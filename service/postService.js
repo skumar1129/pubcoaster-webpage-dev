@@ -1,10 +1,12 @@
 const baseUrl = 'http://localhost:5000';
 
-export const addPost = async (item) =>  {
-  reqBody = {
-
-  };
+export const addPost = async (reqBody) =>  {
   const data = await this.$axios.$post(`${baseUrl}/post`, {
+    reqBody
+  });
+};
+export const updatePost = async (reqBody, uuid) => {
+  const data = await this.$axios.$patch(`${baseUrl}/post/${uuid}`, {
     reqBody
   });
 };
@@ -13,9 +15,6 @@ export const deletePost = async (uuid) => {
   const data = await this.$axios.$delete(`${baseUrl}/post/${uuid}`);
 };
 
-export const updatePost = async (uuid) => {
-  const data = await this.$axios.$patch(`${baseUrl}/post/${uuid}`);
-};
 
 export const getPost = async (uuid) => {
   const data = await this.$axios.$get(`${baseUrl}/post/${uuid}`);
@@ -69,8 +68,6 @@ export const getLocNbhoodPosts = async (location, nbhood, offset=null) => {
   else {
     data = await this.$axios.$get(`${baseUrl}/post/locnbhood/${location}/${nbhood}`);
   }
-
-
 };
 
 
