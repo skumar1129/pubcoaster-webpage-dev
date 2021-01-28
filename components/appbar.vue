@@ -20,25 +20,26 @@
       <v-spacer></v-spacer>
 
       <v-menu>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon>mdi-city</v-icon>
-            </v-btn>
-          </template>
-          <span>Locations</span>
-        </v-tooltip>
+        <template v-slot:activator="{ on: onMenu }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on: onToolTip }">
+              <v-btn icon v-on="{ ...onMenu, ...onToolTip }">
+                <v-icon>mdi-city</v-icon>
+              </v-btn>
+            </template>
+            <span>Locations</span>
+          </v-tooltip>
+        </template>
         <v-list>
-          <v-list-item
-            v-for="(item, index) in locations"
-            :key="index"
-          >
-            <v-list-item-title>{{ locations[index] }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
+            <v-list-item
+              v-for="(item, index) in locations"
+              :key="index"
+            >
+              <v-btn text @click="goToLocationPage(locations[index])">
+                <v-list-item-title>{{ locations[index] }}</v-list-item-title>
+              </v-btn>
+            </v-list-item>
+          </v-list>
       </v-menu>
 
       <v-tooltip bottom>
@@ -83,6 +84,9 @@ export default defineComponent({
     function goToUserPage(this: any){
       this.$router.push('/user')
     }
+    function goToLocationPage(this: any, location: string) {
+      this.$router.push(`/locationPosts/${location}`)
+    }
     const locations = ['Chicago', 'Columbus', 'Denver', 'New York',
     'San Francisco', 'Orlando', 'Phoenix', 'Boston', 'Los Angeles']
     // TODO: implement after we have user profiles and authenication
@@ -93,7 +97,7 @@ export default defineComponent({
 
     // }
 
-    return { goToUserPage, goHome }
+    return { goToUserPage, goHome, goToLocationPage, locations }
   }
 });
 </script>
