@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1><NuxtLink to="/user">Test</NuxtLink></h1>
+    <h1><NuxtLink to="/home">Home Screen Vibes Homies</NuxtLink></h1>
     <button @click="goToLocationPost">Go to location posts</button>
   </div>
 </template>
