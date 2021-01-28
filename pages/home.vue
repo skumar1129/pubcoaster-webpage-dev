@@ -10,7 +10,7 @@
 <script>
 import { ref, defineComponent} from '@nuxtjs/composition-api';
 import appbar from '~/components/appbar.vue';
-import AppBar from '../components/appbar';
+
 
 export default defineComponent({
   components: { appbar },
