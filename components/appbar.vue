@@ -19,17 +19,27 @@
 
       <v-spacer></v-spacer>
 
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon
-            v-bind="attrs"
-            v-on="on"
+      <v-menu>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>mdi-city</v-icon>
+            </v-btn>
+          </template>
+          <span>Locations</span>
+        </v-tooltip>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in locations"
+            :key="index"
           >
-            <v-icon>mdi-city</v-icon>
-          </v-btn>
-        </template>
-        <span>Locations</span>
-      </v-tooltip>
+            <v-list-item-title>{{ locations[index] }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -73,6 +83,8 @@ export default defineComponent({
     function goToUserPage(this: any){
       this.$router.push('/user')
     }
+    const locations = ['Chicago', 'Columbus', 'Denver', 'New York',
+    'San Francisco', 'Orlando', 'Phoenix', 'Boston', 'Los Angeles']
     // TODO: implement after we have user profiles and authenication
     // function searchUser() {
 
