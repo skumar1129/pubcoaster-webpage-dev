@@ -9,7 +9,7 @@
     <v-row>
     <v-col>
     <!--{{response['picLink']}}-->
-    <v-img height="500" src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img> 
+    <v-img v-if="'picLink' in response" height="500" src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img> 
     </v-col>
     </v-row>
     <v-divider style="height: 5px; color: black;"> </v-divider>

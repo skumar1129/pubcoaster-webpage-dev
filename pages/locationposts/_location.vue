@@ -4,7 +4,7 @@
   <v-spacer> </v-spacer>
   <post v-bind:currentUser="String('helga')" v-bind:response="{
       createdBy: 'helga',
-      picLink: 'testing',
+      //picLink: 'testing',
       bar: 'Cheers',
       description: 'Litty mc titty',
       rating: 10,
