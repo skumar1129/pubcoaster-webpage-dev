@@ -3,13 +3,13 @@
     <v-row>
     <v-col style="font-size: 35px;"><b>{{response["bar"]}}</b></v-col>
     <v-spacer></v-spacer>
-    <v-col align="right" style="font-size: 25px;"><b>rating: </b>{{response["rating"]}}</v-col>
+    <v-col align="right" style="font-size: 25px;"><b>rating: </b>{{response["rating"]}}/10</v-col>
     </v-row>
     <v-divider style="height: 5px; color: black;"> </v-divider>
     <v-row>
     <v-col>
     <!--{{response['picLink']}}-->
-    <v-img v-if="'picLink' in response" height="500" src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img> 
+    <!-- <v-img v-if="'picLink' in response" height="500" src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img> -->
     </v-col>
     </v-row>
     <v-divider style="height: 5px; color: black;"> </v-divider>
@@ -21,6 +21,7 @@
     <v-col v-if="response['likes']==1" align="right" style="font-size: 25px;">
         {{response['likes']}} like
     </v-col>
+    <v-col v-else-if="response['likes']==null" align="right" style="font-size: 25px;">No likes yet</v-col>
     <v-col v-else align="right" style="font-size: 25px;">{{response['likes']}} likes</v-col>
     </v-row>
     <v-row v-if="response['anonymous'] == false">
@@ -31,20 +32,20 @@
     <!--view comments for right now-->
     <v-divider></v-divider>
     <u><h3 style="margin-bottom:14px; margin-top: 10px;">Comments</h3></u>
-    <v-row class="mt-2" v-for="(comment, i) in response['comments']" :key="i" style="font-size: 15px;">
+    <!-- <v-row class="mt-2" v-for="(comment, i) in response['comments']" :key="i" style="font-size: 15px;">
         <v-col>
             <b>{{ comment['createdBy'] }}:</b> {{ comment['text'] }}
         </v-col>
-    </v-row>
-    <!--<v-row v-if="response['comments'].length != 0" style="color: grey;">View all {{response['comments'].length}} comments</v-row>-->
-    <!--<v-row v-else>No comments yet</v-row>-->
+    </v-row> -->
+    <v-row v-if="response['numComments'] != 0" style="color: grey;">View all {{response['numComments']}} comments</v-row>
+    <v-row v-else>No comments yet</v-row>
     <v-row>
         <!--<div class="d-flex flex-row align-center justify-center">-->
-        <v-col>
+        <!-- <v-col>
             <div>
             <v-text-field style="width: 90%; display: inline-block;" v-model="comment" placeholder="Add a comment" @keypress.enter="send"></v-text-field><v-btn class="ml-2" icon @click.prevent="send"><v-icon>mdi-send</v-icon></v-btn>
             </div>
-        </v-col>
+        </v-col> -->
         <!--</div>-->
     </v-row>
     </v-container>
@@ -57,14 +58,14 @@ import { ref, defineComponent} from '@nuxtjs/composition-api';
 
 export default defineComponent({
   name: "Post",
-  props: { 
+  props: {
     response: {
         type: Object,
         required: true
     },
     currentUser: {
         type: String,
-        required: true
+        required: false
     }
   },
   setup(props) {

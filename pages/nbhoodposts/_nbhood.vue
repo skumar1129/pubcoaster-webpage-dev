@@ -1,7 +1,7 @@
 <template>
   <div>
   <appbar></appbar>
-  <h1>{{this.$route.params.location}}</h1>
+  <h1>{{this.$route.params.nbhood}} in {{this.$route.params.location}}</h1>
   <v-spacer></v-spacer>
   <v-row v-for="(response, i) in responses" :key="i">
     <v-spacer></v-spacer>
@@ -19,13 +19,13 @@ import { ref, defineComponent} from '@nuxtjs/composition-api';
 
 export default defineComponent({
   components: { post, appbar },
-  name: "LocationPosts",
+  name: "NbhoodPosts",
   setup() {
     let responses = ref([]);
     return { responses };
   },
   async fetch() {
-    let data = await this.$axios.$get(`http://localhost:5000/post/location/${this.$route.params.location}`);
+    let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${this.$route.params.location}/${this.$route.params.nbhood}`);
     this.responses = _.union(this.responses, data)
     console.log(this.responses);
   }
