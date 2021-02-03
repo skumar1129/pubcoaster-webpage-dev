@@ -14,6 +14,8 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  // TODO: change to server for build
+  target: 'static',
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [

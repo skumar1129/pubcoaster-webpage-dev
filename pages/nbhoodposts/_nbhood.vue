@@ -1,13 +1,12 @@
 <template>
   <div>
-  <appbar></appbar>
-  <h1>{{this.$route.params.nbhood}} in {{this.$route.params.location}}</h1>
-  <v-spacer></v-spacer>
-  <v-row v-for="(response, i) in responses" :key="i">
-    <v-spacer></v-spacer>
-    <post :response="response"></post>
-    <v-spacer></v-spacer>
-  </v-row>
+    <appbar></appbar>
+    <h1>{{this.$route.params.nbhood}} in {{this.$route.params.location}}</h1>
+    <client-only placeholder="Loading....">
+      <v-row v-for="(response, i) in responses" :key="i">
+        <post :response="response"></post>
+      </v-row>
+    </client-only>
   </div>
 </template>
 

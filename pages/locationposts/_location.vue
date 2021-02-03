@@ -2,12 +2,11 @@
   <div>
   <appbar></appbar>
   <h1>{{this.$route.params.location}}</h1>
-  <v-spacer></v-spacer>
-  <v-row v-for="(response, i) in responses" :key="i">
-    <v-spacer></v-spacer>
-    <post :response="response"></post>
-    <v-spacer></v-spacer>
-  </v-row>
+    <client-only placeholder="Loading....">
+      <v-row v-for="(response, i) in responses" :key="i">
+        <post :response="response"></post>
+      </v-row>
+    </client-only>
   </div>
 </template>
 
@@ -21,14 +20,15 @@ export default defineComponent({
   components: { post, appbar },
   name: "LocationPosts",
   setup() {
-    let responses = ref([]);
+    const responses = ref([]);
     return { responses };
   },
   async fetch() {
     let data = await this.$axios.$get(`http://localhost:5000/post/location/${this.$route.params.location}`);
     this.responses = _.union(this.responses, data)
     console.log(this.responses);
-  }
+  },
+  fetchOnServer: false
 });
 </script>
 
