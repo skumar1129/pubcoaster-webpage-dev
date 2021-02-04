@@ -12,6 +12,7 @@
       location: 'Chicago',
       neighborhood: 'Niles',
       comments: [{createdBy: 'helga', text: 'heyyy girl'}],
+      createdAt: '2021-01-27 20:26:25',
       likes: 1
   }"></post>
   </div>

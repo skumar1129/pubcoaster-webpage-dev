@@ -14,9 +14,11 @@
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/composition-api": "^0.18.1",
     "core-js": "^3.6.5",
+    "moment": "^2.29.1",
     "nuxt": "^2.14.6"
   },
   "devDependencies": {
+    "@mdi/font": "^5.9.55",
     "@nuxt/types": "^2.14.6",
     "@nuxt/typescript-build": "^2.0.3",
     "@nuxtjs/pwa": "^3.3.4",
