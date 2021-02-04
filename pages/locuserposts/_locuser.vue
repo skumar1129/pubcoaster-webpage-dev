@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <v-app>
     <appbar></appbar>
     <v-main>
       <navdrawer :location="location"></navdrawer>
-      <client-only placeholder="Loading....">
-        <h1>{{user}} in {{location}}</h1>
-        <v-row v-for="(response, i) in responses" :key="i">
-          <post :response="response"></post>
-        </v-row>
-      </client-only>
+      <v-container>
+        <client-only placeholder="Loading....">
+          <h1>{{user}} in {{location}}</h1>
+          <v-row v-for="(response, i) in responses" :key="i">
+            <post :response="response"></post>
+          </v-row>
+        </client-only>
+      </v-container>
     </v-main>
-  </div>
+  </v-app>
 </template>
 
 <script lang='ts'>

@@ -1,21 +1,23 @@
 <template>
-  <div>
+  <v-app>
     <appbar></appbar>
     <v-main>
       <navdrawer :location="$route.params.location"></navdrawer>
-      <v-col class="d-flex align-center justify-space-between">
-        <h1>{{this.$route.params.location}}</h1>
-        <v-btn @click="goToCreatePost" elevation="2" outlined>Create New Post</v-btn>
-      </v-col>
-      <v-col>
-        <client-only placeholder="Loading....">
-          <v-row v-for="(response, i) in responses" :key="i">
-            <post :response="response"></post>
-          </v-row>
-        </client-only>
-      </v-col>
+      <v-container>
+        <v-col>
+          <h1>{{this.$route.params.location}}</h1>
+          <v-btn @click="goToCreatePost" elevation="2" outlined>Create New Post</v-btn>
+        </v-col>
+        <v-col>
+          <client-only placeholder="Loading....">
+            <v-row v-for="(response, i) in responses" :key="i">
+              <post :response="response"></post>
+            </v-row>
+          </client-only>
+        </v-col>
+      </v-container>
     </v-main>
-  </div>
+  </v-app>
 </template>
 
 <script lang='ts'>
