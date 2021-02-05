@@ -19,7 +19,7 @@ export default {
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
-    '@mdi/font/css/materialdesignicons.min.css'
+    // '@mdi/font/css/materialdesignicons.min.css'
   ],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
@@ -35,7 +35,6 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    ['@nuxtjs/vuetify', { iconfont: 'mdi' }],
     '@nuxtjs/composition-api',
     '@nuxtjs/pwa'
   ],
