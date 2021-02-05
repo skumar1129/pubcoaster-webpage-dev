@@ -3,7 +3,7 @@
     <v-card elevation="6" outlined shaped class="inner" color="green">
         <v-row>
             <v-col class="title">
-                <h1>{{response['bar']}}</h1>
+                <h1>{{bar}}</h1>
             </v-col>
             <v-spacer> </v-spacer>
             <v-col align="right" class="title">
@@ -29,7 +29,7 @@
                 <h1>{{response['description']}}</h1>
             </v-col>
         </v-row>
-        <v-row v-if="'picLink' in response">
+        <v-row v-if="response['picLink']">
             <v-col align="center">
                 <!--eventually replace src with response['picLink']-->
                 <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img>
@@ -40,18 +40,18 @@
             <v-col v-if="response['anonymous'] == false" class="middle">
                 <i>{{response['createdBy']}}</i>
             </v-col>
-            <v-col v-if="response['likes']==1" align="right" class="middle">
-                {{response['likes']}} like
+            <v-col v-if="response['numLikes']==1" align="right" class="middle">
+                {{response['numLikes']}} like
             </v-col>
-            <v-col v-else-if="response['likes']==0">
+            <v-col align="right" class="middle" v-else-if="response['numLikes']==0">
                 No likes yet
             </v-col>
-            <v-col v-else align="right" class="middle">{{response['likes']}} likes</v-col>
+            <v-col v-else align="right" class="middle">{{response['numLikes']}} likes</v-col>
         </v-row>
         <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
-            <v-col class="footer" align="right" v-if="'neighborhood' in response">
-                <i>{{response['neighborhood']}}, {{response['location']}}</i>
+            <v-col class="footer" align="right" v-if="response['neighborhood']">
+                <i>{{nbhood}}, {{response['location']}}</i>
             </v-col>
             <v-col v-else class="footer" align="right">
                 <i>{{response['location']}}</i>
@@ -88,7 +88,7 @@
 
 
 <script lang='ts'>
-import { ref, defineComponent} from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent} from '@nuxtjs/composition-api';
 import moment from 'moment';
 
 export default defineComponent({
@@ -129,10 +129,29 @@ export default defineComponent({
           let mydate = new Date(date);
           return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
       }
+      const nbhood = computed(() => {
+        if (props.response.neighborhood) {
+          return props.response.neighborhood.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+        else {
+          return '';
+        }
+      })
+      const bar = computed(() => {
+        if (props.response.bar) {
+          return props.response.bar.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+      })
       const comment = ref("")
       const picture = ref(null)
 
-      return { comment, send, getNow, picture, getMoment }
+      return { comment, send, getNow, picture, getMoment, nbhood, bar }
   }
 });
 </script>
@@ -160,6 +179,8 @@ export default defineComponent({
     }
     .outer {
         background-color: black;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
     .inner {
         background-color: white;

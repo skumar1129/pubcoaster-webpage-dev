@@ -1,9 +1,9 @@
 <template>
-    <v-container class="outer">
+    <v-container class="outer" @click="goToSinglePost">
     <v-card elevation="6" outlined shaped class="inner" color="green">
         <v-row>
             <v-col class="title">
-                <h1>{{response['bar']}}</h1>
+                <h1>{{bar}}</h1>
             </v-col>
             <v-spacer> </v-spacer>
             <v-col align="right" class="title">
@@ -51,7 +51,7 @@
         <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
             <v-col class="footer" align="right" v-if="response['neighborhood']">
-                <i>{{response['neighborhood']}}, {{response['location']}}</i>
+                <i>{{nbhood}}, {{response['location']}}</i>
             </v-col>
             <v-col v-else class="footer" align="right">
                 <i>{{response['location']}}</i>
@@ -71,7 +71,7 @@
 </template>
 
 <script lang='ts'>
-import { ref, defineComponent} from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent} from '@nuxtjs/composition-api';
 import moment from 'moment';
 
 export default defineComponent({
@@ -87,9 +87,31 @@ export default defineComponent({
           let mydate = new Date(date);
           return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
       }
+      function goToSinglePost(this: any) {
+        this.$router.push(`/singlepost/${props.response.uuid}`);
+      }
       const picture = ref(null)
+      const nbhood = computed(() => {
+        if (props.response.neighborhood) {
+          return props.response.neighborhood.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+        else {
+          return '';
+        }
+      })
+      const bar = computed(() => {
+        if (props.response.bar) {
+          return props.response.bar.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+      })
 
-      return { picture, getMoment }
+      return { picture, getMoment, goToSinglePost, bar, nbhood }
   }
 });
 </script>
