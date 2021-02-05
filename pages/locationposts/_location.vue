@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <appbar></appbar>
     <v-main>
       <navdrawer :location="$route.params.location"></navdrawer>
@@ -17,7 +17,7 @@
         </v-col>
       </v-container>
     </v-main>
-  </v-app>
+  </div>
 </template>
 
 <script lang='ts'>
