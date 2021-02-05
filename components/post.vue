@@ -125,7 +125,8 @@ export default defineComponent({
         return dateTime
       }
       function getMoment(date: any) {
-          return moment.utc(date, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
+          let mydate = new Date(date);
+          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
       }
       const comment = ref("")
       const picture = ref(null)

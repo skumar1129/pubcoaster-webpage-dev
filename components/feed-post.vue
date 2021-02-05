@@ -58,7 +58,7 @@
             </v-col>
         </v-row>
         <v-divider class="divider" color="grey"></v-divider>
-        <v-row v-if="response['comments'] == 0" class="comments"> 
+        <v-row v-if="response['numComments'] == 0" class="comments"> 
             No comments yet
         </v-row>
         <v-row v-else class="comments">
@@ -88,7 +88,9 @@ export default defineComponent({
   },
   setup(props) {
       function getMoment(date: any) {
-          return moment.utc(date, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
+          let mydate = new Date(date);
+          console.log(mydate);
+          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
       }
       const picture = ref(null)
 
@@ -112,11 +114,6 @@ export default defineComponent({
     .footer {
         margin: .5rem;
         font-size: 1rem;
-    }
-    .comment-line {
-        width: 90%;
-        display: inline-block;
-        margin: .5rem;
     }
     .outer {
         background-color: black;

@@ -12,9 +12,10 @@
       location: 'Chicago',
       neighborhood: 'Niles',
       comments: [{createdBy: 'helga', text: 'heyyy girl'}],
-      createdAt: '2021-01-27 20:26:25',
+      createdAt: 'Mon, 01 Feb 2021 21:21:29 GMT',
       likes: 1
   }"></post>
+  <v-spacer></v-spacer>
   <feedpost v-bind:currentUser="String('helga')" v-bind:response="{
       createdBy: 'helga',
       picLink: 'testing',
@@ -25,7 +26,7 @@
       location: 'Chicago',
       neighborhood: 'Park Ridge',
       numComments: 2,
-      createdAt: '2021-01-27 20:26:25',
+      createdAt: 'Mon, 01 Feb 2021 21:21:29 GMT',
       likes: 1
   }">
   </feedpost>
