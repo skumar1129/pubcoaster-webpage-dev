@@ -14,6 +14,8 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  // TODO: change to server for build
+  target: 'static',
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
@@ -21,6 +23,7 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
+    { src: '~/plugins/infiniteloading', ssr: false }
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -31,7 +34,7 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify', 
+    '@nuxtjs/vuetify',
     '@nuxtjs/composition-api',
     '@nuxtjs/pwa'
   ],

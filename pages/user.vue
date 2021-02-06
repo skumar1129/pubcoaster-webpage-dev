@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1><NuxtLink to="userPosts/Sahil">User Page</NuxtLink></h1>
+    <h1>User Page</h1>
     <v-btn @click="goBack">Go back</v-btn>
   </div>
 </template>

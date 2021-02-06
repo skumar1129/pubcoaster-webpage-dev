@@ -17,4 +17,7 @@ $ npm run start
 $ npm run generate
 ```
 
+# TODO
+$ get rid of target: 'static' in nuxt.config.js
+
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
