@@ -12,7 +12,7 @@
       anonymous: false,
       location: 'Chicago',
       neighborhood: 'Niles',
-      comments: [{createdBy: 'helga', text: 'heyyy girl', createdAt: 'Mon, 01 Feb 2021 21:21:29 GMT'}],
+      comments: [{createdBy: 'helga', text: 'heyyy girl', createdAt: 'Mon, 01 Feb 2021 21:21:29 GMT', uuid: 'e416cad9-20fb-4d97-8829-11959d6436d3'}],
       createdAt: 'Mon, 01 Feb 2021 21:21:29 GMT',
       numLikes: 1
   }"></post>
@@ -41,7 +41,7 @@
       uuid: '681b2a2c-fe0a-4c4a-a7ad-7bea12477193',
       location: 'Chicago',
       neighborhood: 'Park Ridge',
-      comments: [{createdBy: 'helga', text: 'heyyy girl', createdAt: 'Mon, 01 Feb 2021 21:21:29 GMT'}],
+      comments: [{createdBy: 'helga', text: 'heyyy girl', createdAt: 'Mon, 01 Feb 2021 21:21:29 GMT', uuid: 'e416cad9-20fb-4d97-8829-11959d6436d3'}],
       createdAt: 'Mon, 01 Feb 2021 21:21:29 GMT',
       numLikes: 1
   }"></editpost>

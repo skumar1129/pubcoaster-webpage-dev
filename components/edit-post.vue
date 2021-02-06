@@ -70,6 +70,9 @@
             <v-spacer> </v-spacer>
             <v-col align="right">
                 {{getMoment(comment['createdAt'])}}
+                <v-btn v-if="currentUser == comment['createdBy']" @click="deleteComment(comment['uuid'])" icon small>
+                <v-icon>mdi-delete</v-icon>
+                </v-btn> 
             </v-col>
         </v-row>
         <v-row>
@@ -235,6 +238,10 @@ export default defineComponent({
           this.edit = false;
           location.reload();
       }
+      async function deleteComment(this: any, uuid: String) {
+          let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
+          location.reload();
+      }
       const comment = ref("")
       const picture = ref(null)
       const edit = ref(false)
@@ -243,7 +250,7 @@ export default defineComponent({
       const description = ref(null)
       const neighborhood = ref(null)
 
-      return { comment, send, picture, getMoment, edit, barName, rating, description, neighborhood, saveEdits, deletePost }
+      return { comment, send, picture, getMoment, edit, barName, rating, description, neighborhood, saveEdits, deletePost, deleteComment }
   }
 });
 </script>
@@ -278,6 +285,8 @@ export default defineComponent({
     .comments {
         margin: .2rem;
         font-size: 1rem;
+        box-shadow: 0 0 3pt 2pt darkgrey;
+        /* outline: solid darkgray 1px; */
     }
     .selectRating {
         margin: .5rem;

@@ -45,10 +45,10 @@
             </v-col>
         </v-row>
         <v-divider class="divider" color="grey"></v-divider>
-        <v-row v-if="response['numComments'] == 0" class="comments"> 
+        <v-row v-if="response['numComments'] == 0" class="num-comments"> 
             No comments yet
         </v-row>
-        <v-row v-else class="comments">
+        <v-row v-else class="num-comments">
             <v-col>
                 {{response['numComments']}} Comments
             </v-col>
@@ -107,7 +107,7 @@ export default defineComponent({
     .inner {
         background-color: white;
     }
-    .comments {
+    .num-comments {
         margin: .2rem;
         font-size: 1rem;
     }
