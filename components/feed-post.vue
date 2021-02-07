@@ -1,37 +1,13 @@
 <template>
-<<<<<<< HEAD
-    <v-container class="outer">
-    <v-card elevation="6" outlined shaped class="inner">
-        <v-row> 
-            <v-col class="title"> 
-                <h1>{{response['bar']}}</h1>
-=======
     <v-container class="outer" @click="goToSinglePost">
-    <v-card elevation="6" outlined shaped class="inner" color="green">
+    <v-card elevation="6" outlined shaped class="inner">
         <v-row>
             <v-col class="title">
                 <h1>{{bar}}</h1>
->>>>>>> master
             </v-col>
             <v-spacer> </v-spacer>
             <v-col align="right" class="title">
                 <h3>Rating: {{response['rating']}} / 10</h3>
-<<<<<<< HEAD
-=======
-                <!-- think this would be a cool addition when creating a post but can't get it to work
-                <v-rating
-                    background-color="grey"
-                    color="red lighten-3"
-                    empty-icon="$mdiStarOutline"
-                    full-icon="$mdiStar"
-                    half-icon="$mdiStarHalfFull"
-                    readonly
-                    length="10"
-                    size="43"
-                    value="5"
-                ></v-rating>
-                -->
->>>>>>> master
             </v-col>
         </v-row>
         <v-divider color="grey" class="divider"> </v-divider>
@@ -54,11 +30,7 @@
             <v-col v-if="response['numLikes']==1" align="right" class="middle">
                 {{response['numLikes']}} like
             </v-col>
-<<<<<<< HEAD
-            <v-col v-else-if="response['numLikes']==0"> 
-=======
             <v-col v-else-if="response['numLikes']==0" align="right" class="middle">
->>>>>>> master
                 No likes yet
             </v-col>
             <v-col v-else align="right" class="middle">{{response['numLikes']}} likes</v-col>
@@ -66,23 +38,14 @@
         <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
             <v-col class="footer" align="right" v-if="response['neighborhood']">
-<<<<<<< HEAD
-                <i>{{response['neighborhood']}}, {{response['location']}}</i>
-            </v-col> 
-=======
                 <i>{{nbhood}}, {{response['location']}}</i>
             </v-col>
->>>>>>> master
             <v-col v-else class="footer" align="right">
                 <i>{{response['location']}}</i>
             </v-col>
         </v-row>
         <v-divider class="divider" color="grey"></v-divider>
-<<<<<<< HEAD
-        <v-row v-if="response['numComments'] == 0" class="num-comments"> 
-=======
-        <v-row v-if="response['numComments'] == 0" class="comments">
->>>>>>> master
+        <v-row v-if="response['numComments'] == 0" class="num-comments">
             No comments yet
         </v-row>
         <v-row v-else class="num-comments">
