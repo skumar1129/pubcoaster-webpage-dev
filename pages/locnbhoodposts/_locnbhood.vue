@@ -2,19 +2,19 @@
   <div>
     <appbar></appbar>
     <v-main>
-      <navdrawer :location="$route.params.location"></navdrawer>
+      <navdrawer :location="location"></navdrawer>
       <v-container grid-list>
-        <v-row class="title-button">
-          <h1>{{this.$route.params.location}}</h1>
-          <v-btn @click="goToCreatePost" elevation="2" outlined>Create New Post</v-btn>
-        </v-row>
-        <v-col>
-          <client-only placeholder="Loading....">
+        <client-only placeholder="Loading....">
+          <v-row class="title-button">
+             <h1>{{nbhood}} in {{location}}</h1>
+            <v-btn @click="goToCreatePost" elevation="2" outlined>Create New Post</v-btn>
+         </v-row>
+          <v-col>
             <v-row v-for="(response, i) in responses" :key="i">
               <feedpost :response="response"></feedpost>
             </v-row>
-          </client-only>
-        </v-col>
+          </v-col>
+        </client-only>
       </v-container>
       <infinite-loading
         v-if="responses.length"
@@ -25,25 +25,27 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
+import { ref, defineComponent } from '@nuxtjs/composition-api';
 import feedpost from '~/components/feed-post.vue';
-import appbar from '~/components/appbar.vue';
+import appbar from '~/components/appbar.vue'
 import navdrawer from '~/components/navdrawer.vue';
 import * as _ from 'lodash';
-import { ref, defineComponent} from '@nuxtjs/composition-api';
 
 export default defineComponent({
   components: { feedpost, appbar, navdrawer },
-  name: "LocationPosts",
+  name: "LocNbhoodPosts",
   setup() {
-    const responses = ref([]);
+    let responses = ref([]);
+    const nbhood = ref('');
+    const location = ref('');
     const offset = ref(1);
     function goToCreatePost(this: any) {
       this.$router.push('/createpost');
     }
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
-      let data = await this.$axios.$get(`http://localhost:5000/post/location/${this.$route.params.location}?offset=${offset.value}`);
+      let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${location.value}/${nbhood.value}?offset=${offset.value}`);
       if (data.length > 0) {
         responses.value = _.union(responses.value, data);
         $state.loaded();
@@ -51,15 +53,20 @@ export default defineComponent({
         $state.complete();
       }
     }
-    return { responses, goToCreatePost, infinteScroll };
+    return { responses, nbhood, location, goToCreatePost, infinteScroll };
   },
   async fetch() {
-    let data = await this.$axios.$get(`http://localhost:5000/post/location/${this.$route.params.location}`);
+    let params = this.$route.params.locnbhood.split('-');
+    this.location = params[0];
+    this.nbhood = params[1];
+    let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${this.location}/${this.nbhood}`);
+    console.log(data);
     this.responses = _.union(this.responses, data)
   },
   fetchOnServer: false
 });
 </script>
+
 
 <style scoped>
   .title-button {

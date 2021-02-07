@@ -1,13 +1,36 @@
 <template>
     <v-container class="outer">
+<<<<<<< HEAD
     <v-card elevation="6" outlined shaped class="inner">
         <v-row> 
             <v-col class="title"> 
                 <h1>{{response['bar']}}</h1>
+=======
+    <v-card elevation="6" outlined shaped class="inner" color="green">
+        <v-row>
+            <v-col class="title">
+                <h1>{{bar}}</h1>
+>>>>>>> master
             </v-col>
             <v-spacer> </v-spacer>
             <v-col align="right" class="title">
                 <h3>Rating: {{response['rating']}} / 10</h3>
+<<<<<<< HEAD
+=======
+                <!-- think this would be a cool addition when creating a post but can't get it to work
+                <v-rating
+                    background-color="grey"
+                    color="red lighten-3"
+                    empty-icon="$mdiStarOutline"
+                    full-icon="$mdiStar"
+                    half-icon="$mdiStarHalfFull"
+                    readonly
+                    length="10"
+                    size="43"
+                    value="5"
+                ></v-rating>
+                -->
+>>>>>>> master
             </v-col>
         </v-row>
         <v-divider color="grey" class="divider"> </v-divider>
@@ -19,27 +42,36 @@
         <v-row v-if="response['picLink']">
             <v-col align="center">
                 <!--eventually replace src with response['picLink']-->
-                <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img> 
+                <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img>
             </v-col>
         </v-row>
         <v-divider color="grey" class="divider"> </v-divider>
-        <v-row> 
+        <v-row>
             <v-col v-if="response['anonymous'] == false" class="middle">
                 <i>{{response['createdBy']}}</i>
             </v-col>
             <v-col v-if="response['numLikes']==1" align="right" class="middle">
                 {{response['numLikes']}} like
             </v-col>
+<<<<<<< HEAD
             <v-col v-else-if="response['numLikes']==0"> 
+=======
+            <v-col align="right" class="middle" v-else-if="response['numLikes']==0">
+>>>>>>> master
                 No likes yet
             </v-col>
             <v-col v-else align="right" class="middle">{{response['numLikes']}} likes</v-col>
         </v-row>
-        <v-row> 
+        <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
             <v-col class="footer" align="right" v-if="response['neighborhood']">
+<<<<<<< HEAD
                 <i>{{response['neighborhood']}}, {{response['location']}}</i>
             </v-col> 
+=======
+                <i>{{nbhood}}, {{response['location']}}</i>
+            </v-col>
+>>>>>>> master
             <v-col v-else class="footer" align="right">
                 <i>{{response['location']}}</i>
             </v-col>
@@ -50,7 +82,7 @@
             <u><h3 class="title">Comments</h3></u>
         </v-col>
         </v-row>
-        <v-row v-if="response['comments'] == 0" class="comments"> 
+        <v-row v-if="response['comments'] == 0" class="comments">
             No comments yet
         </v-row>
         <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
@@ -118,24 +150,25 @@
         </v-row>
     </v-card>
     </v-container>
+  <!-- </v-card> -->
 </template>
 
 
 
 <script lang='ts'>
-import { ref, defineComponent} from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent} from '@nuxtjs/composition-api';
 import moment from 'moment';
 
 export default defineComponent({
   name: "Post",
-  props: { 
+  props: {
     response: {
         type: Object,
         required: true
     },
     currentUser: {
         type: String,
-        required: true
+        required: false
     }
   },
   setup(props) {
@@ -157,6 +190,7 @@ export default defineComponent({
           let mydate = new Date(date);
           return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
       }
+<<<<<<< HEAD
       async function deleteComment(this: any, uuid: String) {
           let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
           location.reload();
@@ -179,6 +213,31 @@ export default defineComponent({
       const picture = ref(null)
 
       return { comment, send, picture, getMoment, deleteComment, editCommentFunc, editComment, editedComment, cancelEditComment }
+=======
+      const nbhood = computed(() => {
+        if (props.response.neighborhood) {
+          return props.response.neighborhood.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+        else {
+          return '';
+        }
+      })
+      const bar = computed(() => {
+        if (props.response.bar) {
+          return props.response.bar.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+      })
+      const comment = ref("")
+      const picture = ref(null)
+
+      return { comment, send, getNow, picture, getMoment, nbhood, bar }
+>>>>>>> master
   }
 });
 </script>
@@ -206,6 +265,8 @@ export default defineComponent({
     }
     .outer {
         background-color: black;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
     .inner {
         background-color: white;
@@ -215,6 +276,7 @@ export default defineComponent({
         margin: .2rem;
         font-size: 1rem;
     }
+<<<<<<< HEAD
     .editingComment {
         display: inline-block;
         height: 1rem;
@@ -222,3 +284,6 @@ export default defineComponent({
         margin: .4rem;
     }
 </style>
+=======
+</style>
+>>>>>>> master
