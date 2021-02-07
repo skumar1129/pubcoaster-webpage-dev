@@ -64,12 +64,55 @@
             No comments yet
         </v-row>
         <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
-            <v-col>
+             <v-col v-if="editComment">
+                <b class="editingComment">{{ comment['createdBy'] }}:</b>
+                <v-text-field
+                    label="Comment Text"
+                    v-model="editedComment"
+                    filled
+                    clearable
+                    dense
+                    class="editingComment"
+                    :placeholder="comment['text']"
+                ></v-text-field> 
+            </v-col>
+            <v-col v-else>
                 <b>{{ comment['createdBy'] }}:</b> {{ comment['text'] }}
             </v-col>
             <v-spacer> </v-spacer>
             <v-col align="right">
+                <i v-if="!editComment">
                 {{getMoment(comment['createdAt'])}}
+                </i>
+                <v-btn
+                    color="red"
+                    outlined
+                    rounded
+                    v-if="editComment"
+                    large
+                    @click="cancelEditComment"
+                >
+                Cancel
+                </v-btn>
+                <v-btn
+                    color="grey"
+                    plain
+                    small
+                    v-if="currentUser == comment['createdBy'] && !editComment"
+                    @click="editComment = true"
+                >
+                Edit
+                </v-btn>
+                <v-btn
+                    color="blue"
+                    outlined
+                    rounded
+                    large
+                    v-if="editComment"
+                    @click="editCommentFunc(comment['uuid'])"
+                >
+                Save
+                </v-btn>
                 <v-btn v-if="currentUser == comment['createdBy']" @click="deleteComment(comment['uuid'])" icon small>
                 <v-icon>mdi-delete</v-icon>
                 </v-btn> 
@@ -156,7 +199,7 @@
                 rounded
                 color="error"
                 class="title"
-                @click="edit=false"
+                @click="cancelEdit"
                 >Cancel Edit</v-btn>  
             </v-col>
             <v-col class="locationInput" align="right" v-if="response['neighborhood']">
@@ -231,6 +274,11 @@ export default defineComponent({
           let postData = {picLink: null, neighborhood: this.neighborhood, location: null, rating: this.rating, bar: this.barName, description: this.description};
           let data = await this.$axios.$patch(`http://localhost:5000/post/${this.response['uuid']}`, postData);
           this.edit = false;
+          //reset values
+          this.barName = null;
+          this.rating = null;
+          this.description = null;
+          this.neighborhood = null;
           location.reload();
       }
       async function deletePost(this: any) {
@@ -242,6 +290,26 @@ export default defineComponent({
           let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
           location.reload();
       }
+      function cancelEdit(this: any) {
+          this.edit = false;
+          //reset values
+          this.barName = null;
+          this.rating = null;
+          this.description = null;
+          this.neighborhood = null;
+      }
+      async function editCommentFunc(this: any, uuid: String) {
+          let commentData = {'text': this.editedComment}
+          let data = await this.$axios.$patch(`http://localhost:5000/comment/${uuid}`, commentData);
+          //reset values
+          this.editedComment = null;
+          this.editComment = false;
+          location.reload();
+      }
+      function cancelEditComment(this: any) {
+          this.editedComment = null;
+          this.editComment = false;
+      }
       const comment = ref("")
       const picture = ref(null)
       const edit = ref(false)
@@ -249,8 +317,10 @@ export default defineComponent({
       const rating = ref(null)
       const description = ref(null)
       const neighborhood = ref(null)
+      const editComment = ref(false)
+      const editedComment = ref(null)
 
-      return { comment, send, picture, getMoment, edit, barName, rating, description, neighborhood, saveEdits, deletePost, deleteComment }
+      return { comment, send, picture, getMoment, edit, barName, rating, description, neighborhood, saveEdits, deletePost, deleteComment, cancelEdit, editCommentFunc, cancelEditComment, editComment, editedComment }
   }
 });
 </script>

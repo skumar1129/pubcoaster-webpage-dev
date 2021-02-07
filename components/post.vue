@@ -54,12 +54,55 @@
             No comments yet
         </v-row>
         <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
-            <v-col>
+            <v-col v-if="editComment">
+                <b class="editingComment">{{ comment['createdBy'] }}:</b>
+                <v-text-field
+                    label="Comment Text"
+                    v-model="editedComment"
+                    filled
+                    clearable
+                    dense
+                    class="editingComment"
+                    :placeholder="comment['text']"
+                ></v-text-field> 
+            </v-col>
+            <v-col v-else>
                 <b>{{ comment['createdBy'] }}:</b> {{ comment['text'] }}
             </v-col>
             <v-spacer> </v-spacer>
             <v-col align="right">
+                <i v-if="!editComment">
                 {{getMoment(comment['createdAt'])}}
+                </i>
+                <v-btn
+                    color="red"
+                    outlined
+                    rounded
+                    v-if="editComment"
+                    large
+                    @click="cancelEditComment"
+                >
+                Cancel
+                </v-btn>
+                <v-btn
+                    color="grey"
+                    plain
+                    small
+                    v-if="currentUser == comment['createdBy'] && !editComment"
+                    @click="editComment = true"
+                >
+                Edit
+                </v-btn>
+                <v-btn
+                    color="blue"
+                    outlined
+                    rounded
+                    large
+                    v-if="editComment"
+                    @click="editCommentFunc(comment['uuid'])"
+                >
+                Save
+                </v-btn>
                 <v-btn v-if="currentUser == comment['createdBy']" @click="deleteComment(comment['uuid'])" icon small>
                 <v-icon>mdi-delete</v-icon>
                 </v-btn> 
@@ -117,10 +160,24 @@ export default defineComponent({
           let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
           location.reload();
       }
+      async function editCommentFunc(this: any, uuid: String) {
+          let commentData = {'text': this.editedComment}
+          let data = await this.$axios.$patch(`http://localhost:5000/comment/${uuid}`, commentData);
+          //reset values
+          this.editedComment = null;
+          this.editComment = false;
+          location.reload();
+      }
+      function cancelEditComment(this: any) {
+          this.editedComment = null;
+          this.editComment = false;
+      }
+      const editComment = ref(false)
+      const editedComment = ref(null)
       const comment = ref("")
       const picture = ref(null)
 
-      return { comment, send, picture, getMoment, deleteComment }
+      return { comment, send, picture, getMoment, deleteComment, editCommentFunc, editComment, editedComment, cancelEditComment }
   }
 });
 </script>
@@ -156,5 +213,11 @@ export default defineComponent({
         box-shadow: 0 0 3pt 2pt darkgrey;
         margin: .2rem;
         font-size: 1rem;
+    }
+    .editingComment {
+        display: inline-block;
+        height: 1rem;
+        font-size: 1.3rem;
+        margin: .4rem;
     }
 </style>
