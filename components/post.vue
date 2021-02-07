@@ -62,6 +62,7 @@
                     filled
                     clearable
                     dense
+                    rounded
                     class="editingComment"
                     :placeholder="comment['text']"
                 ></v-text-field> 
