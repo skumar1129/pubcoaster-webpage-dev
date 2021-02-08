@@ -19,7 +19,7 @@ export default defineComponent({
   name: "LocationPosts",
   setup() {
     const response = ref({});
-    const user = 'Sahil'
+    const user = 'helga'
     return { response, user };
   },
   async fetch() {

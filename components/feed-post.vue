@@ -1,6 +1,6 @@
 <template>
     <v-container class="outer" @click="goToSinglePost">
-    <v-card elevation="6" outlined shaped class="inner" color="green">
+    <v-card elevation="6" outlined shaped class="inner">
         <v-row>
             <v-col class="title">
                 <h1>{{bar}}</h1>
@@ -8,19 +8,6 @@
             <v-spacer> </v-spacer>
             <v-col align="right" class="title">
                 <h3>Rating: {{response['rating']}} / 10</h3>
-                <!-- think this would be a cool addition when creating a post but can't get it to work
-                <v-rating
-                    background-color="grey"
-                    color="red lighten-3"
-                    empty-icon="$mdiStarOutline"
-                    full-icon="$mdiStar"
-                    half-icon="$mdiStarHalfFull"
-                    readonly
-                    length="10"
-                    size="43"
-                    value="5"
-                ></v-rating>
-                -->
             </v-col>
         </v-row>
         <v-divider color="grey" class="divider"> </v-divider>
@@ -58,12 +45,17 @@
             </v-col>
         </v-row>
         <v-divider class="divider" color="grey"></v-divider>
-        <v-row v-if="response['numComments'] == 0" class="comments">
+        <v-row v-if="response['numComments'] == 0" class="num-comments">
             No comments yet
         </v-row>
-        <v-row v-else class="comments">
+        <v-row v-else-if="response['numComments'] != 1" class="num-comments">
             <v-col>
                 {{response['numComments']}} Comments
+            </v-col>
+        </v-row>
+        <v-row v-else class="num-comments">
+            <v-col>
+                {{response['numComments']}} Comment
             </v-col>
         </v-row>
     </v-card>
@@ -85,7 +77,8 @@ export default defineComponent({
   setup(props) {
       function getMoment(date: any) {
           let mydate = new Date(date);
-          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
+          mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
+          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
       }
       function goToSinglePost(this: any) {
         this.$router.push(`/singlepost/${props.response.uuid}`);
@@ -139,7 +132,7 @@ export default defineComponent({
     .inner {
         background-color: white;
     }
-    .comments {
+    .num-comments {
         margin: .2rem;
         font-size: 1rem;
     }

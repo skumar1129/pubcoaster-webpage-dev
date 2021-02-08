@@ -50,6 +50,7 @@ export default defineComponent({
         responses.value = _.union(responses.value, data);
         $state.loaded();
       } else {
+        $state.loaded();
         $state.complete();
       }
     }

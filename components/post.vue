@@ -1,6 +1,6 @@
 <template>
     <v-container class="outer">
-    <v-card elevation="6" outlined shaped class="inner" color="green">
+    <v-card elevation="6" outlined shaped class="inner">
         <v-row>
             <v-col class="title">
                 <h1>{{bar}}</h1>
@@ -8,19 +8,6 @@
             <v-spacer> </v-spacer>
             <v-col align="right" class="title">
                 <h3>Rating: {{response['rating']}} / 10</h3>
-                <!-- think this would be a cool addition when creating a post but can't get it to work
-                <v-rating
-                    background-color="grey"
-                    color="red lighten-3"
-                    empty-icon="$mdiStarOutline"
-                    full-icon="$mdiStar"
-                    half-icon="$mdiStarHalfFull"
-                    readonly
-                    length="10"
-                    size="43"
-                    value="5"
-                ></v-rating>
-                -->
             </v-col>
         </v-row>
         <v-divider color="grey" class="divider"> </v-divider>
@@ -67,18 +54,67 @@
             No comments yet
         </v-row>
         <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
-            <v-col>
+            <v-col v-if="editComment && comment['uuid']==uuidEdit">
+                <b class="editingComment">{{ comment['createdBy'] }}:</b>
+                <v-text-field
+                    label="Comment Text"
+                    v-model="editedComment"
+                    filled
+                    clearable
+                    dense
+                    rounded
+                    class="editingComment"
+                    :placeholder="comment['text']"
+                ></v-text-field>
+            </v-col>
+            <v-col v-else>
                 <b>{{ comment['createdBy'] }}:</b> {{ comment['text'] }}
+            </v-col>
+            <v-spacer> </v-spacer>
+            <v-col align="right">
+                <i v-if="!editComment || comment['uuid']!=uuidEdit">
+                {{getMoment(comment['createdAt'])}}
+                </i>
+                <v-btn
+                    color="red"
+                    outlined
+                    rounded
+                    v-if="editComment && comment['uuid']==uuidEdit"
+                    large
+                    @click="cancelEditComment"
+                >
+                Cancel
+                </v-btn>
+                <v-btn
+                    color="grey"
+                    plain
+                    small
+                    v-if="(currentUser == comment['createdBy'] && !editComment) || (currentUser == comment['createdBy'] && uuidEdit == comment['uuid'])"
+                    @click="turnOnEditComment(comment['uuid'])"
+                >
+                Edit
+                </v-btn>
+                <v-btn
+                    color="blue"
+                    outlined
+                    rounded
+                    large
+                    v-if="editComment && comment['uuid']==uuidEdit"
+                    @click="editCommentFunc(comment['uuid'])"
+                >
+                Save
+                </v-btn>
+                <v-btn v-if="currentUser == comment['createdBy']" @click="deleteComment(comment['uuid'])" icon small>
+                <v-icon>mdi-delete</v-icon>
+                </v-btn>
             </v-col>
         </v-row>
         <v-row>
-        <!--<div class="d-flex flex-row align-center justify-center">-->
         <v-col>
             <div>
             <v-text-field class="comment-line" v-model="comment" placeholder="Add a comment" @keypress.enter="send"></v-text-field><v-btn class="ml-2" icon @click.prevent="send"><v-icon>mdi-send</v-icon></v-btn>
             </div>
         </v-col>
-        <!--</div>-->
         </v-row>
     </v-card>
     </v-container>
@@ -104,31 +140,53 @@ export default defineComponent({
     }
   },
   setup(props) {
-      function send(this: any) {
+      async function send(this: any) {
         if (this.comment != null && this.comment != "") {
-            let currentTime = this.getNow()
             let newComment = {
                 "createdBy": this.currentUser,
                 "text": this.comment,
-                "createdAt": currentTime
+                "uuid": this.response['uuid']
             }
             //temporarily add to this comments list - also do I have to do this? if we want the comment to be added without reloading the page i think so
-            this.response['comments'].push(newComment)
+            // this.response['comments'].push(newComment)
             this.comment = null //reset comment
-            //add to database: TODO
+            let data = await this.$axios.$post('http://localhost:5000/comment', newComment);
+            location.reload();
         }
-      }
-      function getNow() {
-        const today = new Date();
-        const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
-        const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
-        const dateTime = date +' '+ time
-        return dateTime
       }
       function getMoment(date: any) {
           let mydate = new Date(date);
-          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
+          mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
+          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
       }
+      async function deleteComment(this: any, uuid: String) {
+          let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
+          location.reload();
+      }
+      async function editCommentFunc(this: any, uuid: String) {
+          let commentData = {'text': this.editedComment}
+          let data = await this.$axios.$patch(`http://localhost:5000/comment/${uuid}`, commentData);
+          //reset values
+          this.editedComment = null;
+          this.editComment = false;
+          this.uuidEdit = null;
+          location.reload();
+      }
+      function cancelEditComment(this: any) {
+          this.editedComment = null;
+          this.editComment = false;
+          this.uuidEdit = null;
+      }
+      function turnOnEditComment(this: any, uuid: String) {
+          this.uuidEdit = uuid;
+          this.editComment = true;
+      }
+      const editComment = ref(false);
+      const editedComment = ref(null);
+      const comment = ref("");
+      const picture = ref(null);
+      const uuidEdit = ref(null);
+
       const nbhood = computed(() => {
         if (props.response.neighborhood) {
           return props.response.neighborhood.toLowerCase()
@@ -139,7 +197,7 @@ export default defineComponent({
         else {
           return '';
         }
-      })
+      });
       const bar = computed(() => {
         if (props.response.bar) {
           return props.response.bar.toLowerCase()
@@ -147,11 +205,9 @@ export default defineComponent({
             .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
             .join(' ');
         }
-      })
-      const comment = ref("")
-      const picture = ref(null)
+      });
+      return { comment, send, picture, getMoment, deleteComment, editCommentFunc, editComment, editedComment, cancelEditComment, nbhood, bar, uuidEdit, turnOnEditComment }
 
-      return { comment, send, getNow, picture, getMoment, nbhood, bar }
   }
 });
 </script>
@@ -186,7 +242,14 @@ export default defineComponent({
         background-color: white;
     }
     .comments {
+        box-shadow: 0 0 3pt 2pt darkgrey;
         margin: .2rem;
         font-size: 1rem;
+    }
+    .editingComment {
+        display: inline-block;
+        height: 1rem;
+        font-size: 1.3rem;
+        margin: .4rem;
     }
 </style>
