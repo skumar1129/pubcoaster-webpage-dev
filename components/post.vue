@@ -27,13 +27,20 @@
             <v-col v-if="response['anonymous'] == false" class="middle">
                 <i>{{response['createdBy']}}</i>
             </v-col>
-            <v-col v-if="response['numLikes']==1" align="right" class="middle">
-                {{response['numLikes']}} like
+            <v-col v-if="numLikes==1" align="right" class="middle">
+                {{numLikes}} like
+                <v-btn v-if="!hasLikedPost && !likedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
+                <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
             </v-col>
-            <v-col align="right" class="middle" v-else-if="response['numLikes']==0">
+            <v-col align="right" class="middle" v-else-if="numLikes">
                 No likes yet
+                <v-btn v-if="!hasLikedPost && !likedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
+                <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
             </v-col>
-            <v-col v-else align="right" class="middle">{{response['numLikes']}} likes</v-col>
+            <v-col v-else align="right" class="middle">{{numLikes}} likes
+              <v-btn v-if="!hasLikedPost && !likedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
+              <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
+            </v-col>
         </v-row>
         <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
@@ -115,7 +122,7 @@
             <v-text-field class="comment-line" v-model="comment" placeholder="Add a comment" @keypress.enter="send"></v-text-field><v-btn class="ml-2" icon @click.prevent="send"><v-icon>mdi-send</v-icon></v-btn>
             </div>
         </v-col>
-        </v-row>
+      </v-row>
     </v-card>
     </v-container>
   <!-- </v-card> -->
@@ -140,74 +147,106 @@ export default defineComponent({
     }
   },
   setup(props) {
-      async function send(this: any) {
-        if (this.comment != null && this.comment != "") {
-            let newComment = {
-                "createdBy": this.currentUser,
-                "text": this.comment,
-                "uuid": this.response['uuid']
-            }
-            //temporarily add to this comments list - also do I have to do this? if we want the comment to be added without reloading the page i think so
-            // this.response['comments'].push(newComment)
-            this.comment = null //reset comment
-            let data = await this.$axios.$post('http://localhost:5000/comment', newComment);
-            location.reload();
-        }
-      }
-      function getMoment(date: any) {
-          let mydate = new Date(date);
-          mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
-          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
-      }
-      async function deleteComment(this: any, uuid: String) {
-          let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
+    async function likePost(this: any) {
+      // TODO: Get username from local storage
+      this.$axios.setHeader('username', 'helga');
+      await this.$axios.$post(`http://localhost:5000/like/${props.response.uuid}`);
+      likedPost.value = true;
+      numLikes.value++;
+    }
+    async function unLikePost(this: any) {
+      // TODO: Get username from local storage
+      this.$axios.setHeader('username', 'helga');
+      await this.$axios.$delete(`http://localhost:5000/like/${props.response.uuid}`);
+      likedPost.value = false;
+      numLikes.value--;
+    }
+    async function send(this: any) {
+      if (this.comment != null && this.comment != "") {
+          let newComment = {
+              "createdBy": this.currentUser,
+              "text": this.comment,
+              "uuid": this.response['uuid']
+          }
+          //temporarily add to this comments list - also do I have to do this? if we want the comment to be added without reloading the page i think so
+          // this.response['comments'].push(newComment)
+          this.comment = null //reset comment
+          let data = await this.$axios.$post('http://localhost:5000/comment', newComment);
           location.reload();
       }
-      async function editCommentFunc(this: any, uuid: String) {
-          let commentData = {'text': this.editedComment}
-          let data = await this.$axios.$patch(`http://localhost:5000/comment/${uuid}`, commentData);
-          //reset values
-          this.editedComment = null;
-          this.editComment = false;
-          this.uuidEdit = null;
-          location.reload();
-      }
-      function cancelEditComment(this: any) {
-          this.editedComment = null;
-          this.editComment = false;
-          this.uuidEdit = null;
-      }
-      function turnOnEditComment(this: any, uuid: String) {
-          this.uuidEdit = uuid;
-          this.editComment = true;
-      }
-      const editComment = ref(false);
-      const editedComment = ref(null);
-      const comment = ref("");
-      const picture = ref(null);
-      const uuidEdit = ref(null);
+    }
+    function getMoment(date: any) {
+        let mydate = new Date(date);
+        mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
+        return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
+    }
+    async function deleteComment(this: any, uuid: String) {
+        let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
+        location.reload();
+    }
+    async function editCommentFunc(this: any, uuid: String) {
+        let commentData = {'text': this.editedComment}
+        let data = await this.$axios.$patch(`http://localhost:5000/comment/${uuid}`, commentData);
+        //reset values
+        this.editedComment = null;
+        this.editComment = false;
+        this.uuidEdit = null;
+        location.reload();
+    }
+    function cancelEditComment(this: any) {
+        this.editedComment = null;
+        this.editComment = false;
+        this.uuidEdit = null;
+    }
+    function turnOnEditComment(this: any, uuid: String) {
+        this.uuidEdit = uuid;
+        this.editComment = true;
+    }
+    const editComment = ref(false);
+    const editedComment = ref(null);
+    const comment = ref("");
+    const picture = ref(null);
+    const uuidEdit = ref(null);
 
-      const nbhood = computed(() => {
-        if (props.response.neighborhood) {
-          return props.response.neighborhood.toLowerCase()
-            .split(' ')
-            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
-            .join(' ');
-        }
-        else {
-          return '';
-        }
-      });
-      const bar = computed(() => {
-        if (props.response.bar) {
-          return props.response.bar.toLowerCase()
-            .split(' ')
-            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
-            .join(' ');
-        }
-      });
-      return { comment, send, picture, getMoment, deleteComment, editCommentFunc, editComment, editedComment, cancelEditComment, nbhood, bar, uuidEdit, turnOnEditComment }
+    const likedPost = ref(false);
 
+    const hasLikedPost = computed(() => {
+      if (props.response.likes) {
+        for (const like of props.response.likes) {
+          // TODO: use local storage username as username
+          if (like.username == 'helga') {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
+
+    const numLikes = ref(props.response.likes ? props.response.likes.length : 0);
+
+    const nbhood = computed(() => {
+      if (props.response.neighborhood) {
+        return props.response.neighborhood.toLowerCase()
+          .split(' ')
+          .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+          .join(' ');
+      }
+      else {
+        return '';
+      }
+    });
+    const bar = computed(() => {
+      if (props.response.bar) {
+        return props.response.bar.toLowerCase()
+          .split(' ')
+          .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+          .join(' ');
+      }
+    });
+    return { comment, send, picture, getMoment, deleteComment,
+    editCommentFunc, editComment, editedComment, cancelEditComment,
+    nbhood, bar, uuidEdit, turnOnEditComment,
+    hasLikedPost, likePost, unLikePost, numLikes, likedPost }
   }
 });
 </script>
