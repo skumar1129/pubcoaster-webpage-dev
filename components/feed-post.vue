@@ -75,9 +75,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-      function getMoment(this: any, date: any) {
+      function getMoment(date: any) {
           let mydate = new Date(date);
-          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
+          mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
+          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
       }
       function goToSinglePost(this: any) {
         this.$router.push(`/singlepost/${props.response.uuid}`);

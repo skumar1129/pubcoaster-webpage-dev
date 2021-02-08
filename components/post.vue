@@ -145,8 +145,7 @@ export default defineComponent({
             let newComment = {
                 "createdBy": this.currentUser,
                 "text": this.comment,
-                "uuid": this.response['uuid'],
-                "createdAt": Date.now()
+                "uuid": this.response['uuid']
             }
             //temporarily add to this comments list - also do I have to do this? if we want the comment to be added without reloading the page i think so
             // this.response['comments'].push(newComment)
@@ -157,8 +156,8 @@ export default defineComponent({
       }
       function getMoment(date: any) {
           let mydate = new Date(date);
-          mydate.setHours(mydate.getHours() + 5);
-          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
+          mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
+          return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
       }
       async function deleteComment(this: any, uuid: String) {
           let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
