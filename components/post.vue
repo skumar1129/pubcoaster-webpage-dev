@@ -54,7 +54,7 @@
             No comments yet
         </v-row>
         <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
-            <v-col v-if="editComment">
+            <v-col v-if="editComment && comment['uuid']==uuidEdit">
                 <b class="editingComment">{{ comment['createdBy'] }}:</b>
                 <v-text-field
                     label="Comment Text"
@@ -72,14 +72,14 @@
             </v-col>
             <v-spacer> </v-spacer>
             <v-col align="right">
-                <i v-if="!editComment">
+                <i v-if="!editComment || comment['uuid']!=uuidEdit">
                 {{getMoment(comment['createdAt'])}}
                 </i>
                 <v-btn
                     color="red"
                     outlined
                     rounded
-                    v-if="editComment"
+                    v-if="editComment && comment['uuid']==uuidEdit"
                     large
                     @click="cancelEditComment"
                 >
@@ -89,8 +89,8 @@
                     color="grey"
                     plain
                     small
-                    v-if="currentUser == comment['createdBy'] && !editComment"
-                    @click="editComment = true"
+                    v-if="(currentUser == comment['createdBy'] && !editComment) || (currentUser == comment['createdBy'] && uuidEdit == comment['uuid'])"
+                    @click="turnOnEditComment(comment['uuid'])"
                 >
                 Edit
                 </v-btn>
@@ -99,7 +99,7 @@
                     outlined
                     rounded
                     large
-                    v-if="editComment"
+                    v-if="editComment && comment['uuid']==uuidEdit"
                     @click="editCommentFunc(comment['uuid'])"
                 >
                 Save
@@ -169,16 +169,23 @@ export default defineComponent({
           //reset values
           this.editedComment = null;
           this.editComment = false;
+          this.uuidEdit = null;
           location.reload();
       }
       function cancelEditComment(this: any) {
           this.editedComment = null;
           this.editComment = false;
+          this.uuidEdit = null;
+      }
+      function turnOnEditComment(this: any, uuid: String) {
+          this.uuidEdit = uuid;
+          this.editComment = true;
       }
       const editComment = ref(false);
       const editedComment = ref(null);
       const comment = ref("");
       const picture = ref(null);
+      const uuidEdit = ref(null);
 
       const nbhood = computed(() => {
         if (props.response.neighborhood) {
@@ -199,7 +206,7 @@ export default defineComponent({
             .join(' ');
         }
       });
-      return { comment, send, picture, getMoment, deleteComment, editCommentFunc, editComment, editedComment, cancelEditComment, nbhood, bar }
+      return { comment, send, picture, getMoment, deleteComment, editCommentFunc, editComment, editedComment, cancelEditComment, nbhood, bar, uuidEdit, turnOnEditComment }
 
   }
 });

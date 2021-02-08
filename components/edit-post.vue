@@ -63,8 +63,8 @@
         <v-row v-if="response['comments'] == 0" class="comments"> 
             No comments yet
         </v-row>
-        <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
-             <v-col v-if="editComment">
+       <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
+            <v-col v-if="editComment && comment['uuid']==uuidEdit">
                 <b class="editingComment">{{ comment['createdBy'] }}:</b>
                 <v-text-field
                     label="Comment Text"
@@ -75,21 +75,21 @@
                     rounded
                     class="editingComment"
                     :placeholder="comment['text']"
-                ></v-text-field> 
+                ></v-text-field>
             </v-col>
             <v-col v-else>
                 <b>{{ comment['createdBy'] }}:</b> {{ comment['text'] }}
             </v-col>
             <v-spacer> </v-spacer>
             <v-col align="right">
-                <i v-if="!editComment">
+                <i v-if="!editComment || comment['uuid']!=uuidEdit">
                 {{getMoment(comment['createdAt'])}}
                 </i>
                 <v-btn
                     color="red"
                     outlined
                     rounded
-                    v-if="editComment"
+                    v-if="editComment && comment['uuid']==uuidEdit"
                     large
                     @click="cancelEditComment"
                 >
@@ -99,8 +99,8 @@
                     color="grey"
                     plain
                     small
-                    v-if="currentUser == comment['createdBy'] && !editComment"
-                    @click="editComment = true"
+                    v-if="(currentUser == comment['createdBy'] && !editComment) || (currentUser == comment['createdBy'] && uuidEdit == comment['uuid'])"
+                    @click="turnOnEditComment(comment['uuid'])"
                 >
                 Edit
                 </v-btn>
@@ -109,14 +109,14 @@
                     outlined
                     rounded
                     large
-                    v-if="editComment"
+                    v-if="editComment && comment['uuid']==uuidEdit"
                     @click="editCommentFunc(comment['uuid'])"
                 >
                 Save
                 </v-btn>
                 <v-btn v-if="currentUser == comment['createdBy']" @click="deleteComment(comment['uuid'])" icon small>
                 <v-icon>mdi-delete</v-icon>
-                </v-btn> 
+                </v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -310,6 +310,11 @@ export default defineComponent({
       function cancelEditComment(this: any) {
           this.editedComment = null;
           this.editComment = false;
+          this.uuidEdit = null;
+      }
+      function turnOnEditComment(this: any, uuid: String) {
+          this.uuidEdit = uuid;
+          this.editComment = true;
       }
       const comment = ref("")
       const picture = ref(null)
@@ -320,8 +325,9 @@ export default defineComponent({
       const neighborhood = ref(null)
       const editComment = ref(false)
       const editedComment = ref(null)
+      const uuidEdit = ref(null)
 
-      return { comment, send, picture, getMoment, edit, barName, rating, description, neighborhood, saveEdits, deletePost, deleteComment, cancelEdit, editCommentFunc, cancelEditComment, editComment, editedComment }
+      return { comment, send, picture, getMoment, edit, barName, rating, description, neighborhood, saveEdits, deletePost, deleteComment, cancelEdit, editCommentFunc, cancelEditComment, editComment, editedComment, uuidEdit, turnOnEditComment }
   }
 });
 </script>

@@ -57,7 +57,6 @@ export default defineComponent({
     let data = await this.$axios.$get(`http://localhost:5000/post/location/${this.$route.params.location}`);
     this.responses = _.union(this.responses, data)
   },
-  fetchOnServer: false
 });
 </script>
 
