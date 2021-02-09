@@ -94,7 +94,7 @@ export default defineComponent({
         neighborhood: neighborhood.value
       };
       await this.$axios.$post('http://localhost:5000/post', reqBody);
-      // this.$router.push(`/locationposts/${location.value}`);
+      this.$router.push(`/locationposts/${location.value}`);
     }
 
     return { location, bar, neighborhood, picture,
