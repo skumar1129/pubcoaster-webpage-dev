@@ -9,11 +9,12 @@
       <v-spacer></v-spacer>
 
       <v-text-field
-            label="Users"
-            placeholder="Search for users"
+        label="Users"
+        placeholder="Search for users"
+        v-model="user"
       >
       </v-text-field>
-      <v-btn icon>
+      <v-btn icon @click="searchUser">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
@@ -78,6 +79,7 @@ import { ref, defineComponent} from '@nuxtjs/composition-api';
 export default defineComponent({
   name: "AppBar",
   setup() {
+    const user = ref('');
     function goHome(this: any) {
       this.$router.push('/home')
     }
@@ -89,15 +91,15 @@ export default defineComponent({
     }
     const locations = ['Chicago', 'Columbus', 'Denver', 'New York',
     'San Francisco', 'Orlando', 'Phoenix', 'Boston', 'Los Angeles']
+    function searchUser(this: any) {
+      this.$router.push(`/userposts/${user.value}`);
+    }
     // TODO: implement after we have user profiles and authenication
-    // function searchUser() {
-
-    //}
     // function logOut(){
 
     // }
 
-    return { goToUserPage, goHome, goToLocationPage, locations }
+    return { user, searchUser, goToUserPage, goHome, goToLocationPage, locations }
   }
 });
 </script>
