@@ -239,9 +239,6 @@ export default defineComponent({
           .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
           .join(' ');
       }
-      else {
-        return '';
-      }
     });
     const bar = computed(() => {
       if (props.response.bar) {
