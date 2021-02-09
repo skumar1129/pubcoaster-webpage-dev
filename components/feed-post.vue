@@ -29,13 +29,11 @@
             </v-col>
             <v-col v-if="response['numLikes']==1" align="right" class="middle">
                 {{response['numLikes']}} like
-                <v-icon>mdi-heart</v-icon>
             </v-col>
             <v-col v-else-if="response['numLikes']==0" align="right" class="middle">
                 No likes yet
-                <v-icon>mdi-heart</v-icon>
             </v-col>
-            <v-col v-else align="right" class="middle">{{response['numLikes']}} likes <v-icon>mdi-heart</v-icon></v-col>
+            <v-col v-else align="right" class="middle">{{response['numLikes']}} likes </v-col>
         </v-row>
         <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
