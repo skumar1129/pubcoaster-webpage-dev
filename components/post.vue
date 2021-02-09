@@ -29,16 +29,16 @@
             </v-col>
             <v-col v-if="numLikes==1" align="right" class="middle">
                 {{numLikes}} like
-                <v-btn v-if="!hasLikedPost && !likedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
+                <v-btn v-if="!hasLikedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
                 <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
             </v-col>
             <v-col align="right" class="middle" v-else-if="numLikes">
                 No likes yet
-                <v-btn v-if="!hasLikedPost && !likedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
+                <v-btn v-if="!hasLikedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
                 <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
             </v-col>
             <v-col v-else align="right" class="middle">{{numLikes}} likes
-              <v-btn v-if="!hasLikedPost && !likedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
+              <v-btn v-if="!hasLikedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
               <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
             </v-col>
         </v-row>
@@ -151,15 +151,17 @@ export default defineComponent({
       // TODO: Get username from local storage
       this.$axios.setHeader('username', 'helga');
       await this.$axios.$post(`http://localhost:5000/like/${props.response.uuid}`);
-      likedPost.value = true;
-      numLikes.value++;
+      // likedPost.value = true;
+      // numLikes.value++;
+      location.reload();
     }
     async function unLikePost(this: any) {
       // TODO: Get username from local storage
       this.$axios.setHeader('username', 'helga');
       await this.$axios.$delete(`http://localhost:5000/like/${props.response.uuid}`);
-      likedPost.value = false;
-      numLikes.value--;
+      // likedPost.value = false;
+      // numLikes.value--;
+      location.reload();
     }
     async function send(this: any) {
       if (this.comment != null && this.comment != "") {
@@ -222,7 +224,13 @@ export default defineComponent({
       return false;
     });
 
-    const numLikes = ref(props.response.likes ? props.response.likes.length : 0);
+    const numLikes = computed(() => {
+      if (props.response.likes) {
+        return props.response.likes.length;
+      }
+    });
+
+    // const numLikes = ref(props.response.likes ? props.response.likes.length : 0);
 
     const nbhood = computed(() => {
       if (props.response.neighborhood) {
