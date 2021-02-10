@@ -4,13 +4,13 @@
     <v-main>
       <v-container grid-list>
         <v-row class="title-button">
-          <h1>My Posts</h1>
+          <h1>Posts for {{this.$route.params.user}}</h1>
           <v-btn @click="goToCreatePost" elevation="2" outlined>Create New Post</v-btn>
         </v-row>
         <v-col>
           <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
-              <editpost :response="response"></editpost>
+              <feedpost :response="response"></feedpost>
             </v-row>
           </client-only>
         </v-col>
@@ -26,22 +26,22 @@
 
 <script lang='ts'>
 import { ref, defineComponent } from '@nuxtjs/composition-api';
+import feedpost from '@/components/feed-post.vue';
 import appbar from '~/components/appbar.vue';
-import editpost from '@/components/edit-post.vue';
 import * as _ from 'lodash';
 
 export default defineComponent({
-  name: 'UserFeed',
-  components: { editpost, appbar },
+  name: 'UserPosts',
+  components: { appbar, feedpost },
   setup() {
-    const responses = ref([]);
+     const responses = ref([]);
     const offset = ref(1);
     function goToCreatePost(this: any) {
       this.$router.push('/createpost');
     }
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
-      let data = await this.$axios.$get(`http://localhost:5000/mypost/user?offset=${offset.value}`);
+      let data = await this.$axios.$get(`http://localhost:5000/post/user/${this.$route.params.user}?offset=${offset.value}`);
       if (data.length > 0) {
         responses.value = _.union(responses.value, data);
         $state.loaded();
@@ -53,9 +53,7 @@ export default defineComponent({
     return { responses, goToCreatePost, infinteScroll };
   },
   async fetch() {
-    // TODO: Make username come from local storage
-    this.$axios.setHeader('username', 'helga');
-    let data = await this.$axios.$get('http://localhost:5000/mypost/user');
+    let data = await this.$axios.$get(`http://localhost:5000/post/user/${this.$route.params.user}`);
     this.responses = _.union(this.responses, data);
   },
   fetchOnServer: false

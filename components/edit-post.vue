@@ -1,11 +1,11 @@
 <template>
-    <v-container class="outer" v-if="!edit">
-    <v-card elevation="6" outlined shaped class="inner">
-        <v-row> 
-            <v-col class="title"> 
-                <h1>{{response['bar']}}</h1>
+    <v-container class="outer" @click="goToSinglePost" v-if="!edit">
+      <v-card elevation="6" outlined shaped class="inner">
+        <v-row>
+            <v-col class="title">
+                <h1>{{bar}}</h1>
             </v-col>
-            <v-col align="center" class="title"> 
+            <v-col align="center" class="title">
                 <v-btn
                 elevation="4"
                 depressed
@@ -29,108 +29,50 @@
         <v-row v-if="response['picLink']">
             <v-col align="center">
                 <!--eventually replace src with response['picLink']-->
-                <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img> 
+                <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img>
             </v-col>
         </v-row>
         <v-divider color="grey" class="divider"> </v-divider>
-        <v-row> 
+        <v-row>
             <v-col v-if="response['anonymous'] == false" class="middle">
                 <i>{{response['createdBy']}}</i>
             </v-col>
             <v-col v-if="response['numLikes']==1" align="right" class="middle">
                 {{response['numLikes']}} like
             </v-col>
-            <v-col v-else-if="response['numLikes']==0"> 
+            <v-col v-else-if="response['numLikes']==0" align="right" class="middle">
                 No likes yet
             </v-col>
             <v-col v-else align="right" class="middle">{{response['numLikes']}} likes</v-col>
         </v-row>
-        <v-row> 
+        <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
-            <v-col class="footer" align="right" v-if="'neighborhood' in response">
-                <i>{{response['neighborhood']}}, {{response['location']}}</i>
-            </v-col> 
+            <v-col class="footer" align="right" v-if="response['neighborhood']">
+                <i>{{nbhood}}, {{response['location']}}</i>
+            </v-col>
             <v-col v-else class="footer" align="right">
                 <i>{{response['location']}}</i>
             </v-col>
         </v-row>
         <v-divider class="divider" color="grey"></v-divider>
-        <v-row>
-        <v-col>
-            <u><h3 class="title">Comments</h3></u>
-        </v-col>
-        </v-row>
-        <v-row v-if="response['comments'] == 0" class="comments"> 
+        <v-row v-if="response['numComments'] == 0" class="num-comments">
             No comments yet
         </v-row>
-       <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
-            <v-col v-if="editComment && comment['uuid']==uuidEdit">
-                <b class="editingComment">{{ comment['createdBy'] }}:</b>
-                <v-text-field
-                    label="Comment Text"
-                    v-model="editedComment"
-                    filled
-                    clearable
-                    dense
-                    rounded
-                    class="editingComment"
-                    :placeholder="comment['text']"
-                ></v-text-field>
-            </v-col>
-            <v-col v-else>
-                <b>{{ comment['createdBy'] }}:</b> {{ comment['text'] }}
-            </v-col>
-            <v-spacer> </v-spacer>
-            <v-col align="right">
-                <i v-if="!editComment || comment['uuid']!=uuidEdit">
-                {{getMoment(comment['createdAt'])}}
-                </i>
-                <v-btn
-                    color="red"
-                    outlined
-                    rounded
-                    v-if="editComment && comment['uuid']==uuidEdit"
-                    large
-                    @click="cancelEditComment"
-                >
-                Cancel
-                </v-btn>
-                <v-btn
-                    color="grey"
-                    plain
-                    small
-                    v-if="(currentUser == comment['createdBy'] && !editComment) || (currentUser == comment['createdBy'] && uuidEdit == comment['uuid'])"
-                    @click="turnOnEditComment(comment['uuid'])"
-                >
-                Edit
-                </v-btn>
-                <v-btn
-                    color="blue"
-                    outlined
-                    rounded
-                    large
-                    v-if="editComment && comment['uuid']==uuidEdit"
-                    @click="editCommentFunc(comment['uuid'])"
-                >
-                Save
-                </v-btn>
-                <v-btn v-if="currentUser == comment['createdBy']" @click="deleteComment(comment['uuid'])" icon small>
-                <v-icon>mdi-delete</v-icon>
-                </v-btn>
+        <v-row v-else-if="response['numComments'] != 1" class="num-comments">
+            <v-col>
+                {{response['numComments']}} Comments
             </v-col>
         </v-row>
-        <v-row>
-        <v-col>
-            <div>
-            <v-text-field class="comment-line" v-model="comment" placeholder="Add a comment" @keypress.enter="send"></v-text-field><v-btn class="ml-2" icon @click.prevent="send"><v-icon>mdi-send</v-icon></v-btn>
-            </div>
-        </v-col>
+        <v-row v-else class="num-comments">
+            <v-col>
+                {{response['numComments']}} Comment
+            </v-col>
         </v-row>
-    </v-card>
+      </v-card>
     </v-container>
     <v-container v-else class="outer">
         <v-card elevation="6" outlined shaped class="inner">
-            <v-row> 
+            <v-row>
             <v-col class="title">
                 <v-text-field
                     label="Name of Bar"
@@ -139,10 +81,10 @@
                     clearable
                     dense
                     rounded
-                    :placeholder="response['bar']"
-                ></v-text-field> 
+                    :placeholder="bar"
+                ></v-text-field>
             </v-col>
-            <v-col align="center" class="title"> 
+            <v-col align="center" class="title">
                 <v-btn
                 elevation="4"
                 depressed
@@ -181,17 +123,17 @@
                     dense
                     rounded
                     :placeholder="response['description']"
-                ></v-text-field> 
+                ></v-text-field>
             </v-col>
         </v-row>
         <!--TODO: add someway to edit the picture at a later point-->
         <v-divider color="grey" class="divider"> </v-divider>
-        <v-row> 
+        <v-row>
             <v-col align="left">
                 <!--TODO: should this be a button that says delete or just the icon-->
                 <v-btn @click="deletePost" icon class="title" large>
                 <v-icon>mdi-delete</v-icon>
-                </v-btn> 
+                </v-btn>
                 <v-btn
                 elevation="4"
                 depressed
@@ -201,7 +143,7 @@
                 color="error"
                 class="title"
                 @click="cancelEdit"
-                >Cancel Edit</v-btn>  
+                >Cancel Edit</v-btn>
             </v-col>
             <v-col class="locationInput" align="right" v-if="response['neighborhood']">
                 <div>
@@ -213,10 +155,10 @@
                     dense
                     rounded
                     class="neighborhood"
-                    :placeholder="response['neighborhood']"
+                    :placeholder="nbhood"
                 ></v-text-field><b>,  {{response['location']}}</b>
                 </div>
-            </v-col> 
+            </v-col>
             <v-col v-else class="locationInput" align="right">
                 <div>
                 <v-text-field
@@ -237,97 +179,83 @@
 </template>
 
 <script lang='ts'>
-import { ref, defineComponent} from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent} from '@nuxtjs/composition-api';
 import moment from 'moment';
 
 export default defineComponent({
   name: "editpost",
-  props: { 
+  props: {
     response: {
         type: Object,
-        required: true
-    },
-    currentUser: {
-        type: String,
         required: true
     }
   },
   setup(props) {
-      async function send(this: any) {
-        if (this.comment != null && this.comment != "") {
-            let newComment = {
-                "createdBy": this.currentUser,
-                "text": this.comment,
-                "uuid": this.response['uuid']
-            }
-            //temporarily add to this comments list - also do I have to do this? if we want the comment to be added without reloading the page i think so
-            //this.response['comments'].push(newComment)
-            this.comment = null //reset comment
-            let data = await this.$axios.$post('http://localhost:5000/comment', newComment);
-            location.reload();
-        }
-      }
       function getMoment(date: any) {
           let mydate = new Date(date);
+          mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
           return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow()
       }
       async function saveEdits(this: any) {
-          let postData = {picLink: null, neighborhood: this.neighborhood, location: null, rating: this.rating, bar: this.barName, description: this.description};
-          let data = await this.$axios.$patch(`http://localhost:5000/post/${this.response['uuid']}`, postData);
-          this.edit = false;
+          let postData = {
+            picLink: null,
+            neighborhood: neighborhood.value,
+            rating: rating.value,
+            bar: barName.value,
+            description: description.value
+          };
+          let data = await this.$axios.$patch(`http://localhost:5000/post/${props.response['uuid']}`, postData);
+          edit.value = false;
           //reset values
-          this.barName = null;
-          this.rating = null;
-          this.description = null;
-          this.neighborhood = null;
+          barName.value = null;
+          rating.value = null;
+          description.value = null;
+          neighborhood.value = null;
           location.reload();
       }
       async function deletePost(this: any) {
-          let data = await this.$axios.$delete(`http://localhost:5000/post/${this.response['uuid']}`);
-          this.edit = false;
-          location.reload();
-      }
-      async function deleteComment(this: any, uuid: String) {
-          let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
+          let data = await this.$axios.$delete(`http://localhost:5000/post/${props.response['uuid']}`);
+          edit.value = false;
           location.reload();
       }
       function cancelEdit(this: any) {
-          this.edit = false;
+          edit.value = false;
           //reset values
-          this.barName = null;
-          this.rating = null;
-          this.description = null;
-          this.neighborhood = null;
+          barName.value = null;
+          rating.value = null;
+          description.value = null;
+          neighborhood.value = null;
       }
-      async function editCommentFunc(this: any, uuid: String) {
-          let commentData = {'text': this.editedComment}
-          let data = await this.$axios.$patch(`http://localhost:5000/comment/${uuid}`, commentData);
-          //reset values
-          this.editedComment = null;
-          this.editComment = false;
-          location.reload();
+      const nbhood = computed(() => {
+        if (props.response.neighborhood) {
+          return props.response.neighborhood.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+      });
+      const bar = computed(() => {
+        if (props.response.bar) {
+          return props.response.bar.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+      });
+      function goToSinglePost(this: any) {
+        this.$router.push(`/singlepost/${props.response.uuid}`);
       }
-      function cancelEditComment(this: any) {
-          this.editedComment = null;
-          this.editComment = false;
-          this.uuidEdit = null;
-      }
-      function turnOnEditComment(this: any, uuid: String) {
-          this.uuidEdit = uuid;
-          this.editComment = true;
-      }
-      const comment = ref("")
       const picture = ref(null)
       const edit = ref(false)
       const barName = ref(null)
       const rating = ref(null)
       const description = ref(null)
       const neighborhood = ref(null)
-      const editComment = ref(false)
-      const editedComment = ref(null)
-      const uuidEdit = ref(null)
 
-      return { comment, send, picture, getMoment, edit, barName, rating, description, neighborhood, saveEdits, deletePost, deleteComment, cancelEdit, editCommentFunc, cancelEditComment, editComment, editedComment, uuidEdit, turnOnEditComment }
+      return { picture, getMoment,
+      edit, barName, rating, description,
+      neighborhood, saveEdits, deletePost,
+      cancelEdit, bar, nbhood, goToSinglePost }
   }
 });
 </script>
@@ -355,6 +283,8 @@ export default defineComponent({
     }
     .outer {
         background-color: black;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
     .inner {
         background-color: white;
