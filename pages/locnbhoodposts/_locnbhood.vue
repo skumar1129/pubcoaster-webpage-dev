@@ -60,7 +60,6 @@ export default defineComponent({
     this.location = params[0];
     this.nbhood = params[1];
     let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${this.location}/${this.nbhood}`);
-    console.log(data);
     this.responses = _.union(this.responses, data)
   },
   fetchOnServer: false
