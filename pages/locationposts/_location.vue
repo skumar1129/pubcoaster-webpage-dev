@@ -6,7 +6,6 @@
       <v-container grid-list>
         <v-row class="title-button">
           <h1>{{this.$route.params.location}}</h1>
-          <v-btn @click="goToCreatePost" elevation="2" outlined>Create New Post</v-btn>
         </v-row>
         <v-col>
           <client-only placeholder="Loading....">
@@ -65,7 +64,7 @@ export default defineComponent({
 <style scoped>
   .title-button {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-bottom: 2rem;
     margin-top: 2rem;
   }

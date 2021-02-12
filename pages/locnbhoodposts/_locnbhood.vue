@@ -7,7 +7,6 @@
         <client-only placeholder="Loading....">
           <v-row class="title-button">
              <h1>{{nbhood}} in {{location}}</h1>
-            <v-btn @click="goToCreatePost" elevation="2" outlined>Create New Post</v-btn>
          </v-row>
           <v-col>
             <v-row v-for="(response, i) in responses" :key="i">
@@ -72,7 +71,7 @@ export default defineComponent({
 <style scoped>
   .title-button {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-bottom: 2rem;
     margin-top: 2rem;
   }

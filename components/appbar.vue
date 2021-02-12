@@ -48,6 +48,19 @@
           <v-btn icon
             v-bind="attrs"
             v-on="on"
+            @click="goToCreatePost"
+          >
+            <v-icon>mdi-text-box-plus</v-icon>
+          </v-btn>
+        </template>
+        <span>Create new post</span>
+      </v-tooltip>
+
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon
+            v-bind="attrs"
+            v-on="on"
             @click="goToUserPage"
           >
             <v-icon>mdi-account-circle</v-icon>
@@ -83,6 +96,9 @@ export default defineComponent({
     function goHome(this: any) {
       this.$router.push('/home')
     }
+    function goToCreatePost(this: any) {
+      this.$router.push('createpost');
+    }
     function goToUserPage(this: any){
       this.$router.push('/user')
     }
@@ -99,7 +115,7 @@ export default defineComponent({
 
     // }
 
-    return { user, searchUser, goToUserPage, goHome, goToLocationPage, locations }
+    return { user, searchUser, goToUserPage, goHome, goToLocationPage, locations, goToCreatePost }
   }
 });
 </script>
