@@ -9,7 +9,7 @@
       <v-list-item-icon>
         <v-icon>mdi-account-search</v-icon>
       </v-list-item-icon>
-      <v-list-item-title>Search location by:</v-list-item-title>
+      <v-list-item-title>Search {{location}} by:</v-list-item-title>
       <v-btn
         icon
         @click.stop="mini = !mini"
