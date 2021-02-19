@@ -97,7 +97,7 @@ export default defineComponent({
       this.$router.push('/home')
     }
     function goToCreatePost(this: any) {
-      this.$router.push('createpost');
+      this.$router.push('/createpost');
     }
     function goToUserPage(this: any){
       this.$router.push('/user')
