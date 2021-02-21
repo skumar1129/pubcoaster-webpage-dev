@@ -143,23 +143,23 @@ export default defineComponent({
     },
     currentUser: {
         type: String,
-        required: false
+        required: true
     }
   },
   setup(props) {
     async function likePost(this: any) {
       // TODO: Get username from local storage
-      this.$axios.setHeader('username', 'helga');
+      this.$axios.setHeader('username', props.currentUser);
       await this.$axios.$post(`http://localhost:5000/like/${props.response.uuid}`);
       // likedPost.value = true;
-      this.response['likes'].push({'username': 'helga'});
+      this.response['likes'].push({'username': props.currentUser});
       //location.reload();
     }
     async function unLikePost(this: any) {
       // TODO: Get username from local storage
-      this.$axios.setHeader('username', 'helga');
+      this.$axios.setHeader('username', props.currentUser);
       await this.$axios.$delete(`http://localhost:5000/like/${props.response.uuid}`);
-      let index = this.response['likes'].findIndex((element: any) => element == {'username': 'helga'});
+      let index = this.response['likes'].findIndex((element: any) => element == {'username': props.currentUser});
       this.response['likes'].splice(index, 1);
       // likedPost.value = false;
       // numLikes.value--;
@@ -172,19 +172,23 @@ export default defineComponent({
               "text": this.comment,
               "uuid": this.response['uuid'],
               "createdAt": this.getNow()
-          }
-          console.log(this.getNow())
+          };
           //temporarily add to this comments list - also do I have to do this? if we want the comment to be added without reloading the page i think so
-          this.response['comments'].push(newComment)
-          this.comment = null //reset comment
-          let data = await this.$axios.$post('http://localhost:5000/comment', newComment);
+          let sentComment = {
+            createdBy: this.currentUser,
+            text: this.comment,
+            uuid: this.response.uuid,
+          };
+          this.response['comments'].push(newComment);
+          this.comment = null; //reset comment
+          let data = await this.$axios.$post('http://localhost:5000/comment', sentComment);
           //location.reload();
       }
     }
     function getNow() {
         var today = new Date();
         today.setTime(today.getTime() - today.getTimezoneOffset()*60*1000);
-        return today
+        return today;
     }
     function getMoment(date: any) {
         let mydate = new Date(date);
@@ -225,7 +229,7 @@ export default defineComponent({
       if (props.response.likes) {
         for (const like of props.response.likes) {
           // TODO: use local storage username as username
-          if (like.username == 'helga') {
+          if (like.username == props.currentUser) {
             return true;
           }
         }
