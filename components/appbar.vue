@@ -106,7 +106,7 @@ export default defineComponent({
       this.$router.push(`/locationPosts/${location}`)
     }
     const locations = ['Chicago', 'Columbus', 'Denver', 'New York',
-    'San Francisco', 'Orlando', 'Phoenix', 'Boston', 'Los Angeles']
+    'San Francisco', 'Orlando', 'Phoenix', 'Boston', 'Los Angeles', 'Washington DC'];
     function searchUser(this: any) {
       this.$router.push(`/userposts/${user.value}`);
     }
