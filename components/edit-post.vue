@@ -34,7 +34,7 @@
         </v-row>
         <v-divider color="grey" class="divider"> </v-divider>
         <v-row>
-            <v-col v-if="response['anonymous'] == false" class="middle">
+            <v-col class="middle">
                 <i>{{response['createdBy']}}</i>
             </v-col>
             <v-col v-if="response['numLikes']==1" align="right" class="middle">
