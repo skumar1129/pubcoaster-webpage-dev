@@ -92,8 +92,8 @@
                 outlined
                 rounded
                 color="primary"
-                @click="saveEdits"
-                >Save Edits</v-btn>
+                @click="cancelEdit"
+                >Cancel Edit</v-btn>
             </v-col>
             <v-col align="right" class="selectRating">
                 <label for="rate"><b> Rating: </b></label>
@@ -142,8 +142,8 @@
                 rounded
                 color="error"
                 class="title"
-                @click="cancelEdit"
-                >Cancel Edit</v-btn>
+                @click="saveEdits"
+                >Save Edits</v-btn>
             </v-col>
             <v-col class="locationInput" align="right" v-if="response['neighborhood']">
                 <div>
