@@ -4,12 +4,14 @@
     :mini-variant.sync="mini"
     absolute
     permanent
+    color="red"
+    data-app
   >
     <v-list-item>
       <v-list-item-icon>
         <v-icon>mdi-account-search</v-icon>
       </v-list-item-icon>
-      <v-list-item-title>Search {{location}} by:</v-list-item-title>
+      <v-list-item-title>Search by:  </v-list-item-title>
       <v-btn
         icon
         @click.stop="mini = !mini"
@@ -19,36 +21,41 @@
     </v-list-item>
     <v-divider></v-divider>
     <v-list dense>
+
       <v-list-item>
         <v-list-item-icon>
-          <v-icon>mdi-beer</v-icon>
+          <v-icon medium class="mt-8">mdi-beer</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-text-field v-model="bar" label="Bar"></v-text-field>
+          <v-text-field v-model="bar" placeholder="Bar"></v-text-field>
         </v-list-item-content>
         <v-btn icon @click="filterByBar">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
       </v-list-item>
 
+      <!-- <v-divider> </v-divider> -->
+
       <v-list-item>
         <v-list-item-icon>
-          <v-icon>mdi-account-question</v-icon>
+          <v-icon medium class="mt-8">mdi-account-question</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-text-field v-model="user" label="User"></v-text-field>
+          <v-text-field v-model="user" placeholder="User"></v-text-field>
         </v-list-item-content>
         <v-btn icon @click="filterByUser">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
       </v-list-item>
 
+      <!-- <v-divider> </v-divider> -->
+
       <v-list-item>
         <v-list-item-icon>
-          <v-icon>mdi-home-search</v-icon>
+          <v-icon medium class="mt-8">mdi-home-search</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-text-field v-model="nbhood" label="Neighborhood"></v-text-field>
+          <v-text-field v-model="nbhood" placeholder="Neighborhood"></v-text-field>
         </v-list-item-content>
         <v-btn icon @click="filterByNbhood">
           <v-icon>mdi-magnify</v-icon>
@@ -92,5 +99,7 @@ export default defineComponent({
 </script>
 
 <style>
-
+  .display {
+    display: inline-block;
+  }
 </style>

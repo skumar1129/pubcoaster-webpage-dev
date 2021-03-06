@@ -1,6 +1,7 @@
 <template>
-  <div data-app>
-    <h1>Create New Post</h1>
+  <v-app>
+    <div class="page">
+    <h1 class="text-center">Create New Post</h1>
     <v-form
       ref="form"
       lazy-validation
@@ -11,16 +12,22 @@
         :rules="[v => !!v || 'Location is required']"
         label="Location*"
         required
+        dense
+        class="field"
       ></v-select>
       <v-text-field
         v-model="bar"
         label="Bar*"
         :rules="[v => !!v || 'Bar is required']"
         required
+        dense
+        class="field"
       ></v-text-field>
       <v-text-field
         v-model="neighborhood"
         label="Neighborhood"
+        dense
+        class="field"
       ></v-text-field>
       <v-select
         v-model="rating"
@@ -28,34 +35,41 @@
         :rules="[v => !!v || 'Rating is required']"
         label="Rating*"
         required
+        dense
+        class="field"
       ></v-select>
       <v-textarea
         v-model="description"
         label="What's good?"
         :rules="[v => !!v || 'Description is required']"
         required
+        dense
+        class="field"
       ></v-textarea>
       <v-file-input
         label="Picture (optional)"
         prepend-icon="mdi-camera"
+        class="field"
       ></v-file-input>
       <v-checkbox
         v-model="anonymous"
         label="Make post anonymous?"
+        class="field"
       ></v-checkbox>
       <v-row class="btn-row">
-        <v-btn @click="cancel">
+        <v-btn @click="cancel" class="ml-8 mt-5">
           Cancel
         </v-btn>
-        <v-btn @click="clear">
+        <v-btn @click="clear" class="mt-5">
           Clear
         </v-btn>
-        <v-btn @click="submit">
+        <v-btn @click="submit" class="mr-8 mt-5">
           Submit
         </v-btn>
       </v-row>
     </v-form>
-  </div>
+    </div>
+  </v-app>
 </template>
 
 <script lang='ts'>
@@ -109,5 +123,17 @@ export default defineComponent({
     display: flex;
     justify-content: space-around;
   }
-
+  .page {
+    background-color: grey;
+    height: 100%;
+    width: 100%;
+    font-size: 1.5em;
+  }
+  .field {
+    padding-left: 5em;
+    padding-right: 5em;
+    font-weight: bold;
+    font-size: 1em;
+    margin-top: 1em;
+  }
 </style>

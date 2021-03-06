@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <appbar></appbar>
-    <v-main>
-      <navdrawer :location="location"></navdrawer>
-      <v-container grid-list>
+  <v-app class="page">
+    <appbar :nav="true" data-app></appbar>
+      <v-container grid-list data-app>
         <client-only placeholder="Loading....">
           <v-row class="title-button">
              <h1>{{nbhood}} in {{location}}</h1>
@@ -19,9 +17,10 @@
         v-if="responses.length"
         spinner="spiral"
         @infinite="infinteScroll"
-      ></infinite-loading>
-    </v-main>
-  </div>
+        data-app
+      ><span slot="no-more"></span>
+      <div slot="no-results">No Posts Yet!! :(</div></infinite-loading>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -73,5 +72,10 @@ export default defineComponent({
     justify-content: center;
     margin-bottom: 2rem;
     margin-top: 2rem;
+  }
+  .page {
+    background-color: white;
+    color: black;
+    font-size: 1.5em;
   }
 </style>

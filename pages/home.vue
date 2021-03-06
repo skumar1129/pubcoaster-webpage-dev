@@ -1,10 +1,13 @@
 <template>
-  <div>
-    <appbar></appbar>
-    <h1>Welcome to New App Name!</h1>
-    <h3>Check out the vibes of night venues and bars in your area</h3>
-    <img src="../assets/home_page.jpg" alt="Home Page IMG">
-  </div>
+  <v-app>
+    <appbar data-app :nav="false"></appbar>
+    <v-content data-app class="page">
+    <h1 class="heading">Welcome to New App Name!</h1>
+    <h3 class="heading">Check out the vibes of night venues and bars in your area</h3>
+    <v-spacer></v-spacer>
+    <img src="../assets/home_page.jpg" alt="Home Page IMG" height="100%" width="100%" class="image">
+    </v-content>
+  </v-app>
 </template>
 
 <script>
@@ -19,5 +22,18 @@ export default defineComponent({
 </script>
 
 <style>
+  .heading {
+    text-align: center;
+    padding: .15em;
+    justify-content: center;
+    color: black;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  .image {
+    border: 1em solid black;
+  }
+  .page {
+    background-color: white;
+  }
 
 </style>

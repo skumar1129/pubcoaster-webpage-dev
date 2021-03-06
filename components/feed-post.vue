@@ -1,6 +1,6 @@
 <template>
-    <v-container class="outer" @click="goToSinglePost">
-    <v-card elevation="6" outlined shaped class="inner">
+    <v-container class="outer" @click="goToSinglePost" data-app>
+    <v-card elevation="6" outlined shaped class="grey">
         <v-row>
             <v-col class="title">
                 <h1>{{bar}}</h1>
@@ -10,7 +10,7 @@
                 <h3>Rating: {{response['rating']}} / 10</h3>
             </v-col>
         </v-row>
-        <v-divider color="grey" class="divider"> </v-divider>
+        <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col align="center">
                 <h1>{{response['description']}}</h1>
@@ -22,7 +22,7 @@
                 <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img>
             </v-col>
         </v-row>
-        <v-divider color="grey" class="divider"> </v-divider>
+        <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col v-if="response['anonymous'] == false" class="middle">
                 <i>{{response['createdBy']}}</i>
@@ -44,7 +44,7 @@
                 <i>{{response['location']}}</i>
             </v-col>
         </v-row>
-        <v-divider class="divider" color="grey"></v-divider>
+        <v-divider class="divider" color="black"></v-divider>
         <v-row v-if="response['numComments'] == 0" class="num-comments">
             No comments yet
         </v-row>
@@ -113,6 +113,7 @@ export default defineComponent({
  .divider {
         margin-top: .75rem;
         margin-bottom: .75rem;
+        padding: .05em;
     }
     .title {
         margin: .5rem;
@@ -128,9 +129,6 @@ export default defineComponent({
     .outer {
         background-color: black;
         margin-bottom: 1rem;
-    }
-    .inner {
-        background-color: white;
     }
     .num-comments {
         margin: .2rem;
