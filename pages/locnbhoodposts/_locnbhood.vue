@@ -4,7 +4,7 @@
       <v-container grid-list data-app>
         <client-only placeholder="Loading....">
           <v-row class="title-button">
-             <h1>{{nbhood}} in {{location}}</h1>
+             <h1 class="header">{{nbhood}} in {{location}}</h1>
          </v-row>
           <v-col>
             <v-row v-for="(response, i) in responses" :key="i">
@@ -77,5 +77,8 @@ export default defineComponent({
     background-color: white;
     color: black;
     font-size: 1.5em;
+  }
+  .header {
+    font-family: fantasy;
   }
 </style>
