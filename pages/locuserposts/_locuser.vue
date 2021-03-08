@@ -1,6 +1,6 @@
 <template>
   <v-app class="page">
-    <appbar data-app :nav="false"></appbar>
+    <appbar data-app :nav="true"></appbar>
       <v-container grid-list data-app>
         <client-only placeholder="Loading....">
           <v-row class="title-button">
