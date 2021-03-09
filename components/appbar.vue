@@ -87,7 +87,7 @@
 
     </v-app-bar>
 
-    <navdrawer :location="$route.params.location" data-app v-if="nav"></navdrawer>
+    <navdrawer :location="location" data-app v-if="nav"></navdrawer>
   </div>
 </template>
 
@@ -101,6 +101,10 @@ export default defineComponent({
   props: {
     nav: {
       type: Boolean,
+      required: false
+    },
+    location: {
+      type: String,
       required: false
     }
   },

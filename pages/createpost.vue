@@ -5,6 +5,7 @@
     <v-form
       ref="form"
       lazy-validation
+      class="form"
     >
       <v-select
         v-model="location"
@@ -13,6 +14,7 @@
         label="Location*"
         required
         dense
+        color="black"
         class="field"
       ></v-select>
       <v-text-field
@@ -21,12 +23,14 @@
         :rules="[v => !!v || 'Bar is required']"
         required
         dense
+        color="black"
         class="field"
       ></v-text-field>
       <v-text-field
         v-model="neighborhood"
         label="Neighborhood"
         dense
+        color="black"
         class="field"
       ></v-text-field>
       <v-select
@@ -36,6 +40,7 @@
         label="Rating*"
         required
         dense
+        color="black"
         class="field"
       ></v-select>
       <v-textarea
@@ -44,26 +49,29 @@
         :rules="[v => !!v || 'Description is required']"
         required
         dense
+        color="black"
         class="field"
       ></v-textarea>
       <v-file-input
         label="Picture (optional)"
         prepend-icon="mdi-camera"
         class="field"
+        color="black"
       ></v-file-input>
       <v-checkbox
         v-model="anonymous"
         label="Make post anonymous?"
         class="field"
+        color="black"
       ></v-checkbox>
       <v-row class="btn-row">
-        <v-btn @click="cancel" class="ml-8 mt-5">
+        <v-btn @click="cancel" color="red" class="ml-8 mt-5">
           Cancel
         </v-btn>
-        <v-btn @click="clear" class="mt-5">
+        <v-btn @click="clear" color="red" class="mt-5">
           Clear
         </v-btn>
-        <v-btn @click="submit" class="mr-8 mt-5">
+        <v-btn @click="submit" color="red" class="mr-8 mt-5">
           Submit
         </v-btn>
       </v-row>
@@ -118,13 +126,14 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
   .btn-row {
     display: flex;
     justify-content: space-around;
   }
   .page {
     background-color: grey;
+    color: white;
     height: 100%;
     width: 100%;
     font-size: 1.5em;
@@ -135,5 +144,10 @@ export default defineComponent({
     font-weight: bold;
     font-size: 1em;
     margin-top: 1em;
+    color: black;
+  }
+  .form {
+    padding: 1em;
+    border: .375em solid black;
   }
 </style>

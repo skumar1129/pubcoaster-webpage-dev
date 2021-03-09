@@ -1,6 +1,6 @@
 <template>
   <v-app class="page">
-    <appbar data-app :nav="true"></appbar>
+    <appbar data-app :nav="true" :location="$route.params.location"></appbar>
       <v-container grid-list data-app>
         <v-row class="title-button">
           <h1 class="header">{{this.$route.params.location}}</h1>
