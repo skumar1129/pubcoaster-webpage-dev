@@ -148,6 +148,8 @@ export default defineComponent({
   }
   .form {
     padding: 1em;
-    border: .375em solid black;
+    border: .355em solid black;
+    margin-left: .5em;
+    margin-right: .5em;
   }
 </style>
