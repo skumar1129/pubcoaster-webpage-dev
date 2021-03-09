@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <appbar></appbar>
-    <v-main>
+  <v-app>
+    <appbar data-app :nav="false"></appbar>
+    <v-main class="page">
       <client-only placeholder="Loading...">
         <post :response="response" :currentUser="user"></post>
       </client-only>
     </v-main>
-  </div>
+  </v-app>
 </template>
 
 <script lang='ts'>
@@ -32,5 +32,9 @@ export default defineComponent({
 </script>
 
 <style>
+
+  .page {
+    background-color: white;
+  }
 
 </style>

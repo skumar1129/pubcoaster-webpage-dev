@@ -1,6 +1,6 @@
 <template>
-    <v-container class="outer" @click="goToSinglePost" v-if="!edit">
-      <v-card elevation="6" outlined shaped class="inner">
+    <v-container class="outer" @click="goToSinglePost" v-if="!edit" data-app>
+      <v-card elevation="6" outlined shaped color="grey">
         <v-row>
             <v-col class="title">
                 <h1>{{bar}}</h1>
@@ -20,7 +20,7 @@
                 <h3>Rating: {{response['rating']}} / 10</h3>
             </v-col>
         </v-row>
-        <v-divider color="grey" class="divider"> </v-divider>
+        <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col align="center">
                 <h1>{{response['description']}}</h1>
@@ -32,7 +32,7 @@
                 <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img>
             </v-col>
         </v-row>
-        <v-divider color="grey" class="divider"> </v-divider>
+        <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col class="middle">
                 <i>{{response['createdBy']}}</i>
@@ -54,7 +54,7 @@
                 <i>{{response['location']}}</i>
             </v-col>
         </v-row>
-        <v-divider class="divider" color="grey"></v-divider>
+        <v-divider class="divider" color="black"></v-divider>
         <v-row v-if="response['numComments'] == 0" class="num-comments">
             No comments yet
         </v-row>
@@ -71,7 +71,7 @@
       </v-card>
     </v-container>
     <v-container v-else class="outer">
-        <v-card elevation="6" outlined shaped class="inner">
+        <v-card elevation="6" outlined shaped color="grey">
             <v-row>
             <v-col class="title">
                 <v-text-field
@@ -81,6 +81,7 @@
                     clearable
                     dense
                     rounded
+                    outlined
                     :placeholder="bar"
                 ></v-text-field>
             </v-col>
@@ -91,7 +92,7 @@
                 large
                 outlined
                 rounded
-                color="primary"
+                color="error"
                 @click="cancelEdit"
                 >Cancel Edit</v-btn>
             </v-col>
@@ -112,7 +113,7 @@
                 <b> / 10 </b>
             </v-col>
         </v-row>
-        <v-divider color="grey" class="divider"> </v-divider>
+        <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col align="center">
                 <v-text-field
@@ -122,12 +123,13 @@
                     clearable
                     dense
                     rounded
+                    outlined
                     :placeholder="response['description']"
                 ></v-text-field>
             </v-col>
         </v-row>
         <!--TODO: add someway to edit the picture at a later point-->
-        <v-divider color="grey" class="divider"> </v-divider>
+        <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col align="left">
                 <!--TODO: should this be a button that says delete or just the icon-->
@@ -140,7 +142,7 @@
                 large
                 outlined
                 rounded
-                color="error"
+                color="primary"
                 class="title"
                 @click="saveEdits"
                 >Save Edits</v-btn>
@@ -154,6 +156,7 @@
                     clearable
                     dense
                     rounded
+                    outlined
                     class="neighborhood"
                     :placeholder="nbhood"
                 ></v-text-field><b>,  {{response['location']}}</b>
@@ -170,7 +173,7 @@
                     rounded
                     class="neighborhood"
                     :placeholder="response['neighborhood']"
-                ></v-text-field><b>,  {{response['location']}}</b>
+                ></v-text-field><b class="ml-4">  ,  {{response['location']}}</b>
                 </div>
             </v-col>
         </v-row>
@@ -264,6 +267,7 @@ export default defineComponent({
     .divider {
         margin-top: .75rem;
         margin-bottom: .75rem;
+        padding: .05em;
     }
     .title {
         margin: .5rem;
@@ -286,9 +290,6 @@ export default defineComponent({
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
-    .inner {
-        background-color: white;
-    }
     .comments {
         margin: .2rem;
         font-size: 1rem;
@@ -298,13 +299,16 @@ export default defineComponent({
     .selectRating {
         margin: .5rem;
         font-size: 1.35rem;
+        font-weight: bold;
     }
     .locationInput {
         margin: .6rem;
         font-size: 1.4rem;
+        font-weight: bold;
     }
     .neighborhood {
         width: 70%;
         display: inline-block;
+        font-weight: bold;
     }
 </style>

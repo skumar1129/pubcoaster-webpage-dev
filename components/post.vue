@@ -1,6 +1,6 @@
 <template>
-    <v-container class="outer">
-    <v-card elevation="6" outlined shaped class="inner">
+    <v-container class="outer" data-app>
+    <v-card elevation="6" outlined shaped color="grey">
         <v-row>
             <v-col class="title">
                 <h1>{{bar}}</h1>
@@ -10,7 +10,7 @@
                 <h3>Rating: {{response['rating']}} / 10</h3>
             </v-col>
         </v-row>
-        <v-divider color="grey" class="divider"> </v-divider>
+        <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col align="center">
                 <h1>{{response['description']}}</h1>
@@ -22,7 +22,7 @@
                 <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img>
             </v-col>
         </v-row>
-        <v-divider color="grey" class="divider"> </v-divider>
+        <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col v-if="response['anonymous'] == false" class="middle">
                 <i>{{response['createdBy']}}</i>
@@ -51,7 +51,7 @@
                 <i>{{response['location']}}</i>
             </v-col>
         </v-row>
-        <v-divider class="divider" color="grey"></v-divider>
+        <v-divider class="divider" color="black"></v-divider>
         <v-row>
         <v-col>
             <u><h3 class="title">Comments</h3></u>
@@ -66,10 +66,9 @@
                 <v-text-field
                     label="Comment Text"
                     v-model="editedComment"
-                    filled
-                    clearable
                     dense
                     rounded
+                    outlined
                     class="editingComment"
                     :placeholder="comment['text']"
                 ></v-text-field>
@@ -83,7 +82,7 @@
                 {{getMoment(comment['createdAt'])}}
                 </i>
                 <v-btn
-                    color="red"
+                    color="error"
                     outlined
                     rounded
                     v-if="editComment && comment['uuid']==uuidEdit"
@@ -93,16 +92,16 @@
                 Cancel
                 </v-btn>
                 <v-btn
-                    color="grey"
+                    color="white"
                     plain
-                    small
+                    medium
                     v-if="(currentUser == comment['createdBy'] && !editComment) || (currentUser == comment['createdBy'] && uuidEdit == comment['uuid'])"
                     @click="turnOnEditComment(comment['uuid'])"
                 >
                 Edit
                 </v-btn>
                 <v-btn
-                    color="blue"
+                    color="primary"
                     outlined
                     rounded
                     large
@@ -273,6 +272,7 @@ export default defineComponent({
     .divider {
         margin-top: .75rem;
         margin-bottom: .75rem;
+        padding: .05em;
     }
     .title {
         margin: .5rem;
@@ -295,11 +295,8 @@ export default defineComponent({
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
-    .inner {
-        background-color: white;
-    }
     .comments {
-        box-shadow: 0 0 3pt 2pt darkgrey;
+        box-shadow: 0 0 3pt 2pt black;
         margin: .2rem;
         font-size: 1rem;
     }

@@ -1,10 +1,9 @@
 <template>
-  <div>
-    <appbar></appbar>
-    <v-main>
-      <v-container grid-list>
+  <v-app class="page">
+    <appbar data-app :nav="false"></appbar>
+      <v-container grid-list data-app>
         <v-row class="title-button">
-          <h1>Posts for {{this.$route.params.user}}</h1>
+          <h1 class="header">Posts for {{this.$route.params.user}}</h1>
         </v-row>
         <v-col>
           <client-only placeholder="Loading....">
@@ -18,9 +17,10 @@
         v-if="responses.length"
         spinner="spiral"
         @infinite="infinteScroll"
-      ></infinite-loading>
-    </v-main>
-  </div>
+        data-app
+      ><span slot="no-more"></span>
+      <div slot="no-results">No Posts Yet!! :(</div></infinite-loading>
+  </v-app>
 </template>
 
 <script lang='ts'>
@@ -65,5 +65,13 @@ export default defineComponent({
     justify-content: center;
     margin-bottom: 2rem;
     margin-top: 2rem;
+  }
+  .page {
+    background-color: white;
+    color: black;
+    font-size: 1.5em;
+  }
+  .header {
+    font-family: fantasy;
   }
 </style>
