@@ -2,16 +2,20 @@
   <v-app class="page">
     <appbar :nav="true" :location="location" data-app></appbar>
       <v-container grid-list data-app>
-        <client-only placeholder="Loading....">
-          <v-row class="title-button">
+        <v-row class="title-button">
              <h1 class="header">{{nbhood}} in {{location}}</h1>
-         </v-row>
-          <v-col>
+        </v-row>
+        <v-row v-if="responses.length==0" class="titlearea">
+          <h2 class="mb-2"><i>No posts yet for {{nbhood}} :(</i></h2>
+          <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
+        </v-row>
+        <v-col v-else>
+          <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <feedpost :response="response"></feedpost>
             </v-row>
-          </v-col>
-        </client-only>
+          </client-only>
+        </v-col>
       </v-container>
       <infinite-loading
         v-if="responses.length"
@@ -19,7 +23,7 @@
         @infinite="infinteScroll"
         data-app
       ><span slot="no-more"></span>
-      <div slot="no-results">No Posts Yet!! :(</div></infinite-loading>
+     </infinite-loading>
   </v-app>
 </template>
 
@@ -80,5 +84,10 @@ export default defineComponent({
   }
   .header {
     font-family: fantasy;
+    text-decoration: underline;
+  }
+  .titlearea {
+    justify-content: center;
+    font-family: "Lucida Console", "Courier New", monospace;;
   }
 </style>
