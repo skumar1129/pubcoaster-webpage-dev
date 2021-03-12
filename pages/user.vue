@@ -7,7 +7,7 @@
         </v-row>
         <v-row v-if="responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No posts yet :(</i></h2>
-          <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
+          <img src="../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
         <v-col v-else>
           <client-only placeholder="Loading....">
