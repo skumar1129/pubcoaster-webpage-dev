@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <appbar data-app :nav="false"></appbar>
     <div class="page">
     <h1 class="text-center">Create New Post</h1>
     <v-form

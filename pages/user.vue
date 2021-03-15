@@ -5,7 +5,11 @@
         <v-row class="title-button">
           <h1>My Posts</h1>
         </v-row>
-        <v-col>
+        <v-row v-if="responses.length==0" class="titlearea">
+          <h2 class="mb-2"><i>No posts yet :(</i></h2>
+          <img src="../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
+        </v-row>
+        <v-col v-else>
           <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <editpost :response="response"></editpost>
@@ -19,7 +23,7 @@
         @infinite="infinteScroll"
         data-app
       ><span slot="no-more"></span>
-      <div slot="no-results">No Posts Yet!! :(</div></infinite-loading>
+      </infinite-loading>
   </v-app>
 </template>
 
@@ -72,5 +76,9 @@ export default defineComponent({
     background-color: white;
     color: black;
     font-size: 1.5em;
+  }
+  .titlearea {
+    justify-content: center;
+    font-family: "Lucida Console", "Courier New", monospace;;
   }
 </style>

@@ -5,7 +5,11 @@
         <v-row class="title-button">
           <h1 class="header">Posts for {{this.$route.params.user}}</h1>
         </v-row>
-        <v-col>
+        <v-row v-if="responses.length==0" class="titlearea">
+          <h2 class="mb-2"><i>No posts yet for {{this.$route.params.user}} :(</i></h2>
+          <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
+        </v-row>
+        <v-col v-else>
           <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <feedpost :response="response"></feedpost>
@@ -19,7 +23,7 @@
         @infinite="infinteScroll"
         data-app
       ><span slot="no-more"></span>
-      <div slot="no-results">No Posts Yet!! :(</div></infinite-loading>
+      </infinite-loading>
   </v-app>
 </template>
 
@@ -73,5 +77,10 @@ export default defineComponent({
   }
   .header {
     font-family: fantasy;
+    text-decoration: underline;
+  }
+  .titlearea {
+    justify-content: center;
+    font-family: "Lucida Console", "Courier New", monospace;;
   }
 </style>
