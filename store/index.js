@@ -1,11 +1,7 @@
 import Vuex from 'vuex';
-// import createPersistedState from 'vuex-persistedstate';
 
 const createStore = () => {
   return new Vuex.Store({
-    // plugins: [
-    //   createPersistedState()
-    // ],
     state: {
       user: '',
     },
@@ -14,11 +10,6 @@ const createStore = () => {
       user(state) {
         return state.user;
       },
-
-      // TODO: may not need?
-      // isAuthenticated(state) {
-      //   return !!state.user
-      // },
 
       isEmailVerified(state) {
         return state.user.emailVerified;

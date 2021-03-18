@@ -14,7 +14,6 @@ export default defineComponent ({
     });
     onMounted(() => {
       if (!user.value) {
-        console.log('yo');
         $nuxt.$router.push('/signin');
       }
       else if (!user.value.emailVerified) {

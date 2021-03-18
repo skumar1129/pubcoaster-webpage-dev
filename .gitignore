@@ -90,3 +90,6 @@ sw.*
 *.swp
 
 firebaseconfig.js
+
+static
+
