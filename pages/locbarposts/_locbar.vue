@@ -37,6 +37,7 @@ import { ref, defineComponent} from '@nuxtjs/composition-api';
 export default defineComponent({
   components: { feedpost, appbar, navdrawer },
   name: "LocBarPosts",
+  middleware: 'authenticate',
   setup() {
     const responses = ref([]);
     const bar = ref('');

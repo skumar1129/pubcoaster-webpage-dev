@@ -82,10 +82,11 @@
 </template>
 
 <script lang='ts'>
-import { ref, defineComponent } from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
 
 export default defineComponent({
   name: "CreatePost",
+  middleware: 'authenticate',
   setup() {
     const locations = ['Chicago', 'Columbus', 'Denver',
     'New York', 'San Francisco', 'Orlando', 'Phoenix',
@@ -98,6 +99,9 @@ export default defineComponent({
     const neighborhood = ref('');
     const rating = ref();
     const description = ref('');
+    const user = computed(function(this: any) {
+      return this.$store.state.user.displayName;
+    });
     function cancel(this: any) {
       this.$router.push('/home');
     }
@@ -107,7 +111,7 @@ export default defineComponent({
     async function submit(this: any) {
       // TODO: Update username from local storage
       let reqBody = {
-        username: 'helga',
+        username: user.value,
         anonymous: anonymous.value,
         picLink: '',
         bar: bar.value,

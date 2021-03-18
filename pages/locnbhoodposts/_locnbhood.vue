@@ -37,6 +37,7 @@ import * as _ from 'lodash';
 export default defineComponent({
   components: { feedpost, appbar, navdrawer },
   name: "LocNbhoodPosts",
+  middleware: 'authenticate',
   setup() {
     let responses = ref([]);
     const nbhood = ref('');

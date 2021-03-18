@@ -30,7 +30,6 @@
 
 <script lang='ts'>
 import { ref, defineComponent} from '@nuxtjs/composition-api';
-// import firebaseApp from '~/plugins/firebase';
 export default defineComponent({
   name: 'AddUserInfo',
   setup() {
@@ -42,23 +41,22 @@ export default defineComponent({
     }
     async function submit(this: any) {
       try {
-        // let email = firebaseApp.auth().currentUser?.email;
-        let email = '';
+        let email = this.$store.state.user.email;
         let fullName = `${fName} ${lName}`;
         let reqBody = {
           username: username.value,
           email: email,
-          firstName: fName,
-          lastName: lName,
+          firstName: fName.value,
+          lastName: lName.value,
           fullName: fullName,
           picLink: ''
         };
         await this.$axios.$post('http://localhost:8080/user', reqBody);
+        await this.$store.dispatch('setUserName', { displayName: username.value });
+        this.$router.push('/home');
       } catch (e) {
         console.log(e);
       }
-      // await firebaseApp.auth().currentUser?.updateProfile({ displayName: username.value });
-      this.$router.push('/home');
     }
     return { username, fName, lName, signIn, submit };
   }

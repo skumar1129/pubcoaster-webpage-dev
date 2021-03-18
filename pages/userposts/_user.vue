@@ -36,6 +36,7 @@ import * as _ from 'lodash';
 export default defineComponent({
   name: 'UserPosts',
   components: { appbar, feedpost },
+  middleware: 'authenticate',
   setup() {
      const responses = ref([]);
     const offset = ref(1);

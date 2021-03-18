@@ -37,17 +37,11 @@ export default defineComponent({
     }
     async function signUp(this: any) {
       if (password.value === confirm.value) {
-        try {
-          // let userCredentials = await firebaseApp.auth().createUserWithEmailAndPassword(email.value, password.value);
-          // if (userCredentials.user) {
-          //   console.log(userCredentials.user);
-          //   await userCredentials.user?.sendEmailVerification();
-          //   console.log('here');
-          // }
-        } catch (e) {
-          console.log(e);
-        }
-        this.$router.push('/verifyemail');
+        this.$store.dispatch('signUp', { email: email.value, password: password.value })
+          .then(() => {
+            this.$router.push('/verifyemail');
+          })
+          .catch((e: any )=> console.log(e));
       } else {
         console.log('no matchy');
       }

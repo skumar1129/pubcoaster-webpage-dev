@@ -1,4 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
+import { firebaseConfig } from './config/firebaseconfig';
 
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -15,15 +16,21 @@ export default {
     ]
   },
   // TODO: change to server for build
-  target: 'static',
+  target: 'server',
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
   ],
 
+  router: {
+    middlewWare: {
+      ssr: false
+    },
+  },
+
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    { src: '~/plugins/infiniteLoading', ssr: false }
+    { src: '~/plugins/infiniteLoading', ssr: false },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -41,8 +48,42 @@ export default {
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',[
+      '@nuxtjs/firebase', {
+        config: firebaseConfig,
+        services: {
+          auth: {
+            ssr: true
+          }
+        },
+        // onFirebaseHosting: true
+      }
+    ]
   ],
+
+  auth: {
+    persistence: 'local', // default
+    // initialize: {
+    //   onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+    //   onAuthStateChangedAction: 'onAuthStateChangedAction',
+    //   subscribeManually: false
+    // },
+    ssr: true, // default
+    emulatorPort: 3000,
+    emulatorHost: 'http://localhost',
+  },
+
+  pwa: {
+    meta: false,
+    icon: false,
+
+    workbox: {
+      importScripts: [
+        '/firebase-auth-sw.js'
+      ],
+      dev: process.env.NODE_ENV === 'development',
+    }
+  },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {

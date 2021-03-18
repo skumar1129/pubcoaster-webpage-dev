@@ -36,6 +36,7 @@ import * as _ from 'lodash';
 export default defineComponent({
   name: 'UserFeed',
   components: { editpost, appbar },
+  middleware: 'authenticate',
   setup() {
     const responses = ref([]);
     const offset = ref(1);
@@ -57,7 +58,8 @@ export default defineComponent({
   },
   async fetch() {
     // TODO: Make username come from local storage
-    this.$axios.setHeader('username', 'helga');
+    const user = this.$store.state.user.displayName;
+    this.$axios.setHeader('username', user);
     let data = await this.$axios.$get('http://localhost:5000/mypost/user');
     this.responses = _.union(this.responses, data);
   },

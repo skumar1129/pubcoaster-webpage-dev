@@ -14,7 +14,6 @@
 
 <script lang='ts'>
 import { ref, defineComponent} from '@nuxtjs/composition-api';
-// import firebaseApp from '~/plugins/firebase';
 export default defineComponent({
   name: 'ForgotPassword',
   setup() {
@@ -24,7 +23,7 @@ export default defineComponent({
     }
     async function sendEmail(this: any) {
       try {
-        // await firebaseApp.auth().currentUser?.sendEmailVerification();
+        await this.$fire.auth.sendPasswordResetEmail(email.value);
       } catch (e) {
         console.log(e);
       }

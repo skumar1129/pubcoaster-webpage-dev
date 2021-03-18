@@ -24,7 +24,6 @@
 
 <script lang='ts'>
 import { ref, defineComponent} from '@nuxtjs/composition-api';
-// import firebaseApp from '~/plugins/firebase';
 export default defineComponent({
   name: 'SignIn',
   setup() {
@@ -38,7 +37,6 @@ export default defineComponent({
     }
     async function signIn(this: any) {
       try {
-      //  let userCredentials = await firebaseApp.auth().signInWithEmailAndPassword(email.value, password.value);
        this.$store.dispatch('signIn', { email: email.value, password: password.value })
        .then(() => {
          const user = this.$store.getters.user;
