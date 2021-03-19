@@ -1,23 +1,24 @@
 <template>
   <v-app>
     <appbar data-app :nav="false"></appbar>
-    <v-content data-app class="page">
+    <v-main data-app class="page">
     <h1 class="heading">Welcome to New App Name!</h1>
     <h3 class="heading">Check out the vibes of night venues and bars in your area</h3>
     <v-spacer></v-spacer>
     <img src="../assets/home_page.jpg" alt="Home Page IMG" height="100%" width="100%" class="image">
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import { ref, defineComponent} from '@nuxtjs/composition-api';
+import { ref, defineComponent, computed, onMounted} from '@nuxtjs/composition-api';
 import appbar from '~/components/appbar.vue';
 
 
 export default defineComponent({
   components: { appbar },
-  name: "Home"
+  name: "Home",
+  middleware: 'authenticate'
 });
 </script>
 

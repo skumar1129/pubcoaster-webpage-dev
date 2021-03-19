@@ -77,6 +77,7 @@
           <v-btn icon
             v-bind="attrs"
             v-on="on"
+            @click="logOut"
           >
             <v-icon color="white">mdi-export</v-icon>
           </v-btn>
@@ -127,12 +128,12 @@ export default defineComponent({
     function searchUser(this: any) {
       this.$router.push(`/userposts/${user.value}`);
     }
-    // TODO: implement after we have user profiles and authenication
-    // function logOut(){
+    async function logOut(this: any){
+      await this.$store.dispatch('signOut');
+      this.$router.push('/signin');
+    }
 
-    // }
-
-    return { user, searchUser, goToUserPage, goHome, goToLocationPage, locations, goToCreatePost }
+    return { user, searchUser, goToUserPage, goHome, goToLocationPage, locations, goToCreatePost, logOut }
   }
 });
 </script>

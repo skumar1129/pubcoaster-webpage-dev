@@ -10,16 +10,19 @@
 </template>
 
 <script lang='ts'>
-import { ref, defineComponent } from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
 import appbar from '~/components/appbar.vue';
 import post from '~/components/post.vue';
 
 export default defineComponent({
   components: { post, appbar },
   name: "LocationPosts",
+  middleware: 'authenticate',
   setup() {
     const response = ref({});
-    const user = 'helga'
+    const user = computed(function(this: any){
+      return this.$store.state.user.displayName;
+    });
     return { response, user };
   },
   async fetch() {

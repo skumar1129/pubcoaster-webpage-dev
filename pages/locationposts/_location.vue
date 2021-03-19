@@ -36,6 +36,7 @@ import { ref, defineComponent} from '@nuxtjs/composition-api';
 export default defineComponent({
   components: { feedpost, appbar },
   name: "LocationPosts",
+  middleware: 'authenticate',
   setup() {
     const responses = ref([]);
     const offset = ref(1);
