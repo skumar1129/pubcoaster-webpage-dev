@@ -2,7 +2,7 @@
   <v-app>
     <appbar data-app :nav="false"></appbar>
     <div class="page">
-    <h1 class="text-center">Create New Post</h1>
+    <h1 class="text-center mt-1 mb-1">Create New Post</h1>
     <v-form
       ref="form"
       lazy-validation
@@ -15,7 +15,7 @@
         label="Location*"
         required
         dense
-        color="black"
+        color="white"
         class="field"
       ></v-select>
       <v-text-field
@@ -24,14 +24,16 @@
         :rules="[v => !!v || 'Bar is required']"
         required
         dense
-        color="black"
+        @keypress.enter="submit"
+        color="white"
         class="field"
       ></v-text-field>
       <v-text-field
         v-model="neighborhood"
         label="Neighborhood"
         dense
-        color="black"
+        color="white"
+        @keypress.enter="submit"
         class="field"
       ></v-text-field>
       <v-select
@@ -41,7 +43,7 @@
         label="Rating*"
         required
         dense
-        color="black"
+        color="white"
         class="field"
       ></v-select>
       <v-textarea
@@ -50,20 +52,20 @@
         :rules="[v => !!v || 'Description is required']"
         required
         dense
-        color="black"
+        @keypress.enter="submit"
+        color="white"
         class="field"
       ></v-textarea>
       <v-file-input
         label="Picture (optional)"
         prepend-icon="mdi-camera"
         class="field"
-        color="black"
+        color="white"
       ></v-file-input>
       <v-checkbox
         v-model="anonymous"
         label="Make post anonymous?"
         class="field"
-        color="black"
       ></v-checkbox>
       <v-row class="btn-row">
         <v-btn @click="cancel" color="red" class="ml-8 mt-5">
@@ -109,19 +111,23 @@ export default defineComponent({
       this.$refs.form.reset();
     }
     async function submit(this: any) {
-      // TODO: Update username from local storage
-      let reqBody = {
-        username: user.value,
-        anonymous: anonymous.value,
-        picLink: '',
-        bar: bar.value,
-        description: description.value,
-        rating: rating.value,
-        location: location.value,
-        neighborhood: neighborhood.value
-      };
-      await this.$axios.$post('http://localhost:5000/post', reqBody);
-      this.$router.push(`/locationposts/${location.value}`);
+      if (bar.value == null || bar.value == '' || location.value == null || location.value == '' || description.value == null || description.value == '' || rating.value == null) {
+        alert('Please fill out all required info before submitting the form.')
+      } else {
+        // TODO: Update username from local storage
+        let reqBody = {
+          username: user.value,
+          anonymous: anonymous.value,
+          picLink: '',
+          bar: bar.value,
+          description: description.value,
+          rating: rating.value,
+          location: location.value,
+          neighborhood: neighborhood.value
+        };
+        await this.$axios.$post('http://localhost:5000/post', reqBody);
+        this.$router.push(`/locationposts/${location.value}`);
+      }
     }
 
     return { location, bar, neighborhood, picture,
@@ -141,7 +147,7 @@ export default defineComponent({
     color: white;
     height: 100%;
     width: 100%;
-    font-size: 1.5em;
+    font-size: 1.1em;
   }
   .field {
     padding-left: 5em;

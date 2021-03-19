@@ -60,8 +60,11 @@
         <v-row v-if="response['comments'] == 0" class="comments">
             No comments yet
         </v-row>
-        <v-row v-else class="comments" v-for="(comment, i) in response['comments']" :key="i">
-            <v-col v-if="editComment && comment['uuid']==uuidEdit">
+        <v-list v-else class="comments">
+            <template v-for="(comment, i) in response['comments']" class="template">
+            <v-list-item :key=i class="comment">
+            <v-row :key=i>
+            <v-col v-if="editComment && comment['uuid']==uuidEdit" :key=i>
                 <b class="editingComment">{{ comment['createdBy'] }}:</b>
                 <v-text-field
                     label="Comment Text"
@@ -73,11 +76,11 @@
                     :placeholder="comment['text']"
                 ></v-text-field>
             </v-col>
-            <v-col v-else>
+            <v-col v-else :key=i>
                 <b>{{ comment['createdBy'] }}:</b> {{ comment['text'] }}
             </v-col>
-            <v-spacer> </v-spacer>
-            <v-col align="right">
+            <v-spacer :key=i> </v-spacer>
+            <v-col align="right" :key=i>
                 <i v-if="!editComment || comment['uuid']!=uuidEdit">
                 {{getMoment(comment['createdAt'])}}
                 </i>
@@ -113,8 +116,11 @@
                 <v-btn v-if="currentUser == comment['createdBy']" @click="deleteComment(comment['uuid'])" icon small>
                 <v-icon>mdi-delete</v-icon>
                 </v-btn>
-            </v-col>
-        </v-row>
+                </v-col>
+                </v-row>
+                </v-list-item>
+            </template>
+        </v-list>
         <v-row>
         <v-col>
             <div>
@@ -286,8 +292,16 @@ export default defineComponent({
         margin-bottom: 1rem;
     }
     .comments {
-        box-shadow: 0 0 3pt 2pt black;
         margin: .2rem;
+        height: 12em;
+        overflow-y: auto;
+        width: 100%; 
+        background-color: grey;
+        border: .3em solid black;
+    }
+    .comment {
+        background-color: grey;
+        box-shadow: 0 0 3pt 2pt black;
         font-size: 1rem;
     }
     .editingComment {
@@ -295,5 +309,8 @@ export default defineComponent({
         height: 1rem;
         font-size: 1.3rem;
         margin: .4rem;
+    }
+    .template {
+        background-color: grey;
     }
 </style>
