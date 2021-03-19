@@ -72,19 +72,25 @@ export default defineComponent({
         this.snackFail = true;
       } else {
         if (password.value === confirm.value) {
-          this.$store.dispatch('signUp', { email: email.value, password: password.value })
-            .then(() => {
-              this.snackText = 'Successfully signed up!';
-              this.snackSuccess = true;
-              this.$router.push('/verifyemail');
-            })
-            .catch((e: any )=> {
-              this.snackText = 'Error siging up. Please check your network connection.';
-              this.snackFail = true;
-              console.log(e)
-            });
+          try {
+            this.$store.dispatch('signUp', { email: email.value, password: password.value })
+              .then(() => {
+                this.snackText = 'Successfully signed up!';
+                this.snackSuccess = true;
+                this.$router.push('/verifyemail');
+              })
+              .catch((e: Error )=> {
+                this.snackText = e.message;
+                this.snackFail = true;
+                console.log(e);
+              });
+          } catch (e) {
+            this.snackText = 'Error siging up: please check your network connection.';
+            this.snackFail = true;
+            console.log(e);
+          }
         } else {
-           this.snackText = 'Error siging up: passwords do not match. Please try again.';
+          this.snackText = 'Error siging up: passwords do not match. Please try again.';
           this.snackFail = true;
           console.log('no matchy');
         }

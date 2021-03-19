@@ -77,19 +77,20 @@ export default defineComponent({
           }
           else {
              this.snackText = 'Successfully signed in!';
-          this.snackSuccess = true;
+            this.snackSuccess = true;
             this.$router.push('/home');
           }
         })
         .catch((e: Error) => {
-           this.snackText = 'Error: could not sign in. Please check your network connection.';
+          //this one takes care of Firebase auth errors
+          this.snackText = e.message;
           this.snackFail = true;
-          console.log(e)
+          console.log(e.message);
         });
         } catch (e) {
-           this.snackText = 'Error: could not sign in. Please check your login information.';
+          //this one takes care of all other errors
+           this.snackText = 'Error: could not sign in. Please check your network connection';
           this.snackFail = true;
-          console.log(e);
         }
       }
     }
