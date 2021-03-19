@@ -38,6 +38,16 @@
         <v-btn @click="submit" color="red">Submit</v-btn>
       </v-row>
     </v-form>
+    <v-snackbar multi-line v-model="snackFail" color="red">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
+    <v-snackbar multi-line v-model="snackSuccess" color="green">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -50,12 +60,17 @@ export default defineComponent({
     const username = ref('');
     const fName = ref('');
     const lName = ref('');
+    const snackFail = ref(false);
+    const snackText = ref('');
+    const snackSuccess = ref(false);
+
     function signIn(this: any) {
       this.$router.push('/signin');
     }
     async function submit(this: any) {
       if (fName == null || fName.value == '' || lName == null || lName.value == '' || username == null || username.value == '') {
-        alert('Please fill out all required fields before submitting the form.');
+        this.snackText = 'Please fill out all required fields before submitting the form.';
+        this.snackFail = true;
       } else {
         try {
           let email = this.$store.state.user.email;
@@ -70,13 +85,18 @@ export default defineComponent({
           };
           await this.$axios.$post('http://localhost:8080/user', reqBody);
           await this.$store.dispatch('setUserName', { displayName: username.value });
+          this.snackText = 'Successfully created profile!';
+          this.snackSuccess = true;
+          //TODO: do I put a wait call here?
           this.$router.push('/home');
         } catch (e) {
+          this.snackText = 'Error: could not create user. Check network connection.';
+          this.snackFail = true;
           console.log(e);
         }
       }
     }
-    return { username, fName, lName, signIn, submit };
+    return { username, fName, lName, signIn, submit, snackFail, snackText, snackSuccess };
   }
 });
 </script>
@@ -111,5 +131,13 @@ export default defineComponent({
     border: .355em solid black;
     margin-left: .5em;
     margin-right: .5em;
+  }
+  .snack {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+    font-style: italic;
   }
 </style>

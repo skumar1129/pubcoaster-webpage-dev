@@ -37,6 +37,16 @@
       </div>
     </v-form>
     <img src="../assets/sign_up.jpg" alt="Sign Up IMG" height="100%" width="100%" class="image">
+     <v-snackbar multi-line v-model="snackFail" color="red">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
+    <v-snackbar multi-line v-model="snackSuccess" color="green">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -50,25 +60,37 @@ export default defineComponent({
     const email = ref('');
     const password = ref('');
     const confirm = ref('');
+    const snackFail = ref(false);
+    const snackText = ref('');
+    const snackSuccess = ref(false);
     function signIn(this: any) {
       this.$router.push('/signin');
     }
     async function signUp(this: any) {
       if (email == null || email.value == '' || password == null || password.value == '') {
-        alert('Please fill out all required fields before signing up.')
+        this.snackText = 'Please fill out all required fields before submitting the form.';
+        this.snackFail = true;
       } else {
         if (password.value === confirm.value) {
           this.$store.dispatch('signUp', { email: email.value, password: password.value })
             .then(() => {
+              this.snackText = 'Successfully signed up!';
+              this.snackSuccess = true;
               this.$router.push('/verifyemail');
             })
-            .catch((e: any )=> console.log(e));
+            .catch((e: any )=> {
+              this.snackText = 'Error siging up. Please check your network connection.';
+              this.snackFail = true;
+              console.log(e)
+            });
         } else {
+           this.snackText = 'Error siging up: passwords do not match. Please try again.';
+          this.snackFail = true;
           console.log('no matchy');
         }
       }
     }
-    return { email, password, confirm, signIn, signUp };
+    return { email, password, confirm, signIn, signUp, snackFail, snackText, snackSuccess };
   }
 });
 </script>
@@ -102,5 +124,13 @@ export default defineComponent({
     text-align: center;
     margin-top: .1em;
     margin-bottom: .8em;
+  }
+  .snack {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+    font-style: italic;
   }
 </style>
