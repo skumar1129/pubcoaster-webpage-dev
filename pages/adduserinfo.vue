@@ -1,30 +1,44 @@
 <template>
   <v-app>
-    <h1>Hold up, fill out a User Profile</h1>
-    <v-form>
+    <v-main data-app class="page">
+    <h1 class="heading">Hold up, fill out a User Profile</h1>
+    <v-form class="form">
       <v-text-field
         v-model="username"
         label="Username*"
+        color="white"
+        clearable
+        class="field"
+        @keypress.enter="submit"
       ></v-text-field>
       <v-text-field
         v-model="fName"
         label="First Name*"
+        color="white"
+        clearable
+        class="field"
+        @keypress.enter="submit"
       ></v-text-field>
       <v-text-field
         v-model="lName"
         label="Last Name*"
+        color="white"
+        clearable
+        class="field"
+        @keypress.enter="submit"
       ></v-text-field>
       <v-file-input
         label="Profile Picture Picture (optional)"
         prepend-icon="mdi-camera"
         class="field"
-        color="black"
+        color="white"
       ></v-file-input>
-      <v-row>
+      <v-row class="btn-row">
         <v-btn @click="signIn" color="red">Back to Sign In</v-btn>
         <v-btn @click="submit" color="red">Submit</v-btn>
       </v-row>
     </v-form>
+    </v-main>
   </v-app>
 </template>
 
@@ -40,22 +54,26 @@ export default defineComponent({
       this.$router.push('/signin');
     }
     async function submit(this: any) {
-      try {
-        let email = this.$store.state.user.email;
-        let fullName = `${fName} ${lName}`;
-        let reqBody = {
-          username: username.value,
-          email: email,
-          firstName: fName.value,
-          lastName: lName.value,
-          fullName: fullName,
-          picLink: ''
-        };
-        await this.$axios.$post('http://localhost:8080/user', reqBody);
-        await this.$store.dispatch('setUserName', { displayName: username.value });
-        this.$router.push('/home');
-      } catch (e) {
-        console.log(e);
+      if (fName == null || fName.value == '' || lName == null || lName.value == '' || username == null || username.value == '') {
+        alert('Please fill out all required fields before submitting the form.');
+      } else {
+        try {
+          let email = this.$store.state.user.email;
+          let fullName = `${fName} ${lName}`;
+          let reqBody = {
+            username: username.value,
+            email: email,
+            firstName: fName.value,
+            lastName: lName.value,
+            fullName: fullName,
+            picLink: ''
+          };
+          await this.$axios.$post('http://localhost:8080/user', reqBody);
+          await this.$store.dispatch('setUserName', { displayName: username.value });
+          this.$router.push('/home');
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
     return { username, fName, lName, signIn, submit };
@@ -64,4 +82,34 @@ export default defineComponent({
 </script>
 
 <style>
+  .btn-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: .2em;
+    margin-bottom: 1em;
+  }
+  .heading {
+    text-align: center;
+    padding: .15em;
+    justify-content: center;
+    color: white;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  .page {
+    background-color: grey;
+    color: white;
+    font-size: 1.5em;
+  }
+  .field {
+    font-weight: bold;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .form {
+    padding: 1em;
+    border: .355em solid black;
+    margin-left: .5em;
+    margin-right: .5em;
+  }
 </style>

@@ -1,24 +1,36 @@
 <template>
   <v-app>
-    <h1>Welcome to Knew Barz!</h1>
-    <h3>Sign in or sign up and start posting!</h3>
-    <v-btn @click="signUp" color="red">Go to Sign Up Page</v-btn>
+    <v-main data-app class="page">
+      <h1 class="heading">Welcome to Knew Barz!</h1>
+      <h3 class="heading">Sign in or sign up and start posting!</h3>
+      <div class="sign-up">
+        <v-btn @click="signUp" color="red" class="mt-3">Go to Sign Up Page</v-btn>
+      </div>
     <v-form>
       <v-text-field
         v-model="email"
         label="Email"
+        class="field"
+        clearable
+        color="white"
+        @keypress.enter="signIn"
       ></v-text-field>
       <v-text-field
         v-model="password"
         label="Password"
         type="password"
+        class="field"
+        clearable
+        @keypress.enter="signIn"
+        color="white"
       ></v-text-field>
-      <v-row>
-        <v-btn @click="forgotPassword" color="red">Forgot Password</v-btn>
-        <v-btn @click="signIn" color="red">Sign In</v-btn>
+      <v-row class="btn-row">
+        <v-btn @click="forgotPassword" color="red" class="ml-10">Forgot Password</v-btn>
+        <v-btn @click="signIn" color="red" class="mr-10">Sign In</v-btn>
       </v-row>
     </v-form>
-    <img src="../assets/sign_in.jpg" alt="Sign In Page IMG">
+    <img src="../assets/sign_in.jpg" alt="Sign In Page IMG" height="100%" width="100%" class="image">
+    </v-main>
   </v-app>
 </template>
 
@@ -36,23 +48,27 @@ export default defineComponent({
       this.$router.push('/signup');
     }
     async function signIn(this: any) {
-      try {
-       this.$store.dispatch('signIn', { email: email.value, password: password.value })
-       .then(() => {
-         const user = this.$store.getters.user;
-         if (!user.emailVerified) {
-           this.$router.push('/verifyemail');
-         }
-         else if (!user.displayName) {
-           this.$router.push('/adduserinfo');
-         }
-         else {
-           this.$router.push('/home');
-         }
-       })
-       .catch((e: Error) => console.log(e));
-      } catch (e) {
-        console.log(e);
+      if (email == null || email.value == '' || password == null || password.value == '') {
+        alert('Please fill out all required fields before signing in.')
+      } else {
+        try {
+        this.$store.dispatch('signIn', { email: email.value, password: password.value })
+        .then(() => {
+          const user = this.$store.getters.user;
+          if (!user.emailVerified) {
+            this.$router.push('/verifyemail');
+          }
+          else if (!user.displayName) {
+            this.$router.push('/adduserinfo');
+          }
+          else {
+            this.$router.push('/home');
+          }
+        })
+        .catch((e: Error) => console.log(e));
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
     return { email, password, forgotPassword, signUp, signIn };
@@ -61,4 +77,33 @@ export default defineComponent({
 </script>
 
 <style>
+  .btn-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: .2em;
+    margin-bottom: 1em;
+  }
+  .heading {
+    text-align: center;
+    padding: .15em;
+    justify-content: center;
+    color: white;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  .page {
+    background-color: grey;
+  }
+  .field {
+    font-weight: bold;
+    width: 65%;
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .sign-up {
+    text-align: center;
+  }
+  .image {
+    border: 1em solid black;
+  }
 </style>
