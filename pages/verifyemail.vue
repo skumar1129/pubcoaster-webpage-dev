@@ -9,6 +9,16 @@
         <v-btn @click="goToSignUp" color="red" rounded class="mr-12">Go back to sign up</v-btn>
       </v-row>
     </v-form>
+     <v-snackbar multi-line v-model="snackFail" color="red">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
+    <v-snackbar multi-line v-model="snackSuccess" color="green">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -18,6 +28,9 @@ import { ref, defineComponent} from '@nuxtjs/composition-api';
 export default defineComponent({
   name: 'VerifyEmail',
   setup() {
+    const snackFail = ref(false);
+    const snackText = ref('');
+    const snackSuccess = ref(false);
     function goToSignUp(this: any) {
       this.$router.push('/signup');
     }
@@ -28,10 +41,12 @@ export default defineComponent({
       try {
         await this.$fire.auth.currentUser.sendEmailVerification();
       } catch (e) {
+         this.snackText = 'Error: could not resend email verification. Please check your network connection.';
+        this.snackFail = true;
         console.log(e);
       }
     }
-    return { goToSignUp, goToSignIn, resendEmail };
+    return { goToSignUp, goToSignIn, resendEmail, snackFail, snackText, snackSuccess };
   }
 });
 </script>
@@ -64,5 +79,13 @@ export default defineComponent({
     font-weight: bold;
     margin-left: auto;
     margin-right: auto;
+  }
+  .snack {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+    font-style: italic;
   }
 </style>
