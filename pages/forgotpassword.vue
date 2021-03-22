@@ -52,7 +52,6 @@ export default defineComponent({
         } catch (e) {
           this.snackText = 'Error sending email verfication. Please check your network connection.';
           this.snackFail = true;
-          console.log(e);
         }
       }
     }

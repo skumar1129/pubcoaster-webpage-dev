@@ -60,11 +60,10 @@ export default defineComponent({
         } else {
           $state.loaded();
           $state.complete();
-        } 
+        }
       } catch (e) {
         this.snackText = 'Error: could not retrieve posts';
         this.snackFail = true;
-        console.log(e);
       }
     }
     return { responses, goToCreatePost, infinteScroll, snackText, snackFail };
@@ -76,7 +75,6 @@ export default defineComponent({
     } catch (e) {
        this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
-      console.log(e);
     }
   },
   fetchOnServer: false

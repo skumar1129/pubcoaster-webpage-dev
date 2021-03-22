@@ -16,10 +16,9 @@
                 <h1>{{response['description']}}</h1>
             </v-col>
         </v-row>
-        <v-row v-if="response['picLink']">
+        <v-row v-if="response.picLink">
             <v-col align="center">
-                <!--eventually replace src with response['picLink']-->
-                <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img>
+                <v-img :src="response.picLink"></v-img>
             </v-col>
         </v-row>
         <v-divider color="black" class="divider"> </v-divider>
@@ -135,7 +134,7 @@
 
 
 <script lang='ts'>
-import { ref, computed, defineComponent} from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent, onMounted} from '@nuxtjs/composition-api';
 import moment from 'moment';
 
 export default defineComponent({
@@ -151,6 +150,11 @@ export default defineComponent({
     }
   },
   setup(props) {
+    // onMounted(() => {
+    //   if (document.getElementById('pic')) {
+    //     document.getElementById('pic').src = props.response.picLink;
+    //   }
+    // });
     async function likePost(this: any) {
       // TODO: Get username from local storage
       this.$axios.setHeader('username', props.currentUser);
@@ -295,7 +299,7 @@ export default defineComponent({
         margin: .2rem;
         height: 12em;
         overflow-y: auto;
-        width: 100%; 
+        width: 100%;
         background-color: grey;
         border: .3em solid black;
     }

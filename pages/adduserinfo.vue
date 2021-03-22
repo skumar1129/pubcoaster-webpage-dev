@@ -92,7 +92,6 @@ export default defineComponent({
         } catch (e) {
           this.snackText = 'Error: could not create user. Check network connection.';
           this.snackFail = true;
-          console.log(e);
         }
       }
     }
