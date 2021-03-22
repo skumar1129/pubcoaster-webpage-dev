@@ -24,6 +24,11 @@
         data-app
       ><span slot="no-more"></span>
       </infinite-loading>
+      <v-snackbar multi-line v-model="snackFail" color="red" data-app>
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -43,28 +48,42 @@ export default defineComponent({
     const user = ref('');
     const location = ref('');
     const offset = ref(1);
+    const snackFail = ref(false);
+    const snackText = ref('');
     function goToCreatePost(this: any) {
       this.$router.push('/createpost');
     }
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
-      let data = await this.$axios.$get(`http://localhost:5000/post/locuser/${location.value}/${user.value}?offset=${offset.value}`);
-      if (data.length > 0) {
-        responses.value = _.union(responses.value, data);
-        $state.loaded();
-      } else {
-        $state.loaded();
-        $state.complete();
+      try {
+        let data = await this.$axios.$get(`http://localhost:5000/post/locuser/${location.value}/${user.value}?offset=${offset.value}`);
+        if (data.length > 0) {
+          responses.value = _.union(responses.value, data);
+          $state.loaded();
+        } else {
+          $state.loaded();
+          $state.complete();
+        }
+      } catch (e) {
+        this.snackText = 'Error: could not retrieve posts';
+        this.snackFail = true;
+        console.log(e);
       }
     }
-    return { responses, user, location, goToCreatePost, infinteScroll };
+    return { responses, user, location, goToCreatePost, infinteScroll, snackText, snackFail };
   },
   async fetch() {
     let params = this.$route.params.locuser.split('-');
     this.location = params[0];
     this.user = params[1];
-    let data = await this.$axios.$get(`http://localhost:5000/post/locuser/${this.location}/${this.user}`);
-    this.responses = _.union(this.responses, data)
+    try {
+      let data = await this.$axios.$get(`http://localhost:5000/post/locuser/${this.location}/${this.user}`);
+      this.responses = _.union(this.responses, data)
+    } catch (e) {
+      this.snackText = 'Error: could not retrieve posts';
+      this.snackFail = true;
+      console.log(e);
+    }
   },
   fetchOnServer: false
 });
@@ -89,5 +108,13 @@ export default defineComponent({
   .titlearea {
     justify-content: center;
     font-family: "Lucida Console", "Courier New", monospace;;
+  }
+  .snack {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+    font-style: italic;
   }
 </style>

@@ -79,6 +79,16 @@
         </v-btn>
       </v-row>
     </v-form>
+    <v-snackbar multi-line v-model="snackFail" color="red">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
+    <v-snackbar multi-line v-model="snackSuccess" color="green">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
     </div>
   </v-app>
 </template>
@@ -101,6 +111,9 @@ export default defineComponent({
     const neighborhood = ref('');
     const rating = ref();
     const description = ref('');
+    const snackFail = ref(false);
+    const snackText = ref('');
+    const snackSuccess = ref(false);
     const user = computed(function(this: any) {
       return this.$store.state.user.displayName;
     });
@@ -112,27 +125,36 @@ export default defineComponent({
     }
     async function submit(this: any) {
       if (bar.value == null || bar.value == '' || location.value == null || location.value == '' || description.value == null || description.value == '' || rating.value == null) {
-        alert('Please fill out all required info before submitting the form.')
+        this.snackText = 'Please fill out all required fields before submitting the form.';
+        this.snackFail = true;
       } else {
-        // TODO: Update username from local storage
-        let reqBody = {
-          username: user.value,
-          anonymous: anonymous.value,
-          picLink: '',
-          bar: bar.value,
-          description: description.value,
-          rating: rating.value,
-          location: location.value,
-          neighborhood: neighborhood.value
-        };
-        await this.$axios.$post('http://localhost:5000/post', reqBody);
-        this.$router.push(`/locationposts/${location.value}`);
+        try {
+          // TODO: Update username from local storage
+          let reqBody = {
+            username: user.value,
+            anonymous: anonymous.value,
+            picLink: '',
+            bar: bar.value,
+            description: description.value,
+            rating: rating.value,
+            location: location.value,
+            neighborhood: neighborhood.value
+          };
+          await this.$axios.$post('http://localhost:5000/post', reqBody);
+          this.snackText = 'Successfully created post!';
+          this.snackSuccess = true;
+          this.$router.push(`/locationposts/${location.value}`);
+        } catch (e) {
+            this.snackText = 'Error: could not create post. Check network connection.';
+            this.snackFail = true;
+            console.log(e);
+        }
       }
     }
 
     return { location, bar, neighborhood, picture,
     rating, description, locations, ratings, anonymous,
-    cancel, clear, submit };
+    cancel, clear, submit, snackFail, snackText, snackSuccess };
   }
 });
 </script>
@@ -162,5 +184,13 @@ export default defineComponent({
     border: .355em solid black;
     margin-left: .5em;
     margin-right: .5em;
+  }
+  .snack {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+    font-style: italic;
   }
 </style>

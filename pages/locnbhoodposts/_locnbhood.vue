@@ -24,6 +24,11 @@
         data-app
       ><span slot="no-more"></span>
      </infinite-loading>
+      <v-snackbar multi-line v-model="snackFail" color="red" data-app>
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -43,28 +48,40 @@ export default defineComponent({
     const nbhood = ref('');
     const location = ref('');
     const offset = ref(1);
+    const snackFail = ref(false);
+    const snackText = ref('');
     function goToCreatePost(this: any) {
       this.$router.push('/createpost');
     }
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
-      let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${location.value}/${nbhood.value}?offset=${offset.value}`);
-      if (data.length > 0) {
-        responses.value = _.union(responses.value, data);
-        $state.loaded();
-      } else {
-        $state.loaded();
-        $state.complete();
+      try {
+        let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${location.value}/${nbhood.value}?offset=${offset.value}`);
+        if (data.length > 0) {
+          responses.value = _.union(responses.value, data);
+          $state.loaded();
+        } else {
+          $state.loaded();
+          $state.complete();
+        }
+      } catch (e) {
+        this.snackText = 'Error: could not retrieve posts';
+        this.snackFail = true;
       }
     }
-    return { responses, nbhood, location, goToCreatePost, infinteScroll };
+    return { responses, nbhood, location, goToCreatePost, infinteScroll, snackFail, snackText };
   },
   async fetch() {
     let params = this.$route.params.locnbhood.split('-');
     this.location = params[0];
     this.nbhood = params[1];
-    let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${this.location}/${this.nbhood}`);
-    this.responses = _.union(this.responses, data)
+    try {
+      let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${this.location}/${this.nbhood}`);
+      this.responses = _.union(this.responses, data);
+    } catch (e) {
+      this.snackText = 'Error: could not retrieve posts';
+      this.snackFail = true;
+    }
   },
   fetchOnServer: false
 });
@@ -90,5 +107,13 @@ export default defineComponent({
   .titlearea {
     justify-content: center;
     font-family: "Lucida Console", "Courier New", monospace;;
+  }
+  .snack {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+    font-style: italic;
   }
 </style>

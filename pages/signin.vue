@@ -30,6 +30,16 @@
       </v-row>
     </v-form>
     <img src="../assets/sign_in.jpg" alt="Sign In Page IMG" height="100%" width="100%" class="image">
+    <v-snackbar multi-line v-model="snackFail" color="red">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
+    <v-snackbar multi-line v-model="snackSuccess" color="green">
+      <div class="snack">
+      {{ snackText }}
+      </div>
+    </v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -41,6 +51,9 @@ export default defineComponent({
   setup() {
     const email = ref('');
     const password = ref('');
+    const snackFail = ref(false);
+    const snackText = ref('');
+    const snackSuccess = ref(false);
     function forgotPassword(this: any) {
       this.$router.push('/forgotpassword');
     }
@@ -49,7 +62,8 @@ export default defineComponent({
     }
     async function signIn(this: any) {
       if (email == null || email.value == '' || password == null || password.value == '') {
-        alert('Please fill out all required fields before signing in.')
+        this.snackText = 'Please fill out all required fields before submitting the form.';
+        this.snackFail = true;
       } else {
         try {
         this.$store.dispatch('signIn', { email: email.value, password: password.value })
@@ -62,16 +76,25 @@ export default defineComponent({
             this.$router.push('/adduserinfo');
           }
           else {
+             this.snackText = 'Successfully signed in!';
+            this.snackSuccess = true;
             this.$router.push('/home');
           }
         })
-        .catch((e: Error) => console.log(e));
+        .catch((e: Error) => {
+          //this one takes care of Firebase auth errors
+          this.snackText = e.message;
+          this.snackFail = true;
+          console.log(e.message);
+        });
         } catch (e) {
-          console.log(e);
+          //this one takes care of all other errors
+           this.snackText = 'Error: could not sign in. Please check your network connection';
+          this.snackFail = true;
         }
       }
     }
-    return { email, password, forgotPassword, signUp, signIn };
+    return { email, password, forgotPassword, signUp, signIn, snackFail, snackText, snackSuccess };
   }
 });
 </script>
@@ -105,5 +128,13 @@ export default defineComponent({
   }
   .image {
     border: 1em solid black;
+  }
+  .snack {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+    font-style: italic;
   }
 </style>
