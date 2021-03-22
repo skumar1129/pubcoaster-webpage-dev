@@ -96,7 +96,8 @@
 </template>
 
 <script lang='ts'>
-import { ref, computed, onMounted, defineComponent } from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
+import * as uuid from 'uuid/v4';
 
 export default defineComponent({
   name: "CreatePost",
@@ -134,7 +135,8 @@ export default defineComponent({
         let picLink = '';
         if (picFile.value) {
           try {
-            let storageRef = this.$fire.storage.ref().child(picFile.value.name);
+            let id = uuid();
+            let storageRef = this.$fire.storage.ref().child(`post_pics/${user.value}-${id}`);
             storageRef.put(picFile.value).then(() => {
               storageRef.getDownloadURL().then(async (url: string) => {
                 picLink = url;
