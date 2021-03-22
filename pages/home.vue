@@ -5,7 +5,7 @@
     <h1 class="heading">Welcome to New App Name!</h1>
     <h3 class="heading">Check out the vibes of night venues and bars in your area</h3>
     <v-spacer></v-spacer>
-    <img src="../assets/home_page.jpg" alt="Home Page IMG" height="100%" width="100%" class="image">
+    <img src="imageUrl" alt="Home Page IMG" height="100%" width="100%" class="image">
     </v-main>
   </v-app>
 </template>
@@ -18,7 +18,20 @@ import appbar from '~/components/appbar.vue';
 export default defineComponent({
   components: { appbar },
   name: "Home",
-  middleware: 'authenticate'
+  middleware: 'authenticate',
+  setup() {
+    const imageUrl = ref('');
+    onMounted(() => {
+
+      $nuxt.$fire.storage.ref().child('splash_screen.jpg').getDownloadUrl()
+      .then((url) => {
+        imageUrl.value = url;
+      })
+      .catch(e => console.log(e));
+    });
+    return { imageUrl };
+  }
+
 });
 </script>
 
