@@ -56,7 +56,7 @@
 
 <script lang='ts'>
 import { ref, defineComponent} from '@nuxtjs/composition-api';
-import * as uuid from 'uuid/v4';
+import { v4 } from 'uuid';
 
 export default defineComponent({
   name: 'AddUserInfo',
@@ -80,7 +80,7 @@ export default defineComponent({
         let picLink = '';
         if (picFile.value) {
           try {
-            let id = uuid();
+            let id = v4();
             let storageRef = this.$fire.storage.ref().child(`prof_pics/${username.value}-${id}`);
             await storageRef.put(picFile.value);
             picLink = await storageRef.getDownloadURL();
