@@ -56,8 +56,8 @@ const createStore = () => {
           commit('ON_AUTH_STATE_CHANGED_MUTATION', { authUser });
         }
       },
-      async setUserName({ commit }, { displayName }) {
-        await this.$fire.auth.currentUser.updateProfile({displayName: displayName});
+      async setUserName({ commit }, { displayName, profPicUrl }) {
+        await this.$fire.auth.currentUser.updateProfile({displayName: displayName, photoUrl: profPicUrl});
         commit('setDisplayName', displayName);
       },
       async signUp({ commit }, { email, password }) {

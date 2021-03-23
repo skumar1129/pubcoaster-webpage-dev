@@ -95,7 +95,7 @@ export default defineComponent({
               picLink: picLink
             };
             await this.$axios.$post('http://localhost:8080/user', reqBody);
-            await this.$store.dispatch('setUserName', { displayName: username.value });
+            await this.$store.dispatch('setUserName', { displayName: username.value, profPicUrl: picLink });
             this.snackText = 'Successfully created profile!';
             this.snackSuccess = true;
             //TODO: do I put a wait call here?
@@ -118,7 +118,7 @@ export default defineComponent({
               picLink: picLink
             };
             await this.$axios.$post('http://localhost:8080/user', reqBody);
-            await this.$store.dispatch('setUserName', { displayName: username.value });
+            await this.$store.dispatch('setUserName', { displayName: username.value, profPicUrl: picLink });
             this.snackText = 'Successfully created profile!';
             this.snackSuccess = true;
             //TODO: do I put a wait call here?
