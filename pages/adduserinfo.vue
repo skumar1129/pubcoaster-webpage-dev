@@ -32,6 +32,8 @@
         prepend-icon="mdi-camera"
         class="field"
         color="white"
+        accept="image/*"
+        v-model="picFile"
       ></v-file-input>
       <v-row class="btn-row">
         <v-btn @click="signIn" color="red">Back to Sign In</v-btn>
@@ -54,6 +56,8 @@
 
 <script lang='ts'>
 import { ref, defineComponent} from '@nuxtjs/composition-api';
+import { v4 } from 'uuid';
+
 export default defineComponent({
   name: 'AddUserInfo',
   setup() {
@@ -63,6 +67,7 @@ export default defineComponent({
     const snackFail = ref(false);
     const snackText = ref('');
     const snackSuccess = ref(false);
+    const picFile = ref();
 
     function signIn(this: any) {
       this.$router.push('/signin');
@@ -72,31 +77,60 @@ export default defineComponent({
         this.snackText = 'Please fill out all required fields before submitting the form.';
         this.snackFail = true;
       } else {
-        try {
-          let email = this.$store.state.user.email;
-          let fullName = `${fName} ${lName}`;
-          let reqBody = {
-            username: username.value,
-            email: email,
-            firstName: fName.value,
-            lastName: lName.value,
-            fullName: fullName,
-            picLink: ''
-          };
-          await this.$axios.$post('http://localhost:8080/user', reqBody);
-          await this.$store.dispatch('setUserName', { displayName: username.value });
-          this.snackText = 'Successfully created profile!';
-          this.snackSuccess = true;
-          //TODO: do I put a wait call here?
-          this.$router.push('/home');
-        } catch (e) {
-          this.snackText = 'Error: could not create user. Check network connection.';
-          this.snackFail = true;
-          console.log(e);
+        let picLink = '';
+        if (picFile.value) {
+          try {
+            let id = v4();
+            let storageRef = this.$fire.storage.ref().child(`prof_pics/${username.value}-${id}`);
+            await storageRef.put(picFile.value);
+            picLink = await storageRef.getDownloadURL();
+            let email = this.$store.state.user.email;
+            let fullName = `${fName} ${lName}`;
+            let reqBody = {
+              username: username.value,
+              email: email,
+              firstName: fName.value,
+              lastName: lName.value,
+              fullName: fullName,
+              picLink: picLink
+            };
+            await this.$axios.$post('http://localhost:8080/user', reqBody);
+            await this.$store.dispatch('setUserName', { displayName: username.value, profPicUrl: picLink });
+            this.snackText = 'Successfully created profile!';
+            this.snackSuccess = true;
+            //TODO: do I put a wait call here?
+            this.$router.push('/home');
+          } catch (e) {
+            this.snackText = 'Error: could not create user. Check network connection.';
+            this.snackFail = true;
+          }
+        }
+        else {
+          try {
+            let email = this.$store.state.user.email;
+            let fullName = `${fName} ${lName}`;
+            let reqBody = {
+              username: username.value,
+              email: email,
+              firstName: fName.value,
+              lastName: lName.value,
+              fullName: fullName,
+              picLink: picLink
+            };
+            await this.$axios.$post('http://localhost:8080/user', reqBody);
+            await this.$store.dispatch('setUserName', { displayName: username.value, profPicUrl: picLink });
+            this.snackText = 'Successfully created profile!';
+            this.snackSuccess = true;
+            //TODO: do I put a wait call here?
+            this.$router.push('/home');
+          } catch (e) {
+            this.snackText = 'Error: could not create user. Check network connection.';
+            this.snackFail = true;
+          }
         }
       }
     }
-    return { username, fName, lName, signIn, submit, snackFail, snackText, snackSuccess };
+    return { username, fName, lName, signIn, submit, snackFail, snackText, snackSuccess, picFile };
   }
 });
 </script>

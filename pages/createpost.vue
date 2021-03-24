@@ -61,6 +61,8 @@
         prepend-icon="mdi-camera"
         class="field"
         color="white"
+        accept="image/*"
+        v-model="picFile"
       ></v-file-input>
       <v-checkbox
         v-model="anonymous"
@@ -95,6 +97,7 @@
 
 <script lang='ts'>
 import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
+import { v4 } from 'uuid';
 
 export default defineComponent({
   name: "CreatePost",
@@ -111,6 +114,7 @@ export default defineComponent({
     const neighborhood = ref('');
     const rating = ref();
     const description = ref('');
+    const picFile = ref();
     const snackFail = ref(false);
     const snackText = ref('');
     const snackSuccess = ref(false);
@@ -128,33 +132,62 @@ export default defineComponent({
         this.snackText = 'Please fill out all required fields before submitting the form.';
         this.snackFail = true;
       } else {
-        try {
-          // TODO: Update username from local storage
-          let reqBody = {
-            username: user.value,
-            anonymous: anonymous.value,
-            picLink: '',
-            bar: bar.value,
-            description: description.value,
-            rating: rating.value,
-            location: location.value,
-            neighborhood: neighborhood.value
-          };
-          await this.$axios.$post('http://localhost:5000/post', reqBody);
-          this.snackText = 'Successfully created post!';
-          this.snackSuccess = true;
-          this.$router.push(`/locationposts/${location.value}`);
-        } catch (e) {
-            this.snackText = 'Error: could not create post. Check network connection.';
-            this.snackFail = true;
-            console.log(e);
+        let picLink = '';
+        if (picFile.value) {
+          try {
+            let id = v4();
+            let storageRef = this.$fire.storage.ref().child(`post_pics/${user.value}-${id}`);
+            storageRef.put(picFile.value).then(() => {
+              storageRef.getDownloadURL().then(async (url: string) => {
+                picLink = url;
+                let reqBody = {
+                  username: user.value,
+                  anonymous: anonymous.value,
+                  picLink: picLink,
+                  bar: bar.value,
+                  description: description.value,
+                  rating: rating.value,
+                  location: location.value,
+                  neighborhood: neighborhood.value
+                };
+                await this.$axios.$post('http://localhost:5000/post', reqBody);
+                this.snackText = 'Successfully created post!';
+                this.snackSuccess = true;
+                this.$router.push(`/locationposts/${location.value}`);
+              });
+            })
+          } catch (e) {
+              this.snackText = 'Error: could not create post. Check network connection.';
+              this.snackFail = true;
+          }
+        }
+        else {
+          try {
+            let reqBody = {
+              username: user.value,
+              anonymous: anonymous.value,
+              picLink: picLink,
+              bar: bar.value,
+              description: description.value,
+              rating: rating.value,
+              location: location.value,
+              neighborhood: neighborhood.value
+            };
+            await this.$axios.$post('http://localhost:5000/post', reqBody);
+            this.snackText = 'Successfully created post!';
+            this.snackSuccess = true;
+            this.$router.push(`/locationposts/${location.value}`);
+          } catch (e) {
+              this.snackText = 'Error: could not create post. Check network connection.';
+              this.snackFail = true;
+          }
         }
       }
     }
 
     return { location, bar, neighborhood, picture,
     rating, description, locations, ratings, anonymous,
-    cancel, clear, submit, snackFail, snackText, snackSuccess };
+    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess };
   }
 });
 </script>

@@ -54,7 +54,8 @@ export default {
         services: {
           auth: {
             ssr: true
-          }
+          },
+          storage: true
         },
         // onFirebaseHosting: true
       }

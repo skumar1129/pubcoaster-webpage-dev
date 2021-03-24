@@ -39,7 +39,6 @@ export default defineComponent({
     } catch (e) {
       this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
-      console.log(e);
     }
   },
   fetchOnServer: false

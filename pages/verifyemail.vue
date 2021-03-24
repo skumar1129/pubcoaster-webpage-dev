@@ -43,7 +43,6 @@ export default defineComponent({
       } catch (e) {
          this.snackText = 'Error: could not resend email verification. Please check your network connection.';
         this.snackFail = true;
-        console.log(e);
       }
     }
     return { goToSignUp, goToSignIn, resendEmail, snackFail, snackText, snackSuccess };

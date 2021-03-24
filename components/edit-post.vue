@@ -28,8 +28,7 @@
         </v-row>
         <v-row v-if="response['picLink']">
             <v-col align="center">
-                <!--eventually replace src with response['picLink']-->
-                <v-img src="https://us.123rf.com/450wm/mumut/mumut1909/mumut190900001/131961951-stock-vector-cartoon-vector-illustration-of-a-genius-professor-einstein-for-design-element.jpg?ver=6"></v-img>
+                <v-img :src="response['picLink']"></v-img>
             </v-col>
         </v-row>
         <v-divider color="black" class="divider"> </v-divider>

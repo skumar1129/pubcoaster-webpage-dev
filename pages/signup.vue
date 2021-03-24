@@ -82,17 +82,14 @@ export default defineComponent({
               .catch((e: Error )=> {
                 this.snackText = e.message;
                 this.snackFail = true;
-                console.log(e);
               });
           } catch (e) {
             this.snackText = 'Error siging up: please check your network connection.';
             this.snackFail = true;
-            console.log(e);
           }
         } else {
           this.snackText = 'Error siging up: passwords do not match. Please try again.';
           this.snackFail = true;
-          console.log('no matchy');
         }
       }
     }

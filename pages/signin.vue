@@ -85,7 +85,6 @@ export default defineComponent({
           //this one takes care of Firebase auth errors
           this.snackText = e.message;
           this.snackFail = true;
-          console.log(e.message);
         });
         } catch (e) {
           //this one takes care of all other errors
