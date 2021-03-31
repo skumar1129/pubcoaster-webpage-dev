@@ -28,7 +28,7 @@
         </v-row>
         <v-row v-if="response['picLink']">
             <v-col align="center">
-                <v-img :src="response['picLink']" max-height="370" max-width="500"></v-img>
+                <v-img :src="response['picLink']" max-height="480" max-width="820"></v-img>
             </v-col>
         </v-row>
         <v-divider color="black" class="divider"> </v-divider>
