@@ -10,7 +10,6 @@
                 elevation="4"
                 depressed
                 large
-                outlined
                 rounded
                 color="primary"
                 @click="edit=true"
@@ -89,7 +88,6 @@
                 elevation="4"
                 depressed
                 large
-                outlined
                 rounded
                 color="error"
                 @click="cancelEdit"
@@ -139,7 +137,6 @@
                 elevation="4"
                 depressed
                 large
-                outlined
                 rounded
                 color="primary"
                 class="title"
@@ -309,5 +306,12 @@ export default defineComponent({
         width: 70%;
         display: inline-block;
         font-weight: bold;
+    }
+    .num-comments {
+        margin: .3rem;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>

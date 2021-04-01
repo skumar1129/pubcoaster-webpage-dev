@@ -131,7 +131,10 @@ export default defineComponent({
         margin-bottom: 1rem;
     }
     .num-comments {
-        margin: .2rem;
-        font-size: 1rem;
+        margin: .3rem;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>
