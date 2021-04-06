@@ -56,24 +56,27 @@
             <u><h3 class="title">Comments</h3></u>
         </v-col>
         </v-row>
-        <v-row v-if="response['comments'] == 0" class="comments">
-            No comments yet
+        <v-row v-if="response['comments'] == 0" class="no-comments">
+            <b class="no-comment-text">No comments yet</b>
         </v-row>
         <v-list v-else class="comments">
             <template v-for="(comment, i) in response['comments']" class="template">
             <v-list-item :key=i class="comment">
             <v-row :key=i>
             <v-col v-if="editComment && comment['uuid']==uuidEdit" :key=i>
-                <b class="editingComment">{{ comment['createdBy'] }}:</b>
-                <v-text-field
+                <div class="editingComment-1">
+                    <b>{{ comment['createdBy'] }}:</b>
+                </div>
+                <div class="editingComment-2">
+                    <v-text-field
                     label="Comment Text"
                     v-model="editedComment"
                     dense
                     rounded
                     outlined
-                    class="editingComment"
                     :placeholder="comment['text']"
-                ></v-text-field>
+                    ></v-text-field>
+                </div>
             </v-col>
             <v-col v-else :key=i>
                 <b>{{ comment['createdBy'] }}:</b> {{ comment['text'] }}
@@ -85,11 +88,11 @@
                 </i>
                 <v-btn
                     color="error"
-                    outlined
                     rounded
                     v-if="editComment && comment['uuid']==uuidEdit"
                     large
                     @click="cancelEditComment"
+                    class="editbtn"
                 >
                 Cancel
                 </v-btn>
@@ -97,16 +100,16 @@
                     color="white"
                     plain
                     medium
-                    v-if="(currentUser == comment['createdBy'] && !editComment) || (currentUser == comment['createdBy'] && uuidEdit == comment['uuid'])"
+                    v-if="(currentUser == comment['createdBy'] && !editComment)"
                     @click="turnOnEditComment(comment['uuid'])"
                 >
                 Edit
                 </v-btn>
                 <v-btn
                     color="primary"
-                    outlined
                     rounded
                     large
+                    class="editbtn"
                     v-if="editComment && comment['uuid']==uuidEdit"
                     @click="editCommentFunc(comment['uuid'])"
                 >
@@ -275,7 +278,7 @@ export default defineComponent({
         padding: .05em;
     }
     .title {
-        margin: .5rem;
+        margin: .7rem;
     }
     .middle {
         margin: .5rem;
@@ -303,18 +306,45 @@ export default defineComponent({
         background-color: grey;
         border: .3em solid black;
     }
+    .no-comments {
+        margin-left: .2rem;
+        margin-right: .2em;
+        height: 4em;
+        width: 100%;
+        background-color: grey;
+        border: .3em solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .no-comment-text {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
     .comment {
         background-color: grey;
         box-shadow: 0 0 3pt 2pt black;
         font-size: 1rem;
     }
-    .editingComment {
-        display: inline-block;
-        height: 1rem;
-        font-size: 1.3rem;
+    .editingComment-1 {
+        height: .7rem;
+        font-size: 1.1rem;
         margin: .4rem;
+        display: inline-block;
+    }
+    .editingComment-2 {
+        height: .7rem;
+        font-size: 1rem;
+        margin: .4rem;
+        display: inline-block;
+        width: 13.8em;
     }
     .template {
         background-color: grey;
+    }
+    .editbtn {
+        margin: .3em;
+        align-items: center;
+        margin-top: .2em;
     }
 </style>
