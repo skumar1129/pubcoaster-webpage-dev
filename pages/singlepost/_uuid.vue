@@ -3,7 +3,7 @@
     <appbar data-app :nav="false"></appbar>
     <v-main class="page">
       <client-only placeholder="Loading...">
-        <post :response="response" :currentUser="user"></post>
+        <post :response="response"></post>
       </client-only>
       <v-snackbar multi-line v-model="snackFail" color="red">
       <div class="snack">
@@ -27,10 +27,7 @@ export default defineComponent({
     const response = ref({});
     const snackFail = ref(false);
     const snackText = ref('');
-    const user = computed(function(this: any){
-      return this.$store.state.user.displayName;
-    });
-    return { response, user, snackFail, snackText };
+    return { response, snackFail, snackText };
   },
   async fetch() {
     try {

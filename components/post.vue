@@ -147,10 +147,6 @@ export default defineComponent({
         type: Object,
         required: true
     },
-    currentUser: {
-        type: String,
-        required: true
-    }
   },
   setup(props) {
     // onMounted(() => {
@@ -160,15 +156,15 @@ export default defineComponent({
     // });
     async function likePost(this: any) {
       // TODO: Get username from local storage
-      this.$axios.setHeader('username', props.currentUser);
+      this.$axios.setHeader('username', this.currentUser);
       await this.$axios.$post(`http://localhost:5000/like/${props.response.uuid}`);
-      this.response['likes'].push({'username': props.currentUser});
+      this.response['likes'].push({'username': this.currentUser});
     }
     async function unLikePost(this: any) {
       // TODO: Get username from local storage
-      this.$axios.setHeader('username', props.currentUser);
+      this.$axios.setHeader('username', this.currentUser);
       await this.$axios.$delete(`http://localhost:5000/like/${props.response.uuid}`);
-      let index = this.response['likes'].findIndex((element: any) => element == {'username': props.currentUser});
+      let index = this.response['likes'].findIndex((element: any) => element == {'username': this.currentUser});
       this.response['likes'].splice(index, 1);
     }
     async function send(this: any) {
@@ -228,11 +224,13 @@ export default defineComponent({
     const uuidEdit = ref(null);
 
     const likedPost = ref(false);
-
-    const hasLikedPost = computed(() => {
+    const currentUser = computed(function(this: any){
+      return this.$store.state.user.displayName;
+    });
+    const hasLikedPost = computed(function(this: any) {
       if (props.response.likes) {
         for (const like of props.response.likes) {
-          if (like.username == props.currentUser) {
+          if (like.username == this.currentUser) {
             return true;
           }
         }
@@ -266,7 +264,7 @@ export default defineComponent({
     return { comment, send, picture, getMoment, deleteComment,
     editCommentFunc, editComment, editedComment, cancelEditComment,
     nbhood, bar, uuidEdit, turnOnEditComment,
-    hasLikedPost, likePost, unLikePost, numLikes, likedPost, getNow }
+    hasLikedPost, likePost, unLikePost, numLikes, likedPost, getNow, currentUser }
   }
 });
 </script>

@@ -50,10 +50,10 @@ const createStore = () => {
     },
 
     actions: {
-      nuxtServerInit({ commit }, { res }){
+      async nuxtServerInit({ commit }, { res }){
         if (res && res.locals && res.locals.user) {
           const { allClaims: claims, idToken: token, ...authUser } = res.locals.user;
-          commit('ON_AUTH_STATE_CHANGED_MUTATION', { authUser });
+          await commit('ON_AUTH_STATE_CHANGED_MUTATION', { authUser });
         }
       },
       async setUserName({ commit }, { displayName, profPicUrl }) {
