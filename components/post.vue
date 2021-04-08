@@ -156,14 +156,12 @@ export default defineComponent({
     // });
     async function likePost(this: any) {
       // TODO: Get username from local storage
-      console.log('user: ' + this.currentUser);
       this.$axios.setHeader('username', this.currentUser);
       await this.$axios.$post(`http://localhost:5000/like/${props.response.uuid}`);
       this.response['likes'].push({'username': this.currentUser});
     }
     async function unLikePost(this: any) {
       // TODO: Get username from local storage
-      console.log('user: ' + this.currentUser);
       this.$axios.setHeader('username', this.currentUser);
       await this.$axios.$delete(`http://localhost:5000/like/${props.response.uuid}`);
       let index = this.response['likes'].findIndex((element: any) => element == {'username': this.currentUser});
