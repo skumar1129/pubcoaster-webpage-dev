@@ -93,3 +93,9 @@ firebaseconfig.js
 
 static
 
+# firebase stuff
+functions/*
+public/*
+.firebaserc
+.firebase/
+
