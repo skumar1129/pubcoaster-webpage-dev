@@ -12,7 +12,7 @@
         </v-row>
         <v-divider color="black" class="divider"> </v-divider>
         <v-row>
-            <v-col align="center">
+            <v-col align="center" class="descrip">
                 <h1>{{response['description']}}</h1>
             </v-col>
         </v-row>
@@ -305,19 +305,22 @@ export default defineComponent({
         border: .3em solid black;
     }
     .no-comments {
-        margin-left: .2rem;
-        margin-right: .2em;
+        /* margin-left: .25rem;
+        margin-right: .1em; */
         height: 4em;
-        width: 100%;
-        background-color: grey;
+        /* width: 100%; */
+        /* background-color: grey; */
         border: .3em solid black;
         display: flex;
         justify-content: center;
         align-items: center;
     }
     .no-comment-text {
-        font-size: 1.5em;
+        font-size: 1.8em;
         font-weight: bold;
+    }
+    .descrip {
+        font-size: 1.7em;
     }
     .comment {
         background-color: grey;

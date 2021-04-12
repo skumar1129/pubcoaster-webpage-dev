@@ -10,8 +10,8 @@
       @keypress.enter="sendEmail"
     ></v-text-field>
     <v-row class="btn-row">
-      <v-btn @click="signIn" color="red" class="ml-8">Back to sign in</v-btn>
-      <v-btn @click="sendEmail" color="red" class="mr-8">Submit</v-btn>
+      <v-btn @click="signIn" color="red" class="ml-8 mt-4">Back to sign in</v-btn>
+      <v-btn @click="sendEmail" color="red" class="mr-8 mt-4">Submit</v-btn>
     </v-row>
     <v-snackbar multi-line v-model="snackFail" color="red">
       <div class="snack">

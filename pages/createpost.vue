@@ -70,13 +70,13 @@
         class="field"
       ></v-checkbox>
       <v-row class="btn-row">
-        <v-btn @click="cancel" color="red" class="ml-8 mt-5">
+        <v-btn @click="cancel" color="red" class="ml-8 mt-5 mb-4">
           Cancel
         </v-btn>
-        <v-btn @click="clear" color="red" class="mt-5">
+        <v-btn @click="clear" color="red" class="mt-5 mb-4">
           Clear
         </v-btn>
-        <v-btn @click="submit" color="red" class="mr-8 mt-5">
+        <v-btn @click="submit" color="red" class="mr-8 mt-5 mb-4">
           Submit
         </v-btn>
       </v-row>
