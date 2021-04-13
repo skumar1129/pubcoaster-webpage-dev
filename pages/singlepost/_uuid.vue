@@ -29,9 +29,11 @@ export default defineComponent({
     const snackText = ref('');
     return { response, snackFail, snackText };
   },
-  async fetch() {
-    try {
-      let data = await this.$axios.$get(`http://localhost:5000/post/${this.$route.params.uuid}`);
+  async fetch(this: any) {
+    try{
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
+      let data = await this.$axios.$get(`/postapi/post/${this.$route.params.uuid}`);
       this.response = data;
     } catch (e) {
       this.snackText = 'Error: could not retrieve posts';

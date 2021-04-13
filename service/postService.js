@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:5000';
+const baseUrl = 'https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev';
 
 export const addPost = async (reqBody) =>  {
   const data = await this.$axios.$post(`${baseUrl}/post`, {

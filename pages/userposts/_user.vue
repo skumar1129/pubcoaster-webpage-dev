@@ -43,9 +43,9 @@ export default defineComponent({
   components: { appbar, feedpost },
   middleware: 'authenticate',
   setup() {
-     const responses = ref([]);
+    const responses = ref([]);
     const offset = ref(1);
-     const snackFail = ref(false);
+    const snackFail = ref(false);
     const snackText = ref('');
     function goToCreatePost(this: any) {
       this.$router.push('/createpost');
@@ -53,7 +53,9 @@ export default defineComponent({
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
-        let data = await this.$axios.$get(`http://localhost:5000/post/user/${this.$route.params.user}?offset=${offset.value}`);
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}?offset=${offset.value}`);
         if (data.length > 0) {
           responses.value = _.union(responses.value, data);
           $state.loaded();
@@ -68,9 +70,11 @@ export default defineComponent({
     }
     return { responses, goToCreatePost, infinteScroll, snackText, snackFail };
   },
-  async fetch() {
+  async fetch(this: any) {
     try {
-      let data = await this.$axios.$get(`http://localhost:5000/post/user/${this.$route.params.user}`);
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
+      let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}`);
       this.responses = _.union(this.responses, data);
     } catch (e) {
        this.snackText = 'Error: could not retrieve posts';

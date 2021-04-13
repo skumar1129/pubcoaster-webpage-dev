@@ -53,7 +53,9 @@ export default defineComponent({
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
-        let data = await this.$axios.$get(`http://localhost:5000/post/location/${this.$route.params.location}?offset=${offset.value}`);
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        let data = await this.$axios.$get(`/postapi/post/location/${this.$route.params.location}?offset=${offset.value}`);
         if (data.length > 0) {
           responses.value = _.union(responses.value, data);
           $state.loaded();
@@ -68,9 +70,11 @@ export default defineComponent({
     }
     return { responses, goToCreatePost, infinteScroll, snackFail, snackText };
   },
-  async fetch() {
+  async fetch(this: any) {
     try {
-      let data = await this.$axios.$get(`http://localhost:5000/post/location/${this.$route.params.location}`);
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
+      let data = await this.$axios.$get(`/postapi/post/location/${this.$route.params.location}`);
       this.responses = _.union(this.responses, data);
     } catch (e) {
       this.snackText = 'Error: could not retrieve posts';

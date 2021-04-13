@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
 import feedpost from '~/components/feed-post.vue';
 import appbar from '~/components/appbar.vue'
 import navdrawer from '~/components/navdrawer.vue';
@@ -53,10 +53,15 @@ export default defineComponent({
     function goToCreatePost(this: any) {
       this.$router.push('/createpost');
     }
+    const token = computed(async function(this:  any) {
+      await this.$fire.auth.currentUser.getIdToken();
+    });
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
-        let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${location.value}/${nbhood.value}?offset=${offset.value}`);
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        let data = await this.$axios.$get(`/postapi/post/locnbhood/${location.value}/${nbhood.value}?offset=${offset.value}`);
         if (data.length > 0) {
           responses.value = _.union(responses.value, data);
           $state.loaded();
@@ -69,14 +74,16 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, nbhood, location, goToCreatePost, infinteScroll, snackFail, snackText };
+    return { responses, nbhood, location, goToCreatePost, infinteScroll, snackFail, snackText, token };
   },
-  async fetch() {
+  async fetch(this: any) {
     let params = this.$route.params.locnbhood.split('-');
     this.location = params[0];
     this.nbhood = params[1];
     try {
-      let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${this.location}/${this.nbhood}`);
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
+      let data = await this.$axios.$get(`/postapi/post/locnbhood/${this.location}/${this.nbhood}`);
       this.responses = _.union(this.responses, data);
     } catch (e) {
       this.snackText = 'Error: could not retrieve posts';

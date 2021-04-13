@@ -203,7 +203,9 @@ export default defineComponent({
             bar: barName.value,
             description: description.value
           };
-          let data = await this.$axios.$patch(`http://localhost:5000/post/${props.response['uuid']}`, postData);
+          const token = await this.$fire.auth.currentUser.getIdToken();
+          this.$axios.setHeader('Authorization', `Bearer ${token}`);
+          let data = await this.$axios.$patch(`/postapi/post/${props.response['uuid']}`, postData);
           edit.value = false;
           //reset values
           barName.value = null;
@@ -213,7 +215,9 @@ export default defineComponent({
           location.reload();
       }
       async function deletePost(this: any) {
-          let data = await this.$axios.$delete(`http://localhost:5000/post/${props.response['uuid']}`);
+          const token = await this.$fire.auth.currentUser.getIdToken();
+          this.$axios.setHeader('Authorization', `Bearer ${token}`);
+          let data = await this.$axios.$delete(`/postapi/post/${props.response['uuid']}`);
           edit.value = false;
           location.reload();
       }
