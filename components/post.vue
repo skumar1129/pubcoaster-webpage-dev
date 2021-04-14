@@ -159,15 +159,16 @@ export default defineComponent({
       const token = await this.$fire.auth.currentUser.getIdToken();
       this.$axios.setHeader('Authorization', `Bearer ${token}`);
       this.$axios.setHeader('username', this.currentUser);
-      await this.$axios.$post(`https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/like/${props.response.uuid}`);
+      await this.$axios.$post(`/postapi/like/${props.response.uuid}`);
       this.response['likes'].push({'username': this.currentUser});
     }
     async function unLikePost(this: any) {
       // TODO: Get username from local storage
+      console.log(props.response);
       const token = await this.$fire.auth.currentUser.getIdToken();
       this.$axios.setHeader('Authorization', `Bearer ${token}`);
       this.$axios.setHeader('username', this.currentUser);
-      await this.$axios.$delete(`https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/like/${props.response.uuid}`);
+      await this.$axios.$delete(`/postapi/like/${props.response.uuid}`);
       let index = this.response['likes'].findIndex((element: any) => element == {'username': this.currentUser});
       this.response['likes'].splice(index, 1);
     }
@@ -188,7 +189,7 @@ export default defineComponent({
           this.comment = null;
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`); //reset comment
-          let data = await this.$axios.$post('https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/comment', sentComment);
+          let data = await this.$axios.$post('/postapi/comment', sentComment);
       }
     }
     function getNow() {
