@@ -174,22 +174,20 @@ export default defineComponent({
     }
     async function send(this: any) {
       if (this.comment != null && this.comment != "") {
-          let newComment = {
-              "createdBy": this.currentUser,
-              "text": this.comment,
-              "uuid": this.response['uuid'],
-              "createdAt": this.getNow()
-          };
-          let sentComment = {
-            createdBy: this.currentUser,
+        let sentComment = {
+          createdBy: this.currentUser,
             text: this.comment,
             uuid: this.response.uuid,
           };
-          this.response['comments'].unshift(newComment);
-          this.comment = null;
-          const token = await this.$fire.auth.currentUser.getIdToken();
-          this.$axios.setHeader('Authorization', `Bearer ${token}`); //reset comment
           let data = await this.$axios.$post('/postapi/comment', sentComment);
+          let newComment = {
+              "createdBy": this.currentUser,
+              "text": this.comment,
+              "uuid": data.uuid,
+              "createdAt": this.getNow()
+          };
+          this.response['comments'].unshift(newComment);
+          this.comment = null; //reset comment
       }
     }
     function getNow() {
