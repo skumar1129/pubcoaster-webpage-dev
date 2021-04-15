@@ -169,20 +169,20 @@ export default defineComponent({
     }
     async function send(this: any) {
       if (this.comment != null && this.comment != "") {
-          let newComment = {
-              "createdBy": this.currentUser,
-              "text": this.comment,
-              "uuid": this.response['uuid'],
-              "createdAt": this.getNow()
-          };
-          let sentComment = {
-            createdBy: this.currentUser,
+        let sentComment = {
+          createdBy: this.currentUser,
             text: this.comment,
             uuid: this.response.uuid,
           };
+          let data = await this.$axios.$post('http://localhost:5000/comment', sentComment);
+          let newComment = {
+              "createdBy": this.currentUser,
+              "text": this.comment,
+              "uuid": data.uuid,
+              "createdAt": this.getNow()
+          };
           this.response['comments'].unshift(newComment);
           this.comment = null; //reset comment
-          let data = await this.$axios.$post('http://localhost:5000/comment', sentComment);
       }
     }
     function getNow() {
