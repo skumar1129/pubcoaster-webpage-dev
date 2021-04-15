@@ -85,7 +85,7 @@ export default defineComponent({
             await storageRef.put(picFile.value);
             picLink = await storageRef.getDownloadURL();
             let email = this.$store.state.user.email;
-            let fullName = `${fName} ${lName}`;
+            let fullName = `${fName.value} ${lName.value}`;
             let reqBody = {
               username: username.value,
               email: email,
@@ -94,6 +94,8 @@ export default defineComponent({
               fullName: fullName,
               picLink: picLink
             };
+            const token = await this.$fire.auth.currentUser.getIdToken();
+            this.$axios.setHeader('Authorization', `Bearer ${token}`);
             await this.$axios.$post('/userapi/user', reqBody);
             await this.$store.dispatch('setUserName', { displayName: username.value, profPicUrl: picLink });
             this.snackText = 'Successfully created profile!';
@@ -108,7 +110,7 @@ export default defineComponent({
         else {
           try {
             let email = this.$store.state.user.email;
-            let fullName = `${fName} ${lName}`;
+            let fullName = `${fName.value} ${lName.value}`;
             let reqBody = {
               username: username.value,
               email: email,
@@ -117,6 +119,8 @@ export default defineComponent({
               fullName: fullName,
               picLink: picLink
             };
+            const token = await this.$fire.auth.currentUser.getIdToken();
+            this.$axios.setHeader('Authorization', `Bearer ${token}`);
             await this.$axios.$post('/userapi/user', reqBody);
             await this.$store.dispatch('setUserName', { displayName: username.value, profPicUrl: picLink });
             this.snackText = 'Successfully created profile!';
