@@ -58,7 +58,9 @@ export default defineComponent({
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
-        let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${location.value}/${nbhood.value}?offset=${offset.value}`);
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        let data = await this.$axios.$get(`/postapi/post/locnbhood/${location.value}/${nbhood.value}?offset=${offset.value}`);
         if (data.length > 0) {
           responses.value = _.union(responses.value, data);
           $state.loaded();
@@ -73,12 +75,14 @@ export default defineComponent({
     }
     return { responses, nbhood, location, goToCreatePost, infinteScroll, snackFail, snackText };
   },
-  async fetch() {
+  async fetch(this: any) {
     let params = this.$route.params.locnbhood.split('-');
     this.location = params[0];
     this.nbhood = params[1];
     try {
-      let data = await this.$axios.$get(`http://localhost:5000/post/locnbhood/${this.location}/${this.nbhood}`);
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
+      let data = await this.$axios.$get(`/postapi/post/locnbhood/${this.location}/${this.nbhood}`);
       this.responses = _.union(this.responses, data);
     } catch (e) {
       this.snackText = 'Error: could not retrieve posts';

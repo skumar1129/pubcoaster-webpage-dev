@@ -58,8 +58,24 @@ module.exports = {
         },
         // onFirebaseHosting: true
       }
-    ]
+    ],
+    '@nuxtjs/proxy'
   ],
+
+  axios: {
+    proxy: true,
+    common: {
+      'Access-Control-Allow-Origin': '*',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE'
+    }
+  },
+
+  proxy: {
+    '/postapi/': { target: 'https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/', pathRewrite: {'^/postapi/': ''}, changeOrigin: true },
+    '/userapi/': { target: 'https://userapi-a6nxhkm7.uc.gateway.dev/', pathRewrite: {'^/userapi/': ''}, changeOrigin: true }
+  },
 
   auth: {
     persistence: 'local', // default

@@ -150,7 +150,9 @@ export default defineComponent({
                   location: location.value,
                   neighborhood: neighborhood.value
                 };
-                await this.$axios.$post('http://localhost:5000/post', reqBody);
+                const token = await this.$fire.auth.currentUser.getIdToken();
+                this.$axios.setHeader('Authorization', `Bearer ${token}`);
+                await this.$axios.$post('/postapi/post', reqBody);
                 this.snackText = 'Successfully created post!';
                 this.snackSuccess = true;
                 this.$router.push(`/locationposts/${location.value}`);
@@ -173,7 +175,9 @@ export default defineComponent({
               location: location.value,
               neighborhood: neighborhood.value
             };
-            await this.$axios.$post('http://localhost:5000/post', reqBody);
+            const token = await this.$fire.auth.currentUser.getIdToken();
+            this.$axios.setHeader('Authorization', `Bearer ${token}`);
+            await this.$axios.$post('/postapi/post', reqBody);
             this.snackText = 'Successfully created post!';
             this.snackSuccess = true;
             this.$router.push(`/locationposts/${location.value}`);

@@ -55,7 +55,9 @@ export default defineComponent({
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
-        let data = await this.$axios.$get(`http://localhost:5000/mypost/user?offset=${offset.value}`);
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        let data = await this.$axios.$get(`/postapi/mypost/user?offset=${offset.value}`);
         if (data.length > 0) {
           responses.value = _.union(responses.value, data);
           $state.loaded();
@@ -70,12 +72,14 @@ export default defineComponent({
     }
     return { responses, goToCreatePost, infinteScroll, snackText, snackFail };
   },
-  async fetch() {
+  async fetch(this: any) {
     // TODO: Make username come from local storage
     const user = this.$store.state.user.displayName;
     try {
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
       this.$axios.setHeader('username', user);
-      let data = await this.$axios.$get('http://localhost:5000/mypost/user');
+      let data = await this.$axios.$get('/postapi/mypost/user');
       this.responses = _.union(this.responses, data);
     } catch (e) {
        this.snackText = 'Error: could not retrieve posts';

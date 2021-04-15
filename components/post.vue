@@ -155,15 +155,17 @@ export default defineComponent({
     //   }
     // });
     async function likePost(this: any) {
-      // TODO: Get username from local storage
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
       this.$axios.setHeader('username', this.currentUser);
-      await this.$axios.$post(`http://localhost:5000/like/${props.response.uuid}`);
+      await this.$axios.$post(`/postapi/like/${props.response.uuid}`);
       this.response['likes'].push({'username': this.currentUser});
     }
     async function unLikePost(this: any) {
-      // TODO: Get username from local storage
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
       this.$axios.setHeader('username', this.currentUser);
-      await this.$axios.$delete(`http://localhost:5000/like/${props.response.uuid}`);
+      await this.$axios.$delete(`/postapi/like/${props.response.uuid}`);
       let index = this.response['likes'].findIndex((element: any) => element == {'username': this.currentUser});
       this.response['likes'].splice(index, 1);
     }
@@ -174,7 +176,9 @@ export default defineComponent({
             text: this.comment,
             uuid: this.response.uuid,
           };
-          let data = await this.$axios.$post('http://localhost:5000/comment', sentComment);
+          const token = await this.$fire.auth.currentUser.getIdToken();
+          this.$axios.setHeader('Authorization', `Bearer ${token}`);
+          let data = await this.$axios.$post('/postapi/comment', sentComment);
           let newComment = {
               "createdBy": this.currentUser,
               "text": this.comment,
@@ -196,12 +200,16 @@ export default defineComponent({
         return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
     }
     async function deleteComment(this: any, uuid: String) {
-        let data = await this.$axios.$delete(`http://localhost:5000/comment/${uuid}`);
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        let data = await this.$axios.$delete(`/postapi/comment/${uuid}`);
         location.reload();
     }
     async function editCommentFunc(this: any, uuid: String) {
-        let commentData = {'text': this.editedComment}
-        let data = await this.$axios.$patch(`http://localhost:5000/comment/${uuid}`, commentData);
+        let commentData = {'text': this.editedComment};
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        let data = await this.$axios.$patch(`/postapi/comment/${uuid}`, commentData);
         //reset values
         this.editedComment = null;
         this.editComment = false;
