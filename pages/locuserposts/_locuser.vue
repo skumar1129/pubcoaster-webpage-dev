@@ -96,7 +96,8 @@ export default defineComponent({
       this.snackFail = true;
     }
   },
-  fetchOnServer: false
+  fetchOnServer: false,
+  watchQuery: ['offset']
 });
 </script>
 
