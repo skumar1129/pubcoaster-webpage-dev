@@ -1,6 +1,7 @@
 <template>
-  <v-app class="page">
+  <v-app>
     <appbar data-app :nav="false"></appbar>
+      <div class="page">
       <v-container grid-list data-app>
         <v-row class="title-button">
           <h1 class="header">Posts for {{this.$route.params.user}}</h1>
@@ -24,6 +25,7 @@
         data-app
       ><span slot="no-more"></span>
       </infinite-loading>
+      </div>
        <v-snackbar multi-line v-model="snackFail" color="red" data-app>
       <div class="snack">
       {{ snackText }}

@@ -12,7 +12,7 @@
         </v-row>
         <v-divider color="black" class="divider"> </v-divider>
         <v-row>
-            <v-col align="center">
+            <v-col align="center" class="descrip">
                 <h1>{{response['description']}}</h1>
             </v-col>
         </v-row>
@@ -155,7 +155,6 @@ export default defineComponent({
     //   }
     // });
     async function likePost(this: any) {
-      // TODO: Get username from local storage
       const token = await this.$fire.auth.currentUser.getIdToken();
       this.$axios.setHeader('Authorization', `Bearer ${token}`);
       this.$axios.setHeader('username', this.currentUser);
@@ -163,8 +162,6 @@ export default defineComponent({
       this.response['likes'].push({'username': this.currentUser});
     }
     async function unLikePost(this: any) {
-      // TODO: Get username from local storage
-      console.log(props.response);
       const token = await this.$fire.auth.currentUser.getIdToken();
       this.$axios.setHeader('Authorization', `Bearer ${token}`);
       this.$axios.setHeader('username', this.currentUser);
@@ -179,6 +176,8 @@ export default defineComponent({
             text: this.comment,
             uuid: this.response.uuid,
           };
+          const token = await this.$fire.auth.currentUser.getIdToken();
+          this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$post('/postapi/comment', sentComment);
           let newComment = {
               "createdBy": this.currentUser,
@@ -207,7 +206,7 @@ export default defineComponent({
         location.reload();
     }
     async function editCommentFunc(this: any, uuid: String) {
-        let commentData = {'text': this.editedComment}
+        let commentData = {'text': this.editedComment};
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         let data = await this.$axios.$patch(`/postapi/comment/${uuid}`, commentData);
@@ -314,19 +313,22 @@ export default defineComponent({
         border: .3em solid black;
     }
     .no-comments {
-        margin-left: .2rem;
-        margin-right: .2em;
+        /* margin-left: .25rem;
+        margin-right: .1em; */
         height: 4em;
-        width: 100%;
-        background-color: grey;
+        /* width: 100%; */
+        /* background-color: grey; */
         border: .3em solid black;
         display: flex;
         justify-content: center;
         align-items: center;
     }
     .no-comment-text {
-        font-size: 1.5em;
+        font-size: 1.8em;
         font-weight: bold;
+    }
+    .descrip {
+        font-size: 1.7em;
     }
     .comment {
         background-color: grey;

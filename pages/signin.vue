@@ -25,8 +25,8 @@
         color="white"
       ></v-text-field>
       <v-row class="btn-row">
-        <v-btn @click="forgotPassword" color="red" class="ml-10">Forgot Password</v-btn>
-        <v-btn @click="signIn" color="red" class="mr-10">Sign In</v-btn>
+        <v-btn @click="forgotPassword" color="red" class="ml-10 mb-8 mt-4">Forgot Password</v-btn>
+        <v-btn @click="signIn" color="red" class="mr-10 mb-8 mt-4">Sign In</v-btn>
       </v-row>
     </v-form>
     <img src="../assets/sign_in.jpg" alt="Sign In Page IMG" height="100%" width="100%" class="image">

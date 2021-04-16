@@ -36,8 +36,8 @@
         v-model="picFile"
       ></v-file-input>
       <v-row class="btn-row">
-        <v-btn @click="signIn" color="red">Back to Sign In</v-btn>
-        <v-btn @click="submit" color="red">Submit</v-btn>
+        <v-btn @click="signIn" color="red" class="mt-6 mb-6">Back to Sign In</v-btn>
+        <v-btn @click="submit" color="red" class="mt-6 mb-6">Submit</v-btn>
       </v-row>
     </v-form>
     <v-snackbar multi-line v-model="snackFail" color="red">

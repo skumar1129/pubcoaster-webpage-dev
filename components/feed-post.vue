@@ -110,7 +110,7 @@ export default defineComponent({
 </script>
 
 <style>
- .divider {
+    .divider {
         margin-top: .75rem;
         margin-bottom: .75rem;
         padding: .05em;
@@ -133,6 +133,7 @@ export default defineComponent({
     .num-comments {
         margin: .3rem;
         font-size: 1.5rem;
+        height: 4.35rem;
         display: flex;
         justify-content: center;
         align-items: center;
