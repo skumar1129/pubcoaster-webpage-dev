@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
 import feedpost from '~/components/feed-post.vue';
 import appbar from '~/components/appbar.vue'
 import navdrawer from '~/components/navdrawer.vue';
@@ -55,6 +55,9 @@ export default defineComponent({
     function goToCreatePost(this: any) {
       this.$router.push('/createpost');
     }
+    const token = computed(async function(this:  any) {
+      await this.$fire.auth.currentUser.getIdToken();
+    });
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -73,23 +76,33 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, nbhood, location, goToCreatePost, infinteScroll, snackFail, snackText };
+    return { responses, nbhood, location, goToCreatePost, infinteScroll, snackFail, snackText, token };
   },
   async fetch(this: any) {
     let params = this.$route.params.locnbhood.split('-');
     this.location = params[0];
     this.nbhood = params[1];
     try {
-      const token = await this.$fire.auth.currentUser.getIdToken();
-      this.$axios.setHeader('Authorization', `Bearer ${token}`);
-      let data = await this.$axios.$get(`/postapi/post/locnbhood/${this.location}/${this.nbhood}`);
-      this.responses = _.union(this.responses, data);
+      this.$fire.auth.onAuthStateChanged(async (user: any) => {
+        if (user) {
+          const token = await this.$fire.auth.currentUser.getIdToken();
+          this.$axios.setHeader('Authorization', `Bearer ${token}`);
+          let data = await this.$axios.$get(`/postapi/post/locnbhood/${this.location}/${this.nbhood}`);
+          this.responses = _.union(this.responses, data);
+        } else {
+          this.snackText = 'Error: User authentication failed. Please sign in again.';
+          this.snackFail = true;
+          await this.$store.dispatch('signOut');
+          this.$router.push('/signin');
+        }
+      });
     } catch (e) {
       this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
     }
   },
-  fetchOnServer: false
+  fetchOnServer: false,
+  watchQuery: ['offset']
 });
 </script>
 

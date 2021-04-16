@@ -85,7 +85,7 @@ export default defineComponent({
             await storageRef.put(picFile.value);
             picLink = await storageRef.getDownloadURL();
             let email = this.$store.state.user.email;
-            let fullName = `${fName} ${lName}`;
+            let fullName = `${fName.value} ${lName.value}`;
             let reqBody = {
               username: username.value,
               email: email,
@@ -110,7 +110,7 @@ export default defineComponent({
         else {
           try {
             let email = this.$store.state.user.email;
-            let fullName = `${fName} ${lName}`;
+            let fullName = `${fName.value} ${lName.value}`;
             let reqBody = {
               username: username.value,
               email: email,
