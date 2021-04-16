@@ -71,7 +71,6 @@ export default defineComponent({
     return { responses, goToCreatePost, infinteScroll, snackText, snackFail };
   },
   async fetch(this: any) {
-    // TODO: Make username come from local storage
     try {
       const user = this.$store.state.user.displayName;
       this.$axios.setHeader('username', user);
