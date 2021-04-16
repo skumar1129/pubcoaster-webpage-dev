@@ -72,12 +72,21 @@ export default defineComponent({
   },
   async fetch(this: any) {
     try {
-      const token = await this.$fire.auth.currentUser.getIdToken();
-      this.$axios.setHeader('Authorization', `Bearer ${token}`);
-      let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}`);
-      this.responses = _.union(this.responses, data);
+      this.$fire.auth.onAuthStateChanged(async (user: any) => {
+        if (user) {
+          const token = await this.$fire.auth.currentUser.getIdToken();
+          this.$axios.setHeader('Authorization', `Bearer ${token}`);
+          let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}`);
+          this.responses = _.union(this.responses, data);
+        } else {
+          this.snackText = 'Error: User authentication failed. Please sign in again.';
+          this.snackFail = true;
+          await this.$store.dispatch('signOut');
+          this.$router.push('/signin');
+        }
+      });
     } catch (e) {
-       this.snackText = 'Error: could not retrieve posts';
+      this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
     }
   },
