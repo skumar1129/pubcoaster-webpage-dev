@@ -179,13 +179,11 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$post('/postapi/comment', sentComment);
-          var date = this.getNow();
-          var moment = this.getMoment(date);
           let newComment = {
               "createdBy": this.currentUser,
               "text": this.comment,
               "uuid": data.uuid,
-              "createdAt": moment
+              "createdAt": this.getNow()
           };
           this.response['comments'].unshift(newComment);
           this.comment = null; //reset comment
