@@ -31,7 +31,7 @@
                 <v-btn v-if="!hasLikedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
                 <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
             </v-col>
-            <v-col align="right" class="middle" v-else-if="numLikes">
+            <v-col align="right" class="middle" v-else-if="numLikes==0">
                 No likes yet
                 <v-btn v-if="!hasLikedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
                 <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
@@ -179,11 +179,13 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$post('/postapi/comment', sentComment);
+          var date = this.getNow();
+          var moment = this.getMoment(date);
           let newComment = {
               "createdBy": this.currentUser,
               "text": this.comment,
               "uuid": data.uuid,
-              "createdAt": this.getNow()
+              "createdAt": moment
           };
           this.response['comments'].unshift(newComment);
           this.comment = null; //reset comment
@@ -196,7 +198,7 @@ export default defineComponent({
     }
     function getMoment(date: any) {
         let mydate = new Date(date);
-        mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
+        //mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
         return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
     }
     async function deleteComment(this: any, uuid: String) {

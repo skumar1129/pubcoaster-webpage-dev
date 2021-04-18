@@ -57,14 +57,10 @@
             No comments yet
         </v-row>
         <v-row v-else-if="response['numComments'] != 1" class="num-comments">
-            <v-col>
-                {{response['numComments']}} Comments
-            </v-col>
+            {{response['numComments']}} Comments
         </v-row>
         <v-row v-else class="num-comments">
-            <v-col>
-                {{response['numComments']}} Comment
-            </v-col>
+            {{response['numComments']}} Comment
         </v-row>
       </v-card>
     </v-container>
