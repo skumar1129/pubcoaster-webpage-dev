@@ -183,16 +183,11 @@ export default defineComponent({
               "createdBy": this.currentUser,
               "text": this.comment,
               "uuid": data.uuid,
-              "createdAt": this.getNow()
+              "createdAt": data.createdAt
           };
           this.response['comments'].unshift(newComment);
           this.comment = null; //reset comment
       }
-    }
-    function getNow() {
-        var today = new Date();
-        today.setTime(today.getTime() - today.getTimezoneOffset()*60*1000);
-        return today;
     }
     function getMoment(date: any) {
         let mydate = new Date(date);
@@ -272,7 +267,7 @@ export default defineComponent({
     return { comment, send, picture, getMoment, deleteComment,
     editCommentFunc, editComment, editedComment, cancelEditComment,
     nbhood, bar, uuidEdit, turnOnEditComment,
-    hasLikedPost, likePost, unLikePost, numLikes, likedPost, getNow, currentUser }
+    hasLikedPost, likePost, unLikePost, numLikes, likedPost, currentUser }
   }
 });
 </script>
