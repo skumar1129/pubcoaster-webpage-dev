@@ -108,6 +108,8 @@ export default defineComponent({
   }
   .page {
     background-color: grey;
+    height: 100%;
+    width: 100%;
   }
   .sign-in {
     text-align: center;

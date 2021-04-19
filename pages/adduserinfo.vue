@@ -157,6 +157,8 @@ export default defineComponent({
     background-color: grey;
     color: white;
     font-size: 1.5em;
+    height: 100%;
+    width: 100%;
   }
   .field {
     font-weight: bold;
