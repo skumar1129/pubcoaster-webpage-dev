@@ -311,6 +311,7 @@ export default defineComponent({
         margin: .3rem;
         font-size: 1.5rem;
         display: flex;
+        height: 4.35rem;
         justify-content: center;
         align-items: center;
     }

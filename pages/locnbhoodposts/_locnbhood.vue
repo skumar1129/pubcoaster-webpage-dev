@@ -118,6 +118,8 @@ export default defineComponent({
     background-color: white;
     color: black;
     font-size: 1.5em;
+    height: 100%;
+    width: 100%;
   }
   .header {
     font-family: fantasy;
