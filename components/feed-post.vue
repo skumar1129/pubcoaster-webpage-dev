@@ -73,7 +73,6 @@ export default defineComponent({
   setup(props) {
       function getMoment(date: any) {
           let mydate = new Date(date);
-          //mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
           return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
       }
       function goToSinglePost(this: any) {
