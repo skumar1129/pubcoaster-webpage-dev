@@ -49,14 +49,10 @@
             No comments yet
         </v-row>
         <v-row v-else-if="response['numComments'] != 1" class="num-comments">
-            <v-col>
-                {{response['numComments']}} Comments
-            </v-col>
+            {{response['numComments']}} Comments
         </v-row>
         <v-row v-else class="num-comments">
-            <v-col>
-                {{response['numComments']}} Comment
-            </v-col>
+            {{response['numComments']}} Comment
         </v-row>
     </v-card>
     </v-container>
@@ -77,7 +73,6 @@ export default defineComponent({
   setup(props) {
       function getMoment(date: any) {
           let mydate = new Date(date);
-          mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
           return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
       }
       function goToSinglePost(this: any) {

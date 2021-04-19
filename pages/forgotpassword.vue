@@ -70,6 +70,8 @@ export default defineComponent({
   }
 .page {
   background-color: grey;
+  height: 100%;
+  width: 100%;
 }
 .field {
     font-weight: bold;

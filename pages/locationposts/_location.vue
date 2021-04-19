@@ -1,37 +1,37 @@
 <template>
-  <v-app>
-    <appbar data-app :nav="true" :location="$route.params.location"></appbar>
-      <div class="page">
-      <v-container grid-list data-app>
-        <v-row class="title-button">
-          <h1 class="header">{{this.$route.params.location}}</h1>
-        </v-row>
-        <v-row v-if="responses.length==0" class="titlearea">
-          <h2 class="mb-2"><i>No posts yet for {{this.$route.params.location}} :(</i></h2>
-          <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
-        </v-row>
-        <v-col v-else>
-          <client-only placeholder="Loading....">
-            <v-row v-for="(response, i) in responses" :key="i">
-              <feedpost :response="response"></feedpost>
-            </v-row>
-          </client-only>
-        </v-col>
-      </v-container>
-      <infinite-loading
-        v-if="responses.length"
-        spinner="spiral"
-        @infinite="infinteScroll"
-        data-app
-      ><span slot="no-more"></span>
-      </infinite-loading>
+    <v-app>
+    <div class="page">
+      <appbar data-app :nav="true" :location="$route.params.location"></appbar>
+        <v-container grid-list data-app>
+          <v-row class="title-button">
+            <h1 class="header">{{this.$route.params.location}}</h1>
+          </v-row>
+          <v-row v-if="responses.length==0" class="titlearea">
+            <h2 class="mb-2"><i>No posts yet for {{this.$route.params.location}} :(</i></h2>
+            <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
+          </v-row>
+          <v-col v-else>
+            <client-only placeholder="Loading....">
+              <v-row v-for="(response, i) in responses" :key="i">
+                <feedpost :response="response"></feedpost>
+              </v-row>
+            </client-only>
+          </v-col>
+        </v-container>
+        <infinite-loading
+          v-if="responses.length"
+          spinner="spiral"
+          @infinite="infinteScroll"
+          data-app
+        ><span slot="no-more"></span>
+        </infinite-loading>
+        <v-snackbar multi-line v-model="snackFail" color="red" data-app>
+        <div class="snack">
+        {{ snackText }}
+        </div>
+      </v-snackbar>
       </div>
-      <v-snackbar multi-line v-model="snackFail" color="red" data-app>
-      <div class="snack">
-      {{ snackText }}
-      </div>
-    </v-snackbar>
-  </v-app>
+    </v-app>
 </template>
 
 <script lang='ts'>
@@ -108,6 +108,8 @@ export default defineComponent({
     background-color: white;
     color: black;
     font-size: 1.5em;
+    height: 100%;
+    width: 100%;
   }
   .header {
     font-family: fantasy;

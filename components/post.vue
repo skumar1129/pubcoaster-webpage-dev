@@ -31,7 +31,7 @@
                 <v-btn v-if="!hasLikedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
                 <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
             </v-col>
-            <v-col align="right" class="middle" v-else-if="numLikes">
+            <v-col align="right" class="middle" v-else-if="numLikes==0">
                 No likes yet
                 <v-btn v-if="!hasLikedPost" icon @click="likePost"><v-icon>mdi-heart-outline</v-icon></v-btn>
                 <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
@@ -183,20 +183,14 @@ export default defineComponent({
               "createdBy": this.currentUser,
               "text": this.comment,
               "uuid": data.uuid,
-              "createdAt": this.getNow()
+              "createdAt": data.createdAt
           };
           this.response['comments'].unshift(newComment);
           this.comment = null; //reset comment
       }
     }
-    function getNow() {
-        var today = new Date();
-        today.setTime(today.getTime() - today.getTimezoneOffset()*60*1000);
-        return today;
-    }
     function getMoment(date: any) {
         let mydate = new Date(date);
-        mydate.setTime(mydate.getTime() + mydate.getTimezoneOffset()*60*1000);
         return moment.utc(mydate, 'YYYY-MM-DD hh:mm:ss').local().fromNow();
     }
     async function deleteComment(this: any, uuid: String) {
@@ -272,7 +266,7 @@ export default defineComponent({
     return { comment, send, picture, getMoment, deleteComment,
     editCommentFunc, editComment, editedComment, cancelEditComment,
     nbhood, bar, uuidEdit, turnOnEditComment,
-    hasLikedPost, likePost, unLikePost, numLikes, likedPost, getNow, currentUser }
+    hasLikedPost, likePost, unLikePost, numLikes, likedPost, currentUser }
   }
 });
 </script>
