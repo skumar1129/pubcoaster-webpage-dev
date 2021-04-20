@@ -73,8 +73,8 @@ module.exports = {
   },
 
   proxy: {
-    '/postapi/': { target: 'https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/', pathRewrite: {'^/postapi/': ''}, changeOrigin: true },
-    '/userapi/': { target: 'https://userapi-a6nxhkm7.uc.gateway.dev/', pathRewrite: {'^/userapi/': ''}, changeOrigin: true }
+    '/postapi/': { target: 'https://postapi-v1-otuidiffzq-ue.a.run.app/', pathRewrite: {'^/postapi/': ''}, changeOrigin: true },
+    '/userapi/': { target: 'https://userapi-otuidiffzq-uc.a.run.app/', pathRewrite: {'^/userapi/': ''}, changeOrigin: true }
   },
 
   auth: {
