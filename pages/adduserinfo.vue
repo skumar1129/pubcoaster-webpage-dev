@@ -96,7 +96,7 @@ export default defineComponent({
             };
             const token = await this.$fire.auth.currentUser.getIdToken();
             this.$axios.setHeader('Authorization', `Bearer ${token}`);
-            await this.$axios.$post('https://userapi-otuidiffzq-uc.a.run.app/user', reqBody);
+            await this.$axios.$post('https://userapi-a6nxhkm7.uc.gateway.dev/user, reqBody);
             await this.$store.dispatch('setUserName', { displayName: username.value, profPicUrl: picLink });
             this.snackText = 'Successfully created profile!';
             this.snackSuccess = true;
@@ -121,7 +121,7 @@ export default defineComponent({
             };
             const token = await this.$fire.auth.currentUser.getIdToken();
             this.$axios.setHeader('Authorization', `Bearer ${token}`);
-            await this.$axios.$post('https://userapi-otuidiffzq-uc.a.run.app/user', reqBody);
+            await this.$axios.$post('https://userapi-a6nxhkm7.uc.gateway.dev/user', reqBody);
             await this.$store.dispatch('setUserName', { displayName: username.value, profPicUrl: picLink });
             this.snackText = 'Successfully created profile!';
             this.snackSuccess = true;
