@@ -78,26 +78,37 @@ module.exports = {
       target: 'https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/', 
       pathRewrite: {'^/postapi/': ''}, 
       changeOrigin: true,
+      onProxyReq: function log (proxyReq, req, res) {
+        if (!req.body || !Object.keys(req.body).length) {
+          return;
+        }
+  
+        const contentType = proxyReq.getHeader('Content-Type')
+        const writeBody = (bodyData) => {
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+        if (contentType.includes('application/json') || contentType.includes('application/x-www-form-urlencoded')) {
+          writeBody(JSON.stringify(req.body));
+        }
+      } 
      },
     '/userapi/': { 
       target: 'https://userapi-a6nxhkm7.uc.gateway.dev/', 
       pathRewrite: {'^/userapi/': ''}, 
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
-        //  console.log(req.body)
-        // console.log(proxyReq.getHeader('Content-Type'))
-  
         if (!req.body || !Object.keys(req.body).length) {
-          return
+          return;
         }
   
         const contentType = proxyReq.getHeader('Content-Type')
         const writeBody = (bodyData) => {
-          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData))
-          proxyReq.write(bodyData)
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
         }
         if (contentType.includes('application/json') || contentType.includes('application/x-www-form-urlencoded')) {
-          writeBody(JSON.stringify(req.body))
+          writeBody(JSON.stringify(req.body));
         }
       } 
     }
