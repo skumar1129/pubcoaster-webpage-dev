@@ -152,7 +152,7 @@ export default defineComponent({
                 };
                 const token = await this.$fire.auth.currentUser.getIdToken();
                 this.$axios.setHeader('Authorization', `Bearer ${token}`);
-                await this.$axios.$post('/postapi/post', reqBody);
+                await this.$axios.$post('https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/post', reqBody);
                 this.snackText = 'Successfully created post!';
                 this.snackSuccess = true;
                 this.$router.push(`/locationposts/${location.value}`);
@@ -177,7 +177,7 @@ export default defineComponent({
             };
             const token = await this.$fire.auth.currentUser.getIdToken();
             this.$axios.setHeader('Authorization', `Bearer ${token}`);
-            await this.$axios.$post('/postapi/post', reqBody);
+            await this.$axios.$post('https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/post', reqBody);
             this.snackText = 'Successfully created post!';
             this.snackSuccess = true;
             this.$router.push(`/locationposts/${location.value}`);
