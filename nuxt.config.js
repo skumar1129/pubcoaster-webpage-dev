@@ -65,7 +65,6 @@ module.exports = {
   axios: {
     proxy: true,
     common: {
-      //'Access-Control-Allow-Origin': '*',
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE'
@@ -75,7 +74,7 @@ module.exports = {
 
   proxy: {
     '/postapi/': { target: 'https://postapi-v1-otuidiffzq-ue.a.run.app/', pathRewrite: {'^/postapi/': ''}, changeOrigin: true },
-    '/userapi/': { target: 'https://userapi-otuidiffzq-uc.a.run.app/', pathRewrite: {'^/userapi/': ''}, changeOrigin: true }
+    '/userapi/': { target: 'https://userapi-otuidiffzq-uc.a.run.app/', pathRewrite: {'^/userapi/': ''}}
   },
 
   auth: {
