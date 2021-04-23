@@ -149,11 +149,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    // onMounted(() => {
-    //   if (document.getElementById('pic')) {
-    //     document.getElementById('pic').src = props.response.picLink;
-    //   }
-    // });
     async function likePost(this: any) {
       const token = await this.$fire.auth.currentUser.getIdToken();
       this.$axios.setHeader('Authorization', `Bearer ${token}`);
