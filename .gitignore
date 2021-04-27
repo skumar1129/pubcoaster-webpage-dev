@@ -99,3 +99,5 @@ public/*
 .firebaserc
 .firebase/
 
+apiconfig.js
+

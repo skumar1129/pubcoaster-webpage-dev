@@ -1,4 +1,5 @@
 const firebaseConfig = require('./config/firebaseconfig');
+const { postapi, userapi } = require('./config/apiconfig');
 
 module.exports = {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -74,15 +75,15 @@ module.exports = {
   },
 
   proxy: {
-    '/postapi/': { 
-      target: 'https://knew-barz-gateway-a6nxhkm7.ue.gateway.dev/', 
-      pathRewrite: {'^/postapi/': ''}, 
+    '/postapi/': {
+      target: postapi,
+      pathRewrite: {'^/postapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
         if (!req.body || !Object.keys(req.body).length) {
           return;
         }
-  
+
         const contentType = proxyReq.getHeader('Content-Type')
         const writeBody = (bodyData) => {
           proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
@@ -91,17 +92,17 @@ module.exports = {
         if (contentType.includes('application/json') || contentType.includes('application/x-www-form-urlencoded')) {
           writeBody(JSON.stringify(req.body));
         }
-      } 
+      }
      },
-    '/userapi/': { 
-      target: 'https://userapi-a6nxhkm7.uc.gateway.dev/', 
-      pathRewrite: {'^/userapi/': ''}, 
+    '/userapi/': {
+      target: userapi,
+      pathRewrite: {'^/userapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
         if (!req.body || !Object.keys(req.body).length) {
           return;
         }
-  
+
         const contentType = proxyReq.getHeader('Content-Type')
         const writeBody = (bodyData) => {
           proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
@@ -110,7 +111,7 @@ module.exports = {
         if (contentType.includes('application/json') || contentType.includes('application/x-www-form-urlencoded')) {
           writeBody(JSON.stringify(req.body));
         }
-      } 
+      }
     }
   },
 
