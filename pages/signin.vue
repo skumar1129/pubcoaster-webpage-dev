@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main data-app class="page">
-      <h1 class="heading">Welcome to Knew Barz!</h1>
+      <h1 class="heading">Welcome to Pubcoasters!</h1>
       <h3 class="heading">Sign in or sign up and start posting!</h3>
       <div class="sign-up">
         <v-btn @click="signUp" color="red" class="mt-3">Go to Sign Up Page</v-btn>

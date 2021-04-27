@@ -3,8 +3,8 @@ const firebaseConfig = require('./config/firebaseconfig');
 module.exports = {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    titleTemplate: '%s - webapp',
-    title: 'webapp',
+    titleTemplate: '%s',
+    title: 'Pubcoasters',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },

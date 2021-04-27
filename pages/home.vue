@@ -2,7 +2,7 @@
   <v-app>
     <appbar data-app :nav="false"></appbar>
     <v-main data-app class="page">
-    <h1 class="heading">Welcome to Knew Barz!</h1>
+    <h1 class="heading">Welcome to Pubcoasters!</h1>
     <h3 class="heading">Check out the vibes of night venues and bars in your area</h3>
     <v-spacer></v-spacer>
     <img src="../assets/home_page.jpg" alt="Home Page IMG" height="100%" width="100%" class="image">
