@@ -14,11 +14,13 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "appAssociation": "AUTO",
     "rewrites": [
       {
         "source": "**",
         "function": "ssrapp"
-      }
+      },
+      { "source": "/**", "dynamicLinks": true }
     ]
   }
 }
