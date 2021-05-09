@@ -2,10 +2,8 @@
   <v-app>
     <appbar :nav="false" data-app></appbar>
       <div class="page">
-      <v-container grid-list data-app>
-        <v-row class="title-button">
-          <h1>My Posts</h1>
-        </v-row>
+      <myinfo :user_information="user_information" :user_post="user_post"></myinfo>
+      <v-container grid-list data-app class="spacing">
         <v-row v-if="responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No posts yet :(</i></h2>
           <img src="../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
@@ -38,14 +36,17 @@
 import { ref, defineComponent } from '@nuxtjs/composition-api';
 import appbar from '~/components/appbar.vue';
 import editpost from '@/components/edit-post.vue';
+import myinfo from '@/components/my-info.vue';
 import * as _ from 'lodash';
 
 export default defineComponent({
   name: 'UserFeed',
-  components: { editpost, appbar },
+  components: { editpost, appbar, myinfo },
   middleware: 'authenticate',
   setup() {
     const responses = ref([]);
+    const user_information = ref({});
+    const user_post = ref(0);
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
@@ -59,7 +60,7 @@ export default defineComponent({
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         let data = await this.$axios.$get(`/postapi/mypost/user?offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data);
+          responses.value = _.union(responses.value, data.post);
           $state.loaded();
         } else {
           $state.loaded();
@@ -70,18 +71,22 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, goToCreatePost, infinteScroll, snackText, snackFail };
+    return { responses, goToCreatePost, infinteScroll, snackText, snackFail, user_information, user_post };
   },
   async fetch(this: any) {
     try {
-      const user = this.$store.state.user.displayName;
-      this.$axios.setHeader('username', user);
+      const username = this.$store.state.user.displayName;
+      this.$axios.setHeader('username', username);
       this.$fire.auth.onAuthStateChanged(async (user: any) => {
         if (user) {
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get('/postapi/mypost/user');
-          this.responses = _.union(this.responses, data);
+          this.responses = _.union(this.responses, data.post);
+          this.user_post = data.totalCount;
+          //get user data
+          let user_info = await this.$axios.$get(`/userapi/user/${username}`);
+          this.user_information = user_info;
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
@@ -100,12 +105,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .title-button {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
-  }
   .page {
     background-color: white;
     color: black;
@@ -124,5 +123,8 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
+  }
+  .spacing {
+    margin-top: 1em;
   }
 </style>

@@ -59,7 +59,7 @@ export default defineComponent({
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}?offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data);
+          responses.value = _.union(responses.value, data.post);
           $state.loaded();
         } else {
           $state.loaded();
@@ -79,7 +79,7 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}`);
-          this.responses = _.union(this.responses, data);
+          this.responses = _.union(this.responses, data.post);
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
