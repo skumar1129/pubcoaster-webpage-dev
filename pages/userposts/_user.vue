@@ -2,10 +2,8 @@
   <v-app>
     <appbar data-app :nav="false"></appbar>
       <div class="page">
-      <v-container grid-list data-app>
-        <v-row class="title-button">
-          <h1 class="header">Posts for {{this.$route.params.user}}</h1>
-        </v-row>
+        <userinfo :user_information="user_information" :user_post="user_post"></userinfo>
+      <v-container grid-list data-app class="spacing">
         <v-row v-if="responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No posts yet for {{this.$route.params.user}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
@@ -37,16 +35,19 @@
 <script lang='ts'>
 import { ref, defineComponent } from '@nuxtjs/composition-api';
 import feedpost from '@/components/feed-post.vue';
+import userinfo from '@/components/user-info.vue';
 import appbar from '~/components/appbar.vue';
 import * as _ from 'lodash';
 
 export default defineComponent({
   name: 'UserPosts',
-  components: { appbar, feedpost },
+  components: { appbar, feedpost, userinfo },
   middleware: 'authenticate',
   setup() {
     const responses = ref([]);
     const offset = ref(1);
+    const user_information = ref({});
+    const user_post = ref(0);
     const snackFail = ref(false);
     const snackText = ref('');
     function goToCreatePost(this: any) {
@@ -70,7 +71,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, goToCreatePost, infinteScroll, snackText, snackFail };
+    return { responses, goToCreatePost, infinteScroll, snackText, snackFail, user_post, user_information };
   },
   async fetch(this: any) {
     try {
@@ -80,6 +81,10 @@ export default defineComponent({
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}`);
           this.responses = _.union(this.responses, data.post);
+          this.user_post = data.totalCount;
+          //get user data
+          let user_info = await this.$axios.$get(`/userapi/user/${this.$route.params.user}`);
+          this.user_information = user_info;
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
@@ -126,5 +131,8 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
+  }
+  .spacing {
+    margin-top: 1em;
   }
 </style>
