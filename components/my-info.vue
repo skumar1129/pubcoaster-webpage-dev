@@ -26,7 +26,7 @@
             ></v-file-input>
         </v-col>
         <v-col class="edits-false" v-if="!editInfo">
-            <v-btn color="red" large class="delete">Delete Account</v-btn>
+            <v-btn color="red" large class="delete" @click="deleteAccount">Delete Account</v-btn>
             <v-btn color="primary" large class="edit" @click="editInfo=true">Edit Account Information</v-btn>
         </v-col>
         <v-col class="edits-true" v-if="editInfo">
@@ -35,7 +35,7 @@
         </v-col>
         <v-col class="likes">
             <div class="indi-likes">
-                <v-btn color="white"><v-icon color="red" x-large>mdi-post</v-icon></v-btn>
+                <v-btn color="white"><v-icon color="red" x-large @click="dummy">mdi-post</v-icon></v-btn>
                 <i v-if="user_post==1">{{user_post}} post created</i>
                 <i v-else>{{user_post}} posts created</i>
             </div>
@@ -139,6 +139,28 @@ export default defineComponent({
     const snackText = ref('');
     const snackSuccess = ref(false);
 
+    function dummy() {
+        alert('Just look down dummy!!');
+    }
+
+    async function deleteAccount(this: any) {
+        if(confirm('Are you sure you want to delete your account?')) {
+          try {
+            const username = this.$store.state.user.displayName;
+            const token = await this.$fire.auth.currentUser.getIdToken();
+            this.$axios.setHeader('Authorization', `Bearer ${token}`);
+            let data = await this.$axios.$delete(`/userapi/user/${username}`);
+            await this.$fire.auth.currentUser.delete();
+            this.$router.push('/signin');
+            location.reload();
+          } catch (e) {
+            console.log(e);
+            this.snackText = 'Error: could not delete user. Check your network connection.';
+            this.snackFail = true;
+          }
+        }
+    }
+
     async function filePicked(this: any) {
         if (this.picFile != null) {
             try {
@@ -193,7 +215,7 @@ export default defineComponent({
     }
 
   
-    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess }
+    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy }
   }
 });
 </script>
