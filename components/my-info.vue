@@ -1,5 +1,12 @@
 <template>
-    <div data-app>
+    <v-card height="200" data-app v-if="uploading" color="grey">
+        <v-layout align-center justify-center column fill-height>
+            <v-flex row align-center>
+                <v-progress-circular indeterminate :size="70" color="red" class=""></v-progress-circular>
+            </v-flex>
+        </v-layout>
+     </v-card>
+    <div data-app v-else>
         <v-row>
         <v-col v-if="user_information.picLink" class="pic">
             <v-avatar size="200"><img :src="user_information.picLink" alt="Profile Picture"></v-avatar>
@@ -29,7 +36,7 @@
             <v-btn color="red" large class="delete" @click="deleteAccount">Delete Account</v-btn>
             <v-btn color="primary" large class="edit" @click="editInfo=true">Edit Account Information</v-btn>
         </v-col>
-        <v-col class="edits-true" v-if="editInfo">
+        <v-col class="edits-true" v-else>
             <v-btn color="red" large class="edit" @click="cancelEdit">Cancel Editing</v-btn>
             <v-btn color="primary" large class="save-edit" @click="saveEdit">Save Edits</v-btn>
         </v-col>
@@ -138,6 +145,7 @@ export default defineComponent({
     const snackFail = ref(false);
     const snackText = ref('');
     const snackSuccess = ref(false);
+    const uploading = ref(false);
 
     function dummy() {
         alert('Just look down dummy!!');
@@ -164,6 +172,7 @@ export default defineComponent({
     async function filePicked(this: any) {
         if (this.picFile != null) {
             try {
+                this.uploading = true;
                 const username = this.$store.state.user.displayName;
                 let id = v4();
                 let storageRef = this.$fire.storage.ref().child(`prof_pics/${username.value}-${id}`);
@@ -215,7 +224,7 @@ export default defineComponent({
     }
 
   
-    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy }
+    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy, uploading }
   }
 });
 </script>
@@ -321,5 +330,5 @@ export default defineComponent({
         color: white;
         text-align: center;
         font-style: italic;
-  }
+    }
 </style>
