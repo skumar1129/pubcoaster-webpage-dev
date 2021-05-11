@@ -38,7 +38,7 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon medium class="mt-8">mdi-account-question</v-icon>
+          <v-icon medium class="mt-8">mdi-home-map-marker</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
           <v-text-field v-model="location" placeholder="Location"></v-text-field>
