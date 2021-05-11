@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <appbar data-app :nav="true" :location="location"></appbar>
+    <appbar data-app :nav="true" :location="location" :user_nav="false"></appbar>
       <div class="page">
       <v-container grid-list data-app>
         <v-row class="title-button">
@@ -37,12 +37,11 @@
 <script lang='ts'>
 import feedpost from '~/components/feed-post.vue';
 import appbar from '~/components/appbar.vue';
-import navdrawer from '~/components/navdrawer.vue';
 import * as _ from 'lodash';
 import { ref, defineComponent} from '@nuxtjs/composition-api';
 
 export default defineComponent({
-  components: { feedpost, appbar, navdrawer },
+  components: { feedpost, appbar },
   name: "LocUserPosts",
   middleware: 'authenticate',
   setup() {

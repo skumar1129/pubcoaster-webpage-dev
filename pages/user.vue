@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <appbar :nav="false" data-app></appbar>
+    <appbar :nav="false" :user_nav="false" data-app></appbar>
       <div class="page">
       <myinfo :user_information="user_information" :user_post="user_post"></myinfo>
       <v-container grid-list data-app class="spacing">
