@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <appbar data-app :nav="false"></appbar>
+    <appbar data-app :nav="false" :user_nav="false"></appbar>
     <v-main data-app class="page">
     <h1 class="heading">Welcome to Pubcoasters!</h1>
     <h3 class="heading">Check out the vibes of night venues and bars in your area</h3>

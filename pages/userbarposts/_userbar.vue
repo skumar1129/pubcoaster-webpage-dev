@@ -1,19 +1,22 @@
 <template>
   <v-app>
-    <appbar data-app :nav="false" :user_nav="true" :username="this.$route.params.user"></appbar>
+    <appbar data-app :nav="false" :user_nav="true" :username="user" ></appbar>
       <div class="page">
         <userinfo :user_information="user_information" :user_post="user_post"></userinfo>
-      <v-container grid-list data-app class="spacing">
+      <v-container grid-list data-app>
+        <v-row class="title-button">
+          <h1 class="header">{{user}}'s Posts with {{bar}}</h1>
+        </v-row>
         <v-row v-if="responses.length==0" class="titlearea">
-          <h2 class="mb-2"><i>No posts yet for {{this.$route.params.user}} :(</i></h2>
+          <h2 class="mb-2"><i>No posts yet for {{user}} with {{bar}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
         <v-col v-else>
-          <client-only placeholder="Loading....">
+        <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <feedpost :response="response"></feedpost>
             </v-row>
-          </client-only>
+        </client-only>
         </v-col>
       </v-container>
       <infinite-loading
@@ -24,7 +27,7 @@
       ><span slot="no-more"></span>
       </infinite-loading>
       </div>
-       <v-snackbar multi-line v-model="snackFail" color="red" data-app>
+      <v-snackbar multi-line v-model="snackFail" color="red" data-app>
       <div class="snack">
       {{ snackText }}
       </div>
@@ -33,18 +36,20 @@
 </template>
 
 <script lang='ts'>
-import { ref, defineComponent } from '@nuxtjs/composition-api';
-import feedpost from '@/components/feed-post.vue';
-import userinfo from '@/components/user-info.vue';
+import feedpost from '~/components/feed-post.vue';
 import appbar from '~/components/appbar.vue';
+import userinfo from '~/components/user-info.vue';
 import * as _ from 'lodash';
+import { ref, defineComponent} from '@nuxtjs/composition-api';
 
 export default defineComponent({
-  name: 'UserPosts',
-  components: { appbar, feedpost, userinfo },
+  components: { feedpost, appbar, userinfo },
+  name: "UserBarPosts",
   middleware: 'authenticate',
   setup() {
     const responses = ref([]);
+    const bar = ref('');
+    const user = ref('');
     const offset = ref(1);
     const user_information = ref({});
     const user_post = ref(0);
@@ -58,9 +63,9 @@ export default defineComponent({
       try {
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
-        let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}?offset=${offset.value}`);
+        let data = await this.$axios.$get(`/postapi/post/userbar/${user.value}/${bar.value}?offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data.post);
+          responses.value = _.union(responses.value, data);
           $state.loaded();
         } else {
           $state.loaded();
@@ -71,19 +76,22 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, goToCreatePost, infinteScroll, snackText, snackFail, user_post, user_information };
+    return { responses, bar, user, goToCreatePost, infinteScroll, snackText, snackFail, user_information, user_post };
   },
   async fetch(this: any) {
+    let params = this.$route.params.userbar.split('-');
+    this.user = params[0];
+    this.bar = params[1];
     try {
       this.$fire.auth.onAuthStateChanged(async (user: any) => {
         if (user) {
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
-          let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}`);
+          let data = await this.$axios.$get(`/postapi/post/userbar/${this.user}/${this.bar}`)
           this.responses = _.union(this.responses, data.post);
           this.user_post = data.totalCount;
           //get user data
-          let user_info = await this.$axios.$get(`/userapi/user/${this.$route.params.user}`);
+          let user_info = await this.$axios.$get(`/userapi/user/${this.user}`);
           this.user_information = user_info;
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
@@ -131,8 +139,5 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
-  }
-  .spacing {
-    margin-top: 1em;
   }
 </style>
