@@ -83,7 +83,7 @@ export default defineComponent({
   },
   async fetch(this: any) {
     let params = this.$route.params.usernbhood.split('-');
-    this.location = params[0];
+    this.user = params[0];
     this.nbhood = params[1];
     try {
       this.$fire.auth.onAuthStateChanged(async (user: any) => {
