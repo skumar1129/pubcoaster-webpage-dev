@@ -5,7 +5,7 @@
       <v-app-bar-nav-icon v-if="nav || user_nav"></v-app-bar-nav-icon>
 
       <v-btn text @click="goHome">
-        <v-toolbar-title class="title"><b><i>Pubcoasters</i></b></v-toolbar-title>
+        <v-toolbar-title><b><i>Pubcoasters</i></b></v-toolbar-title>
       </v-btn>
 
       <v-spacer></v-spacer>

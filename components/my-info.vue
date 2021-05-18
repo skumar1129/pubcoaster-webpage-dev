@@ -147,6 +147,7 @@ export default defineComponent({
     const snackSuccess = ref(false);
     const uploading = ref(false);
 
+
     function dummy() {
         alert('Just look down dummy!!');
     }
@@ -243,7 +244,7 @@ export default defineComponent({
     }
     .pic {
         margin-bottom: .3em;
-        margin-left: 6em;
+        margin-left: 2em;
         margin-top: .4em;
         position: relative;
     }

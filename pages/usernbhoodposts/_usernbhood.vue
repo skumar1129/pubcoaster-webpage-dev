@@ -55,9 +55,7 @@ export default defineComponent({
     const user_post = ref(0);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     const token = computed(async function(this:  any) {
       await this.$fire.auth.currentUser.getIdToken();
     });
@@ -68,7 +66,7 @@ export default defineComponent({
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         let data = await this.$axios.$get(`/postapi/post/usernbhood/${user.value}/${nbhood.value}?offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data);
+          responses.value = _.union(responses.value, data.post);
           $state.loaded();
         } else {
           $state.loaded();
@@ -79,7 +77,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, nbhood, user, goToCreatePost, infinteScroll, snackFail, snackText, token, user_information, user_post };
+    return { responses, nbhood, user, infinteScroll, snackFail, snackText, token, user_information, user_post };
   },
   async fetch(this: any) {
     let params = this.$route.params.usernbhood.split('-');
