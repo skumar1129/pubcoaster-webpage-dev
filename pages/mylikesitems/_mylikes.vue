@@ -4,7 +4,12 @@
       <div class="page">
       <v-container grid-list data-app>
         <v-row class="title-button">
-          <h1 class="header">Your Liked {{shownItem}}s</h1>
+        <v-col align="left">
+          <h1 class="header" align="left">Your Liked {{shownItem}}s</h1>
+        </v-col>
+        <v-col align="right">
+          <v-btn color="secondary" class="add-new" x-large align="right"><v-icon x-large>mdi-plus</v-icon>Add a new {{shownItem}}</v-btn>
+        </v-col>
         </v-row>
         <v-row v-if="responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No {{shownItem}}s Liked Yet :(</i></h2>
@@ -137,6 +142,7 @@ export default defineComponent({
   .header {
     font-family: fantasy;
     text-decoration: underline;
+    font-size: 2.5em;
   }
   .titlearea {
     justify-content: center;
@@ -149,5 +155,10 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
+  }
+  .add-new {
+      width: 18em;
+      font-weight: bold;
+      font-size: .78em;
   }
 </style>

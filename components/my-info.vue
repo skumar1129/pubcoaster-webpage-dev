@@ -148,13 +148,13 @@ export default defineComponent({
     const uploading = ref(false);
 
     function goToUserLikedBars(this: any) {
-        this.$router.push(`/userlikesitems/${props.user_information['username'] + '-bar'}`);
+        this.$router.push(`/mylikesitems/${props.user_information['username'] + '-bar'}`);
     }
     function goToUserLikedDrinks(this: any) {
-        this.$router.push(`/userlikesitems/${props.user_information['username'] + '-drink'}`);
+        this.$router.push(`/mylikesitems/${props.user_information['username'] + '-drink'}`);
     }
     function goToUserLikedBrands(this: any) {
-        this.$router.push(`/userlikesitems/${props.user_information['username'] + '-brand'}`);
+        this.$router.push(`/mylikesitems/${props.user_information['username'] + '-brand'}`);
     }
 
 
