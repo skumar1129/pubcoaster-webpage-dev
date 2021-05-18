@@ -24,6 +24,11 @@
             <v-col v-else class="name">
                 <b>{{response['drinkName']}}</b>
             </v-col>
+            <v-col v-if="mylikes" align="right">
+                <v-btn @click="deleteItem" white icon x-large class="delete-liked">
+                <v-icon>mdi-delete</v-icon>
+                </v-btn>
+            </v-col>
         </v-row>
     </v-card>
     </v-container>
@@ -42,6 +47,10 @@ export default defineComponent({
     item: {
         type: String,
         required: true
+    },
+    mylikes: {
+        type: Boolean,
+        required: true
     }
   },
   setup(props) {
@@ -56,8 +65,16 @@ export default defineComponent({
           return '';
         }
       })
+
+      async function deleteItem(this: any) {
+        let deleteData = {'username': this.$store.state.user.displayName, 'uuid': this.response['uuid']}
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        let deleteStuff = await this.$axios.$delete(`/userapi/user/${this.item}`, { data: deleteData });
+        location.reload();
+      }
      
-      return { nbhood };
+      return { nbhood, deleteItem };
   }
 });
 </script>
@@ -75,8 +92,9 @@ export default defineComponent({
     }
 
     .name {
-        font-size: 1.5em;
+        font-size: 1.25em;
         margin-right: 6em;
+        margin-top: .3em;
     }
     .bar-col {
         font-size: 1em;
@@ -84,6 +102,10 @@ export default defineComponent({
         margin-top: .6em;
         margin-bottom: .6em;
         vertical-align: middle;
+    }
+    .delete-liked {
+        margin-top: .4em;
+        margin-right: 3em;
     }
 
 </style>

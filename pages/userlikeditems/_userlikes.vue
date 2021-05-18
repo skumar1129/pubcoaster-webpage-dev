@@ -4,21 +4,16 @@
       <div class="page">
       <v-container grid-list data-app>
         <v-row class="title-button">
-        <v-col align="left">
-          <h1 class="header" align="left">Your Liked {{shownItem}}s</h1>
-        </v-col>
-        <v-col align="right">
-          <v-btn color="secondary" class="add-new" x-large align="right"><v-icon x-large>mdi-plus</v-icon>Add a new {{shownItem}}</v-btn>
-        </v-col>
+          <h1 class="header">{{user}}'s Liked {{shownItem}}s</h1>
         </v-row>
         <v-row v-if="responses.length==0" class="titlearea">
-          <h2 class="mb-2"><i>No {{shownItem}}s Liked Yet :(</i></h2>
+          <h2 class="mb-2"><i>No {{shownItem}}s Liked yet for {{user}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
         <v-col v-else>
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
-              <likeditem :response="response" :item="item.toLowerCase()"></likeditem>
+              <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false"></likeditem>
             </v-row>
         </client-only>
         </v-col>
@@ -65,6 +60,7 @@ export default defineComponent({
         }
     })
 
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -92,7 +88,7 @@ export default defineComponent({
     return { responses, user, infinteScroll, snackText, snackFail, item, shownItem };
   },
   async fetch(this: any) {
-    let params = this.$route.params.mylikes.split('-');
+    let params = this.$route.params.userlikes.split('-');
     this.user = params[0];
     this.item = params[1];
     try {
@@ -142,7 +138,6 @@ export default defineComponent({
   .header {
     font-family: fantasy;
     text-decoration: underline;
-    font-size: 2.5em;
   }
   .titlearea {
     justify-content: center;
@@ -155,10 +150,5 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
-  }
-  .add-new {
-      width: 18em;
-      font-weight: bold;
-      font-size: .78em;
   }
 </style>
