@@ -47,17 +47,17 @@
                 <i v-else>{{user_post}} posts created</i>
             </div>
             <div class="indi-likes">
-                <v-btn color="white"><v-icon color="red" x-large>mdi-table-chair</v-icon></v-btn>
+                <v-btn color="white" @click="goToUserLikedBars"><v-icon color="red" x-large>mdi-table-chair</v-icon></v-btn>
                 <i v-if="user_information['numBars']==1">{{user_information['numBars']}} bar liked</i>
                 <i v-else>{{user_information['numBars']}} bars liked</i>
             </div>
             <div class="indi-likes">
-                <v-btn color="white"><v-icon color="red" x-large>mdi-glass-mug-variant</v-icon></v-btn>
+                <v-btn color="white" @click="goToUserLikedDrinks"><v-icon color="red" x-large>mdi-glass-mug-variant</v-icon></v-btn>
                 <i v-if="user_information['numDrinks']==1">{{user_information['numDrinks']}} drink liked</i>
                 <i v-else>{{user_information['numDrinks']}} drinks liked</i>
             </div>
             <div class="indi-likes">
-                <v-btn color="white"><v-icon color="red" x-large>mdi-billboard</v-icon></v-btn>
+                <v-btn color="white" @click="goToUserLikedBrands"><v-icon color="red" x-large>mdi-billboard</v-icon></v-btn>
                 <i v-if="user_information['numBrands']==1">{{user_information['numBrands']}} brand liked</i>
                 <i v-else>{{user_information['numBrands']}} brands liked</i>
             </div>
@@ -147,6 +147,17 @@ export default defineComponent({
     const snackSuccess = ref(false);
     const uploading = ref(false);
 
+    function goToUserLikedBars(this: any) {
+        this.$router.push(`/userlikesitems/${props.user_information['username'] + '-bar'}`);
+    }
+    function goToUserLikedDrinks(this: any) {
+        this.$router.push(`/userlikesitems/${props.user_information['username'] + '-drink'}`);
+    }
+    function goToUserLikedBrands(this: any) {
+        this.$router.push(`/userlikesitems/${props.user_information['username'] + '-brand'}`);
+    }
+
+
 
     function dummy() {
         alert('Just look down dummy!!');
@@ -225,7 +236,7 @@ export default defineComponent({
     }
 
   
-    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy, uploading }
+    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy, uploading, goToUserLikedBars, goToUserLikedDrinks, goToUserLikedBrands }
   }
 });
 </script>
