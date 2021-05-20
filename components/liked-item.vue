@@ -18,8 +18,16 @@
                     <i>{{response['location']}}</i>
                 </v-row>
             </v-col>
-            <v-col v-else-if="item=='brand'" class="name">
-                <b v-if="item=='brand'">{{response['brandName']}}</b>
+            <v-col v-else-if="item=='brand' && response['type']" class="bar-col">
+                <v-row>
+                    <b>{{response['brandName']}}</b>
+                </v-row>
+                <v-row>
+                    <i>{{response['type']}}</i>
+                </v-row>
+            </v-col>
+            <v-col v-else-if="item=='brand' && !response['type']" class="name">
+                <b>{{response['brandName']}}</b>
             </v-col>
             <v-col v-else class="name">
                 <b>{{response['drinkName']}}</b>
