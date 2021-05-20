@@ -13,7 +13,7 @@
         <v-col v-else>
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
-              <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false"></likeditem>
+              <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false" :newlike="true"></likeditem>
             </v-row>
         </client-only>
         </v-col>
@@ -66,7 +66,7 @@ export default defineComponent({
       try {
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
-        let data = await this.$axios.$get(`/userapi/${this.item.toLowerCase()}/${this.user}?offset=${offset.value}`);
+        let data = await this.$axios.$get(`/userapi/${this.item.toLowerCase()}/${this.user}&offset=${offset.value}`);
         if (data.length > 0) {
           if (this.item.toLowerCase() == 'brand') {
             responses.value = _.union(responses.value, data.brands);

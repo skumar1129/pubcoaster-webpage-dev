@@ -29,6 +29,12 @@
                 <v-icon>mdi-delete</v-icon>
                 </v-btn>
             </v-col>
+            <v-col v-else-if="newlike && hasLikedItem">
+                <v-btn white icon @click="unLikeItem" class="heart-icon"><v-icon x-large>mdi-heart</v-icon></v-btn>
+            </v-col>
+            <v-col v-else-if="newlike && !hasLikedItem">
+                <v-btn white icon @click="likeItem" class="heart-icon"><v-icon x-large>mdi-heart-outline</v-icon></v-btn>
+            </v-col>
         </v-row>
     </v-card>
     </v-container>
@@ -51,9 +57,22 @@ export default defineComponent({
     mylikes: {
         type: Boolean,
         required: true
+    },
+    newlike: {
+        type: Boolean,
+        required: true
     }
   },
   setup(props) {
+
+
+    const hasLikedItem = computed(() => {
+      if (props.newlike && props.response.userLiked == true) {
+        return true;
+      }
+      return false;
+    });
+
      const nbhood = computed(() => {
         if (props.item.toLowerCase() == 'bar' && props.response.neighborhood) {
           return props.response.neighborhood.toLowerCase()
@@ -66,15 +85,44 @@ export default defineComponent({
         }
       })
 
-      async function deleteItem(this: any) {
+    function postBody(this: any) {
+        if (this.item.toLowerCase() == 'bar') {
+            if (this.response['neighborhood']) {
+                return {'username': this.$store.state.user.displayName, 'bar': this.response['barName'], 'location': this.response['location'], 'neighborhood': this.response['neighborhood']};
+            } else {
+                return {'username': this.$store.state.user.displayName, 'bar': this.response['barName'], 'location': this.response['location']};
+            }
+        } else if (this.item.toLowerCase() == 'brand') {
+            return {'username': this.$store.state.user.displayName, 'brand': this.response['brandName'], 'type': this.response['type']};
+        } else {
+            return {'username': this.$store.state.user.displayName, 'drink': this.response['drinkName']};
+        }
+    }
+
+    async function likeItem(this: any) {
+      const token = await this.$fire.auth.currentUser.getIdToken();
+      this.$axios.setHeader('Authorization', `Bearer ${token}`);
+      let postData = this.postBody(); 
+      await this.$axios.$post(`/userapi/user/${this.item.toLowerCase()}`, postData );
+      this.response['userLiked'] = true;
+    }
+    async function unLikeItem(this: any) {
         let deleteData = {'username': this.$store.state.user.displayName, 'uuid': this.response['uuid']}
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
-        let deleteStuff = await this.$axios.$delete(`/userapi/user/${this.item}`, { data: deleteData });
+        await this.$axios.$delete(`/userapi/user/${this.item}`, { data: deleteData });
+        this.response['userLiked'] = false;
+    }
+
+    async function deleteItem(this: any) {
+        let deleteData = {'username': this.$store.state.user.displayName, 'uuid': this.response['uuid']}
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        await this.$axios.$delete(`/userapi/user/${this.item}`, { data: deleteData });
         location.reload();
-      }
+    }
      
-      return { nbhood, deleteItem };
+      return { nbhood, deleteItem, likeItem, unLikeItem, postBody, hasLikedItem };
   }
 });
 </script>
@@ -107,5 +155,8 @@ export default defineComponent({
         margin-top: .4em;
         margin-right: 3em;
     }
-
+    .heart-icon {
+        margin-top: 1em;
+        margin-left: 2em;
+    }
 </style>

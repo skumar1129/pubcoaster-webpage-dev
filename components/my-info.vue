@@ -169,7 +169,7 @@ export default defineComponent({
             const username = this.$store.state.user.displayName;
             const token = await this.$fire.auth.currentUser.getIdToken();
             this.$axios.setHeader('Authorization', `Bearer ${token}`);
-            let data = await this.$axios.$delete(`/userapi/user/${username}`);
+            await this.$axios.$delete(`/userapi/user/${username}`);
             await this.$fire.auth.currentUser.delete();
             this.$router.push('/signin');
             location.reload();

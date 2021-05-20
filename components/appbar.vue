@@ -13,6 +13,7 @@
       <v-text-field
         placeholder="Search for users"
         v-model="user"
+        @keypress.enter="searchUser"
         class="mt-4 font-weight-medium"
         color="white"
       >
