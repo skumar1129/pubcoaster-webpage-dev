@@ -9,10 +9,10 @@
             </v-col>
             <v-col v-if="item=='bar'" class="bar-col">
                 <v-row>
-                    <b>{{response['barName']}}</b>
+                    <b>{{bar}}</b>
                 </v-row>
                 <v-row v-if="response['neighborhood']">
-                    <i>{{response['neighborhood']}}, {{response['location']}}</i>
+                    <i>{{nbhood}}, {{response['location']}}</i>
                 </v-row>
                 <v-row v-else>
                     <i>{{response['location']}}</i>
@@ -20,17 +20,17 @@
             </v-col>
             <v-col v-else-if="item=='brand' && response['type']" class="bar-col">
                 <v-row>
-                    <b>{{response['brandName']}}</b>
+                    <b>{{brand}}</b>
                 </v-row>
                 <v-row>
-                    <i>{{response['type']}}</i>
+                    <i>{{type}}</i>
                 </v-row>
             </v-col>
             <v-col v-else-if="item=='brand' && !response['type']" class="name">
-                <b>{{response['brandName']}}</b>
+                <b>{{brand}}</b>
             </v-col>
             <v-col v-else class="name">
-                <b>{{response['drinkName']}}</b>
+                <b>{{drink}}</b>
             </v-col>
             <v-col v-if="mylikes" align="right">
                 <v-btn @click="deleteItem" white icon x-large class="delete-liked">
@@ -73,6 +73,39 @@ export default defineComponent({
   },
   setup(props) {
 
+    const bar = computed(() => {
+        if (props.item.toLowerCase() == 'bar' && props.response.barName) {
+          return props.response.barName.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+        else {
+          return '';
+        }
+    })
+    const brand = computed(() => {
+        if (props.item.toLowerCase() == 'brand' && props.response.brandName) {
+          return props.response.brandName.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+        else {
+          return '';
+        }
+    })
+    const drink = computed(() => {
+        if (props.item.toLowerCase() == 'drink' && props.response.drinkName) {
+          return props.response.drinkName.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+        else {
+          return '';
+        }
+    })
 
     const hasLikedItem = computed(() => {
       if (props.newlike && props.response.userLiked == true) {
@@ -84,6 +117,18 @@ export default defineComponent({
      const nbhood = computed(() => {
         if (props.item.toLowerCase() == 'bar' && props.response.neighborhood) {
           return props.response.neighborhood.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        }
+        else {
+          return '';
+        }
+      })
+
+      const type = computed(() => {
+        if (props.item.toLowerCase() == 'brand' && props.response.type) {
+          return props.response.type.toLowerCase()
             .split(' ')
             .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
             .join(' ');
@@ -130,7 +175,7 @@ export default defineComponent({
         location.reload();
     }
      
-      return { nbhood, deleteItem, likeItem, unLikeItem, postBody, hasLikedItem };
+      return { nbhood, deleteItem, likeItem, unLikeItem, postBody, hasLikedItem, type, bar, brand, drink };
   }
 });
 </script>

@@ -131,6 +131,7 @@ export default defineComponent({
               this.snackText = 'Successfully created brand! Congrats!';
               this.snackSuccess = true;
               this.$refs.form.reset();
+              this.$router.push(`/mylikeditems/brand`);
           } catch (e) {
               this.snackText = `Error: could not create brand. Check network connection.`;
               this.snackFail = true;
@@ -152,6 +153,7 @@ export default defineComponent({
               this.snackText = 'Successfully created drink! Congrats!';
               this.snackSuccess = true;
               this.$refs.form.reset();
+              this.$router.push(`/mylikeditems/drink`);
           } catch (e) {
               this.snackText = `Error: could not create drink. Check network connection.`;
               this.snackFail = true;
@@ -173,9 +175,10 @@ export default defineComponent({
                   'neighborhood': this.neighborhood
               }
               await this.$axios.$post('/userapi/user/bar', reqBody);
-              this.snackText = 'Successfully created brand! Congrats!';
+              this.snackText = 'Successfully created bar! Congrats!';
               this.snackSuccess = true;
               this.$refs.form.reset();
+              this.$router.push(`/mylikeditems/bar`);
           } catch (e) {
               this.snackText = `Error: could not create bar. Check network connection.`;
               this.snackFail = true;
