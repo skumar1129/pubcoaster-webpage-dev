@@ -1,20 +1,19 @@
 <template>
   <v-app>
-    <appbar data-app :nav="false" :user_nav="true" :username="user"></appbar>
+    <appbar data-app :nav="false" :user_nav="false" ></appbar>
       <div class="page">
-        <userinfo :user_information="user_information" :user_post="user_post"></userinfo>
       <v-container grid-list data-app>
         <v-row class="title-button">
-          <h1 class="header">{{user}}'s Posts in {{location}}</h1>
+          <h1 class="header">{{user}}'s Liked {{shownItem}}s</h1>
         </v-row>
         <v-row v-if="responses.length==0" class="titlearea">
-          <h2 class="mb-2"><i>No posts yet for {{user}} in {{location}} :(</i></h2>
+          <h2 class="mb-2"><i>No {{shownItem}}s Liked yet for {{user}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
         <v-col v-else>
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
-              <feedpost :response="response"></feedpost>
+              <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false" :newlike="true"></likeditem>
             </v-row>
         </client-only>
         </v-col>
@@ -36,34 +35,46 @@
 </template>
 
 <script lang='ts'>
-import feedpost from '~/components/feed-post.vue';
 import appbar from '~/components/appbar.vue';
-import userinfo from '~/components/user-info.vue';
+import likeditem from '~/components/liked-item.vue';
 import * as _ from 'lodash';
-import { ref, defineComponent} from '@nuxtjs/composition-api';
+import { ref, defineComponent, computed } from '@nuxtjs/composition-api';
 
 export default defineComponent({
-  components: { feedpost, appbar, userinfo },
-  name: "UserLocPosts",
+  components: { appbar, likeditem },
+  name: "UserLikes",
   middleware: 'authenticate',
   setup() {
-    let responses = ref([]);
+    const responses = ref([]);
+    const item = ref('');
     const user = ref('');
-    const location = ref('');
     const offset = ref(1);
     const snackFail = ref(false);
-    const user_information = ref({});
-    const user_post = ref(0);
     const snackText = ref('');
+
+    const shownItem = computed(function(this: any) {
+        if (this.item) {
+          return this.item.charAt(0).toUpperCase() + this.item.slice(1);
+        } else {
+          return '';
+        }
+    })
+
 
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
-        let data = await this.$axios.$get(`/postapi/post/userloc/${this.user}/${this.location}?offset=${offset.value}`);
+        let data = await this.$axios.$get(`/userapi/${this.item.toLowerCase()}/${this.user}&offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data.post);
+          if (this.item.toLowerCase() == 'brand') {
+            responses.value = _.union(responses.value, data.brands);
+          } else if (this.item.toLowerCase() == 'drink') {
+            responses.value = _.union(responses.value, data.drinks);
+          } else {
+            responses.value = _.union(responses.value, data.bars);
+          }
           $state.loaded();
         } else {
           $state.loaded();
@@ -74,23 +85,25 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, user, location, infinteScroll, snackText, snackFail, user_post, user_information };
+    return { responses, user, infinteScroll, snackText, snackFail, item, shownItem };
   },
   async fetch(this: any) {
-    let params = this.$route.params.userloc.split('-');
+    let params = this.$route.params.userlikes.split('-');
     this.user = params[0];
-    this.location = params[1];
+    this.item = params[1];
     try {
-       this.$fire.auth.onAuthStateChanged(async (user: any) => {
+      this.$fire.auth.onAuthStateChanged(async (user: any) => {
         if (user) {
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
-          let data = await this.$axios.$get(`/postapi/post/userloc/${this.user}/${this.location}`);
-          this.responses = _.union(this.responses, data.post);
-          this.user_post = data.totalCount;
-          //get user data
-          let user_info = await this.$axios.$get(`/userapi/user/${this.user}`);
-          this.user_information = user_info;
+          let data = await this.$axios.$get(`/userapi/${this.item.toLowerCase()}/${this.user}`)
+          if (this.item.toLowerCase() == 'brand') {
+            this.responses = _.union(this.responses, data.brands);
+          } else if (this.item.toLowerCase() == 'drink') {
+            this.responses = _.union(this.responses, data.drinks);
+          } else {
+            this.responses = _.union(this.responses, data.bars);
+          }
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;

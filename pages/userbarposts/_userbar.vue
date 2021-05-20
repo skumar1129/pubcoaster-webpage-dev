@@ -55,9 +55,7 @@ export default defineComponent({
     const user_post = ref(0);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -65,7 +63,7 @@ export default defineComponent({
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         let data = await this.$axios.$get(`/postapi/post/userbar/${user.value}/${bar.value}?offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data);
+          responses.value = _.union(responses.value, data.post);
           $state.loaded();
         } else {
           $state.loaded();
@@ -76,7 +74,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, bar, user, goToCreatePost, infinteScroll, snackText, snackFail, user_information, user_post };
+    return { responses, bar, user, infinteScroll, snackText, snackFail, user_information, user_post };
   },
   async fetch(this: any) {
     let params = this.$route.params.userbar.split('-');

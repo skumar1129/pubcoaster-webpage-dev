@@ -47,17 +47,17 @@
                 <i v-else>{{user_post}} posts created</i>
             </div>
             <div class="indi-likes">
-                <v-btn color="white"><v-icon color="red" x-large>mdi-table-chair</v-icon></v-btn>
+                <v-btn color="white" @click="goToUserLikedBars"><v-icon color="red" x-large>mdi-table-chair</v-icon></v-btn>
                 <i v-if="user_information['numBars']==1">{{user_information['numBars']}} bar liked</i>
                 <i v-else>{{user_information['numBars']}} bars liked</i>
             </div>
             <div class="indi-likes">
-                <v-btn color="white"><v-icon color="red" x-large>mdi-glass-mug-variant</v-icon></v-btn>
+                <v-btn color="white" @click="goToUserLikedDrinks"><v-icon color="red" x-large>mdi-glass-mug-variant</v-icon></v-btn>
                 <i v-if="user_information['numDrinks']==1">{{user_information['numDrinks']}} drink liked</i>
                 <i v-else>{{user_information['numDrinks']}} drinks liked</i>
             </div>
             <div class="indi-likes">
-                <v-btn color="white"><v-icon color="red" x-large>mdi-billboard</v-icon></v-btn>
+                <v-btn color="white" @click="goToUserLikedBrands"><v-icon color="red" x-large>mdi-billboard</v-icon></v-btn>
                 <i v-if="user_information['numBrands']==1">{{user_information['numBrands']}} brand liked</i>
                 <i v-else>{{user_information['numBrands']}} brands liked</i>
             </div>
@@ -147,6 +147,18 @@ export default defineComponent({
     const snackSuccess = ref(false);
     const uploading = ref(false);
 
+    function goToUserLikedBars(this: any) {
+        this.$router.push(`/mylikeditems/bar`);
+    }
+    function goToUserLikedDrinks(this: any) {
+        this.$router.push(`/mylikeditems/drink`);
+    }
+    function goToUserLikedBrands(this: any) {
+        this.$router.push(`/mylikeditems/brand`);
+    }
+
+
+
     function dummy() {
         alert('Just look down dummy!!');
     }
@@ -157,7 +169,7 @@ export default defineComponent({
             const username = this.$store.state.user.displayName;
             const token = await this.$fire.auth.currentUser.getIdToken();
             this.$axios.setHeader('Authorization', `Bearer ${token}`);
-            let data = await this.$axios.$delete(`/userapi/user/${username}`);
+            await this.$axios.$delete(`/userapi/user/${username}`);
             await this.$fire.auth.currentUser.delete();
             this.$router.push('/signin');
             location.reload();
@@ -224,7 +236,7 @@ export default defineComponent({
     }
 
   
-    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy, uploading }
+    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy, uploading, goToUserLikedBars, goToUserLikedDrinks, goToUserLikedBrands }
   }
 });
 </script>
@@ -243,7 +255,7 @@ export default defineComponent({
     }
     .pic {
         margin-bottom: .3em;
-        margin-left: 6em;
+        margin-left: 2em;
         margin-top: .4em;
         position: relative;
     }
