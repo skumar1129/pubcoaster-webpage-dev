@@ -98,7 +98,7 @@ export default defineComponent({
             if (this.response['neighborhood']) {
                 return {'username': this.$store.state.user.displayName, 'bar': this.response['barName'], 'location': this.response['location'], 'neighborhood': this.response['neighborhood']};
             } else {
-                return {'username': this.$store.state.user.displayName, 'bar': this.response['barName'], 'location': this.response['location']};
+                return {'username': this.$store.state.user.displayName, 'bar': this.response['barName'], 'location': this.response['location'], 'neighborhood': ''};
             }
         } else if (this.item.toLowerCase() == 'brand') {
             return {'username': this.$store.state.user.displayName, 'brand': this.response['brandName'], 'type': this.response['type']};
