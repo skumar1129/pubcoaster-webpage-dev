@@ -167,13 +167,14 @@ module.exports = {
       dark: true,
       themes: {
         dark: {
-          primary: '#1976D2',
-          accent: '#424242',
-          secondary: '#FF8F00',
-          info: '#26A69A ',
-          warning: '#FFC107',
-          error: '#DD2C0',
-          success: '#00E676'
+          // TODO: maybe look at a way to fix this another time
+          // primary: '#E5393',
+          // accent: '#2196F',
+          // secondary: '#FF8F00',
+          // info: '#FF8F00 ',
+          // warning: '#FFC107',
+          // error: '#D5000',
+          // success: '#4CAF'
         }
       }
     }
