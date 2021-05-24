@@ -8,7 +8,7 @@
           <h1 class="header" align="left">Your Liked {{shownItem}}s</h1>
         </v-col>
         <v-col align="right">
-          <v-btn color="secondary" class="add-new" x-large align="right" @click="addANewLike"><v-icon x-large>mdi-plus</v-icon>Add a new {{shownItem}}</v-btn>
+          <v-btn color="secondary" class="add-new" x-large align="right" @click="addANewLike"><v-icon large class="pr-3">mdi-heart</v-icon>Like a new {{shownItem}}</v-btn>
         </v-col>
         </v-row>
         <v-row v-if="responses.length==0" class="titlearea">
