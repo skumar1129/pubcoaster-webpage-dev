@@ -1,5 +1,5 @@
 const firebaseConfig = require('./config/firebaseconfig');
-const { postapi, userapi } = require('./config/apiconfig');
+const { postapi, userapi, itemsapi } = require('./config/apiconfig');
 
 module.exports = {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -119,6 +119,25 @@ module.exports = {
           writeBody(JSON.stringify(req.body));
         }
       }
+    },
+    '/itemsapi/': {
+      target: itemsapi,
+      pathRewrite: {'^/itemsapi/': ''},
+      changeOrigin: true,
+      onProxyReq: function log (proxyReq, req, res) {
+        if (!req.body || !Object.keys(req.body).length) {
+          return;
+        }
+
+        const contentType = proxyReq.getHeader('Content-Type')
+        const writeBody = (bodyData) => {
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+        if (contentType.includes('application/json') || contentType.includes('application/x-www-form-urlencoded')) {
+          writeBody(JSON.stringify(req.body));
+        }
+      }
     }
   },
 
@@ -148,13 +167,14 @@ module.exports = {
       dark: true,
       themes: {
         dark: {
-          primary: '#1976D2',
-          accent: '#424242',
-          secondary: '#FF8F00',
-          info: '#26A69A ',
-          warning: '#FFC107',
-          error: '#DD2C0',
-          success: '#00E676'
+          // TODO: maybe look at a way to fix this another time
+          // primary: '#E5393',
+          // accent: '#2196F',
+          // secondary: '#FF8F00',
+          // info: '#FF8F00 ',
+          // warning: '#FFC107',
+          // error: '#D5000',
+          // success: '#4CAF'
         }
       }
     }

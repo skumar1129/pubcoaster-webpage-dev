@@ -2,10 +2,10 @@
   <div data-app>
     <v-app-bar color="red">
 
-      <v-app-bar-nav-icon v-if="nav"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon v-if="nav || user_nav"></v-app-bar-nav-icon>
 
       <v-btn text @click="goHome">
-        <v-toolbar-title class="title"><b><i>Pubcoasters</i></b></v-toolbar-title>
+        <v-toolbar-title><b><i>Pubcoasters</i></b></v-toolbar-title>
       </v-btn>
 
       <v-spacer></v-spacer>
@@ -13,6 +13,7 @@
       <v-text-field
         placeholder="Search for users"
         v-model="user"
+        @keypress.enter="searchUser"
         class="mt-4 font-weight-medium"
         color="white"
       >
@@ -89,15 +90,17 @@
     </v-app-bar>
 
     <navdrawer :location="location" data-app v-if="nav"></navdrawer>
+    <userdrawer :username="username" data-app v-if="user_nav"></userdrawer>
   </div>
 </template>
 
 <script lang='ts'>
 import { ref, defineComponent} from '@nuxtjs/composition-api';
 import navdrawer from '~/components/navdrawer.vue';
+import userdrawer from '~/components/userdrawer.vue';
 
 export default defineComponent({
-  components: { navdrawer },
+  components: { navdrawer, userdrawer },
   name: "AppBar",
   props: {
     nav: {
@@ -105,6 +108,14 @@ export default defineComponent({
       required: false
     },
     location: {
+      type: String,
+      required: false
+    },
+    user_nav: {
+      type: Boolean,
+      required: false
+    },
+    username: {
       type: String,
       required: false
     }

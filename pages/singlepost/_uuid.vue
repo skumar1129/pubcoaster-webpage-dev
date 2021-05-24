@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <appbar data-app :nav="false"></appbar>
+    <appbar data-app :nav="false" :user_nav="false"></appbar>
     <v-main class="page">
       <client-only placeholder="Loading...">
         <post :response="response"></post>

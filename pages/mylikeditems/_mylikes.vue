@@ -1,19 +1,24 @@
 <template>
   <v-app>
-    <appbar data-app :nav="true" :location="location" :user_nav="false"></appbar>
+    <appbar data-app :nav="false" :user_nav="false" ></appbar>
       <div class="page">
       <v-container grid-list data-app>
         <v-row class="title-button">
-          <h1 class="header">{{bar}} in {{location}}</h1>
+        <v-col align="left">
+          <h1 class="header" align="left">Your Liked {{shownItem}}s</h1>
+        </v-col>
+        <v-col align="right">
+          <v-btn color="secondary" class="add-new" x-large align="right" @click="addANewLike"><v-icon large class="pr-3">mdi-heart</v-icon>Like a new {{shownItem}}</v-btn>
+        </v-col>
         </v-row>
         <v-row v-if="responses.length==0" class="titlearea">
-          <h2 class="mb-2"><i>No posts yet for {{bar}} :(</i></h2>
+          <h2 class="mb-2"><i>No {{shownItem}}s Liked Yet :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
         <v-col v-else>
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
-              <feedpost :response="response"></feedpost>
+              <likeditem :response="response" :item="item.toLowerCase()" :mylikes="true" :newlike="true"></likeditem>
             </v-row>
         </client-only>
         </v-col>
@@ -35,33 +40,49 @@
 </template>
 
 <script lang='ts'>
-import feedpost from '~/components/feed-post.vue';
 import appbar from '~/components/appbar.vue';
+import likeditem from '~/components/liked-item.vue';
 import * as _ from 'lodash';
-import { ref, defineComponent} from '@nuxtjs/composition-api';
+import { ref, defineComponent, computed } from '@nuxtjs/composition-api';
 
 export default defineComponent({
-  components: { feedpost, appbar },
-  name: "LocBarPosts",
+  components: { appbar, likeditem },
+  name: "MyLikes",
   middleware: 'authenticate',
   setup() {
     const responses = ref([]);
-    const bar = ref('');
-    const location = ref('');
+    const item = ref('');
+    const user = ref('');
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
+
+    const shownItem = computed(function(this: any) {
+        if (this.item) {
+          return this.item.charAt(0).toUpperCase() + this.item.slice(1);
+        } else {
+          return '';
+        }
+    })
+
+    function addANewLike(this: any) {
+        this.$router.push(`/newlikeditems/${this.item.toLowerCase()}`);
     }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
-        let data = await this.$axios.$get(`/postapi/post/locbar/${location.value}/${bar.value}?offset=${offset.value}`);
+        let data = await this.$axios.$get(`/userapi/${this.item.toLowerCase()}/${this.user}&offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data);
+          if (this.item.toLowerCase() == 'brand') {
+            responses.value = _.union(responses.value, data.brands);
+          } else if (this.item.toLowerCase() == 'drink') {
+            responses.value = _.union(responses.value, data.drinks);
+          } else {
+            responses.value = _.union(responses.value, data.bars);
+          }
           $state.loaded();
         } else {
           $state.loaded();
@@ -72,19 +93,24 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, bar, location, goToCreatePost, infinteScroll, snackText, snackFail };
+    return { responses, user, infinteScroll, snackText, snackFail, item, shownItem, addANewLike };
   },
   async fetch(this: any) {
-    let params = this.$route.params.locbar.split('-');
-    this.location = params[0];
-    this.bar = params[1];
+    this.item = this.$route.params.mylikes;
+    this.user = this.$store.state.user.displayName;
     try {
       this.$fire.auth.onAuthStateChanged(async (user: any) => {
         if (user) {
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
-          let data = await this.$axios.$get(`/postapi/post/locbar/${this.location}/${this.bar}`)
-          this.responses = _.union(this.responses, data);
+          let data = await this.$axios.$get(`/userapi/${this.item.toLowerCase()}/${this.user}`)
+          if (this.item.toLowerCase() == 'brand') {
+            this.responses = _.union(this.responses, data.brands);
+          } else if (this.item.toLowerCase() == 'drink') {
+            this.responses = _.union(this.responses, data.drinks);
+          } else {
+            this.responses = _.union(this.responses, data.bars);
+          }
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
@@ -119,6 +145,7 @@ export default defineComponent({
   .header {
     font-family: fantasy;
     text-decoration: underline;
+    font-size: 2.5em;
   }
   .titlearea {
     justify-content: center;
@@ -131,5 +158,10 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
+  }
+  .add-new {
+      width: 18em;
+      font-weight: bold;
+      font-size: .78em;
   }
 </style>
