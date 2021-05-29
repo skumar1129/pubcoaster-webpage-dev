@@ -50,6 +50,15 @@
       {{ snackText }}
       </div>
     </v-snackbar>
+    <v-overlay :value="spinner">
+      <div class="center-it">
+        <v-progress-circular
+          indeterminate
+          color="white"
+          size="110"
+        ></v-progress-circular>
+      </div>
+    </v-overlay>
     </v-main>
   </v-app>
 </template>
@@ -65,6 +74,7 @@ export default defineComponent({
     const fName = ref('');
     const lName = ref('');
     const snackFail = ref(false);
+    const spinner = ref(false);
     const snackText = ref('');
     const snackSuccess = ref(false);
     const picFile = ref();
@@ -80,6 +90,7 @@ export default defineComponent({
         let picLink = '';
         if (picFile.value) {
           try {
+            this.spinner = true;
             let id = v4();
             let storageRef = this.$fire.storage.ref().child(`prof_pics/${username.value}-${id}`);
             await storageRef.put(picFile.value);
@@ -101,6 +112,7 @@ export default defineComponent({
             this.snackText = 'Successfully created profile!';
             this.snackSuccess = true;
             //TODO: do I put a wait call here?
+            this.spinner = false;
             this.$router.push('/home');
           } catch (e) {
             this.snackText = 'Error: could not create user. Check network connection.';
@@ -109,6 +121,7 @@ export default defineComponent({
         }
         else {
           try {
+            this.spinner = true;
             let email = this.$store.state.user.email;
             let fullName = `${fName.value} ${lName.value}`;
             let reqBody = {
@@ -126,15 +139,17 @@ export default defineComponent({
             this.snackText = 'Successfully created profile!';
             this.snackSuccess = true;
             //TODO: do I put a wait call here?
+            this.spinner = false;
             this.$router.push('/home');
           } catch (e) {
             this.snackText = 'Error: could not create user. Check network connection.';
             this.snackFail = true;
           }
         }
+        this.spinner = false;
       }
     }
-    return { username, fName, lName, signIn, submit, snackFail, snackText, snackSuccess, picFile };
+    return { username, fName, lName, signIn, submit, snackFail, snackText, snackSuccess, picFile, spinner };
   }
 });
 </script>
@@ -179,5 +194,11 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
+  }
+  .center-it {
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+    align-items: center;
   }
 </style>
