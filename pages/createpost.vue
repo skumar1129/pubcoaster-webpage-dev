@@ -91,6 +91,15 @@
       {{ snackText }}
       </div>
     </v-snackbar>
+    <v-overlay :value="spinner">
+      <div class="center-it">
+        <v-progress-circular
+          indeterminate
+          color="white"
+          size="110"
+        ></v-progress-circular>
+      </div>
+    </v-overlay>
     </div>
   </v-app>
 </template>
@@ -115,6 +124,7 @@ export default defineComponent({
     const rating = ref();
     const description = ref('');
     const picFile = ref();
+    const spinner = ref(false);
     const snackFail = ref(false);
     const snackText = ref('');
     const snackSuccess = ref(false);
@@ -132,6 +142,7 @@ export default defineComponent({
         this.snackText = 'Please fill out all required fields before submitting the form.';
         this.snackFail = true;
       } else {
+        this.spinner = true;
         let picLink = '';
         if (picFile.value) {
           try {
@@ -191,7 +202,7 @@ export default defineComponent({
 
     return { location, bar, neighborhood, picture,
     rating, description, locations, ratings, anonymous,
-    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess };
+    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess, spinner };
   }
 });
 </script>
