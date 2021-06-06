@@ -132,7 +132,7 @@ export default defineComponent({
   }
   .titlearea {
     justify-content: center;
-    font-family: "Lucida Console", "Courier New", monospace;;
+    font-family: "Lucida Console", "Courier New", monospace;
   }
   .snack {
     width: 100%;
