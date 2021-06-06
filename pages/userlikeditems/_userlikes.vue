@@ -13,7 +13,7 @@
         <v-col v-else>
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
-              <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false" :newlike="true"></likeditem>
+              <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false" :newlike="false"></likeditem>
             </v-row>
         </client-only>
         </v-col>
@@ -141,7 +141,7 @@ export default defineComponent({
   }
   .titlearea {
     justify-content: center;
-    font-family: "Lucida Console", "Courier New", monospace;;
+    font-family: "Lucida Console", "Courier New", monospace;
   }
   .snack {
     width: 100%;

@@ -2,7 +2,9 @@
   <v-app>
     <appbar data-app :nav="false" :user_nav="true" :username="this.$route.params.user"></appbar>
       <div class="page">
-        <userinfo :user_information="user_information" :user_post="user_post"></userinfo>
+        <client-only>
+          <userinfo :user_information="user_information" :user_post="user_post"></userinfo>
+        </client-only>
       <v-container grid-list data-app class="spacing">
         <v-row v-if="responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No posts yet for {{this.$route.params.user}} :(</i></h2>
@@ -122,7 +124,7 @@ export default defineComponent({
   }
   .titlearea {
     justify-content: center;
-    font-family: "Lucida Console", "Courier New", monospace;;
+    font-family: "Lucida Console", "Courier New", monospace;
   }
   .snack {
     width: 100%;
