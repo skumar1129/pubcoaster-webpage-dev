@@ -52,9 +52,7 @@ export default defineComponent({
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -73,7 +71,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, goToCreatePost, infinteScroll, snackText, snackFail, user_information, user_post };
+    return { responses, infinteScroll, snackText, snackFail, user_information, user_post };
   },
   async fetch(this: any) {
     try {
@@ -127,6 +125,6 @@ export default defineComponent({
     font-style: italic;
   }
   .spacing {
-    margin-top: 1em;
+    margin-top: 1.5em;
   }
 </style>

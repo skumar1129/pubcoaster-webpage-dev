@@ -1,7 +1,14 @@
 <template>
   <v-app>
-    <appbar data-app :nav="false" :user_nav="true" :username="this.$route.params.user"></appbar>
-      <div class="page">
+    <appbar data-app v-if="'message' in user_information && user_information['message']=='No user exists by that username'" :nav="false" :user_nav="false"></appbar>
+    <appbar data-app v-else :nav="false" :user_nav="true" :username="this.$route.params.user"></appbar>
+      <div class="page" v-if="'message' in user_information && user_information['message']=='No user exists by that username'">
+         <v-row class="main-area">
+          <h2 class="mb-2"><i>No such user exists under {{this.$route.params.user}}  :(</i></h2>
+          <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
+        </v-row>
+      </div>
+      <div class="page" v-else>
         <client-only>
           <userinfo :user_information="user_information" :user_post="user_post"></userinfo>
         </client-only>
@@ -52,9 +59,7 @@ export default defineComponent({
     const user_post = ref(0);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -73,7 +78,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, goToCreatePost, infinteScroll, snackText, snackFail, user_post, user_information };
+    return { responses, infinteScroll, snackText, snackFail, user_post, user_information };
   },
   async fetch(this: any) {
     try {
@@ -122,6 +127,13 @@ export default defineComponent({
     font-family: fantasy;
     text-decoration: underline;
   }
+  .main-area {
+    margin-top: 3em;
+    margin-right: 4em;
+    margin-left: 4em;
+    justify-content: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+  }
   .titlearea {
     justify-content: center;
     font-family: "Lucida Console", "Courier New", monospace;
@@ -135,6 +147,6 @@ export default defineComponent({
     font-style: italic;
   }
   .spacing {
-    margin-top: 1em;
+    margin-top: 1.5em;
   }
 </style>
