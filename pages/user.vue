@@ -1,8 +1,10 @@
 <template>
   <v-app>
     <appbar :nav="false" :user_nav="false" data-app></appbar>
-      <div class="page">
-      <myinfo :user_information="user_information" :user_post="user_post"></myinfo>
+      <div class="page" data-app>
+        <client-only>
+          <myinfo :user_information="user_information" :user_post="user_post"></myinfo>
+        </client-only>
       <v-container grid-list data-app class="spacing">
         <v-row v-if="responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No posts yet :(</i></h2>
@@ -50,9 +52,7 @@ export default defineComponent({
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -71,7 +71,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, goToCreatePost, infinteScroll, snackText, snackFail, user_information, user_post };
+    return { responses, infinteScroll, snackText, snackFail, user_information, user_post };
   },
   async fetch(this: any) {
     try {
@@ -114,7 +114,7 @@ export default defineComponent({
   }
   .titlearea {
     justify-content: center;
-    font-family: "Lucida Console", "Courier New", monospace;;
+    font-family: "Lucida Console", "Courier New", monospace;
   }
   .snack {
     width: 100%;
@@ -125,6 +125,6 @@ export default defineComponent({
     font-style: italic;
   }
   .spacing {
-    margin-top: 1em;
+    margin-top: 1.5em;
   }
 </style>

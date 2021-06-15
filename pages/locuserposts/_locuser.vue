@@ -51,9 +51,7 @@ export default defineComponent({
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -72,7 +70,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, user, location, goToCreatePost, infinteScroll, snackText, snackFail };
+    return { responses, user, location, infinteScroll, snackText, snackFail };
   },
   async fetch(this: any) {
     let params = this.$route.params.locuser.split('-');
@@ -122,7 +120,7 @@ export default defineComponent({
   }
   .titlearea {
     justify-content: center;
-    font-family: "Lucida Console", "Courier New", monospace;;
+    font-family: "Lucida Console", "Courier New", monospace;
   }
   .snack {
     width: 100%;

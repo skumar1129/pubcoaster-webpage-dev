@@ -33,12 +33,46 @@
             ></v-file-input>
         </v-col>
         <v-col class="edits-false" v-if="!editInfo">
-            <v-btn color="red" large class="delete" @click="deleteAccount">Delete Account</v-btn>
-            <v-btn color="primary" large class="edit" @click="editInfo=true">Edit Account Information</v-btn>
+            <v-row>
+                <v-btn color="red" large class="delete" @click="deleteAccount">Delete Account</v-btn>
+            </v-row>
+            <v-row>
+                <v-btn color="primary" large class="edit" @click="editInfo=true">Edit</v-btn>
+            </v-row>
+            <v-row>
+              <div class="push-left">
+                 <div class="send-help">
+                    <v-btn outlined class="outline-plz" color="white" elevation="6"><b class="numero">{{user_information['numFollowers']}}</b></v-btn>
+                    <caption class="text-subtitle-1 font-italic" v-if="user_information['numFollowers']==1">Follower</caption>
+                    <caption class="text-subtitle-1 font-italic" v-else>Followers</caption>
+                </div>
+                <div class="send-help">
+                    <v-btn outlined class="outline-plz" color="white" elevation="6"><b class="numero">{{user_information['numFollowing']}}</b></v-btn>
+                    <caption class="text-subtitle-1 font-italic">Following</caption>
+                </div>
+              </div>
+            </v-row>
         </v-col>
         <v-col class="edits-true" v-else>
-            <v-btn color="red" large class="edit" @click="cancelEdit">Cancel Editing</v-btn>
-            <v-btn color="primary" large class="save-edit" @click="saveEdit">Save Edits</v-btn>
+            <v-row>
+                <v-btn color="red" large class="edit-pt-2" @click="cancelEdit">Cancel Editing</v-btn>
+            </v-row>
+            <v-row class="ml-8">
+                <v-btn color="primary" large class="save-edit" @click="saveEdit">Save Edits</v-btn>
+            </v-row>
+            <v-row>
+                <div class="push-left">
+                    <div class="send-help">
+                        <v-btn outlined class="outline-plz" color="white" elevation="6"><b class="numero">{{user_information['numFollowers']}}</b></v-btn>
+                        <caption class="text-subtitle-1 font-italic" v-if="user_information['numFollowers']==1">Follower</caption>
+                        <caption class="text-subtitle-1 font-italic" v-else>Followers</caption>
+                    </div>
+                    <div class="send-help">
+                        <v-btn outlined class="outline-plz" color="white" elevation="6"><b class="numero">{{user_information['numFollowing']}}</b></v-btn>
+                        <caption class="text-subtitle-1 font-italic">Following</caption>
+                    </div>
+                </div>
+            </v-row>
         </v-col>
         <v-col class="likes">
             <div class="indi-likes">
@@ -121,7 +155,7 @@
 </template>
 
 <script lang='ts'>
-import { ref, computed, defineComponent, onMounted} from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
 import { v4 } from 'uuid';
 
 export default defineComponent({
@@ -162,7 +196,6 @@ export default defineComponent({
     function dummy() {
         alert('Just look down dummy!!');
     }
-
     async function deleteAccount(this: any) {
         if(confirm('Are you sure you want to delete your account?')) {
           try {
@@ -262,7 +295,7 @@ export default defineComponent({
     .likes {
         margin-top: 1.1em;
         margin-bottom: 1em;
-        display:grid;
+        display: grid;
         grid-template-columns: 1fr 1fr;
         grid-row: auto auto;
         grid-row-gap: 1em; 
@@ -280,12 +313,27 @@ export default defineComponent({
         bottom: 0;
         left: 0;
     } 
+    .push-left {
+        margin-left: 1em;
+    }
+    .send-help {
+        display: inline-block;
+        position: relative;
+        font-family: sans-serif;
+        text-align: center;
+        margin-top: .25em;
+        margin-left: .66em;
+        margin-bottom: .9em;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
     .edits-false {
-        margin-top: 2em;
+        margin-top: 1.7em;
+        margin-left: 1.7em;
     }
     .edits-true {
-        margin-top: 1.3em;
-        margin-left: 2.4em;
+        margin-top: 1.5em;
+        margin-left: 1.7em;
     }
     .delete {
         color: white;
@@ -296,7 +344,16 @@ export default defineComponent({
     .edit {
         color: white;
         font-weight: bold;
-        margin-top: 1.3em;
+        margin-left: 6.4em;
+        margin-top: .9em;
+        float: left;
+        clear: left;
+    }
+    .edit-pt-2 {
+        color: white;
+        font-weight: bold;
+        margin-left: 3em;
+        margin-top: .3em;
         float: left;
         clear: left;
     }
@@ -342,5 +399,15 @@ export default defineComponent({
         color: white;
         text-align: center;
         font-style: italic;
+    }
+    .numero {
+        font-weight: bold;
+        color: black;
+        font-size: 1.5em;
+        padding-right: .2em;
+        padding-left: .2em;
+    }
+    .outline-plz {
+        outline: .1em solid black;
     }
 </style>

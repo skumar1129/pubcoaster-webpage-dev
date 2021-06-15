@@ -51,9 +51,7 @@ export default defineComponent({
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     const token = computed(async function(this:  any) {
       await this.$fire.auth.currentUser.getIdToken();
     });
@@ -75,7 +73,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, nbhood, location, goToCreatePost, infinteScroll, snackFail, snackText, token };
+    return { responses, nbhood, location, infinteScroll, snackFail, snackText, token };
   },
   async fetch(this: any) {
     let params = this.$route.params.locnbhood.split('-');
@@ -126,7 +124,6 @@ export default defineComponent({
   }
   .titlearea {
     justify-content: center;
-    font-family: "Lucida Console", "Courier New", monospace;;
   }
   .snack {
     width: 100%;
