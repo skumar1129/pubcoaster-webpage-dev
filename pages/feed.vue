@@ -58,7 +58,7 @@ export default defineComponent({
         this.$axios.setHeader('user', this.$store.state.user.displayName);
         let data = await this.$axios.$get(`/followersapi/followingposts?offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data);
+          responses.value = _.union(responses.value, data.posts);
           $state.loaded();
         } else {
           $state.loaded();
@@ -79,7 +79,7 @@ export default defineComponent({
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           this.$axios.setHeader('user', this.$store.state.user.displayName);
           let data = await this.$axios.$get(`/followersapi/followingposts`);
-          this.responses = _.union(this.responses, data);
+          this.responses = _.union(this.responses, data.posts);
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;

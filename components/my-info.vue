@@ -42,12 +42,12 @@
             <v-row>
               <div class="push-left">
                  <div class="send-help">
-                    <v-btn outlined class="outline-plz" color="white" elevation="6"><b class="numero">{{user_information['numFollowers']}}</b></v-btn>
+                    <v-btn outlined class="outline-plz" color="white" elevation="6" @click="follower_dialog=true"><b class="numero">{{user_information['numFollowers']}}</b></v-btn>
                     <caption class="text-subtitle-1 font-italic" v-if="user_information['numFollowers']==1">Follower</caption>
                     <caption class="text-subtitle-1 font-italic" v-else>Followers</caption>
                 </div>
                 <div class="send-help">
-                    <v-btn outlined class="outline-plz" color="white" elevation="6"><b class="numero">{{user_information['numFollowing']}}</b></v-btn>
+                    <v-btn outlined class="outline-plz" color="white" elevation="6" @click="following_dialog=true"><b class="numero">{{user_information['numFollowing']}}</b></v-btn>
                     <caption class="text-subtitle-1 font-italic">Following</caption>
                 </div>
               </div>
@@ -63,12 +63,12 @@
             <v-row>
                 <div class="push-left">
                     <div class="send-help">
-                        <v-btn outlined class="outline-plz" color="white" elevation="6"><b class="numero">{{user_information['numFollowers']}}</b></v-btn>
+                        <v-btn outlined class="outline-plz" color="white" elevation="6" @click="follower_dialog=true"><b class="numero">{{user_information['numFollowers']}}</b></v-btn>
                         <caption class="text-subtitle-1 font-italic" v-if="user_information['numFollowers']==1">Follower</caption>
                         <caption class="text-subtitle-1 font-italic" v-else>Followers</caption>
                     </div>
                     <div class="send-help">
-                        <v-btn outlined class="outline-plz" color="white" elevation="6"><b class="numero">{{user_information['numFollowing']}}</b></v-btn>
+                        <v-btn outlined class="outline-plz" color="white" elevation="6" @click="following_dialog=true"><b class="numero">{{user_information['numFollowing']}}</b></v-btn>
                         <caption class="text-subtitle-1 font-italic">Following</caption>
                     </div>
                 </div>
@@ -151,11 +151,57 @@
             {{ snackText }}
             </div>
         </v-snackbar>
+        <v-dialog data-app v-model="follower_dialog" width="700">
+            <v-card color="white" class="follower-dialog">
+                <h1 class="header">Followers</h1>
+                <!-- TODO: make it scrollable and have infinite scroll -->
+                <v-list dense color="white"> 
+                    <v-list-item v-for="(item, i) in follower_information" :key="i" class="follow-person">
+                        <v-avatar v-if="follower_information[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="follower_information[i]['picLink']" alt="Profile Picture"></v-avatar>
+                        <v-avatar v-else size="80" color="grey lighten-2" class="follow-pic">Prof Pic</v-avatar>
+                        <v-list-item-content class="follow-content">
+                            {{follower_information[i]['user']}}, {{follower_information[i]['fullName']}}
+                            <i class="follow-bio">{{follower_information[i]['bio']}}</i>
+                        </v-list-item-content>
+                        <v-btn large v-if="follower_information[i]['following']" align="right" @click="unfollowAccount(follower_information[i]['user'])" color="primary">Unfollow</v-btn>
+                    </v-list-item>
+                </v-list>
+                <infinite-loading
+                    v-if="follower_information.length"
+                    spinner="spiral"
+                    @infinite="infinteScroll"
+                ><span slot="no-more"></span>
+                </infinite-loading>
+            </v-card>
+        </v-dialog>
+        <v-dialog data-app v-model="following_dialog" width="700">
+            <v-card color="white" class="following-dialog">
+                <h1 class="header">Following</h1>
+             <v-list dense color="white"> 
+                <v-list-item v-for="(item, i) in following_information" :key="i" class="follow-person">
+                  <v-avatar v-if="following_information[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="following_information[i]['picLink']" alt="Profile Picture"></v-avatar>
+                  <v-avatar v-else size="80" color="grey lighten-2" class="follow-pic">Prof Pic</v-avatar>
+                  <v-list-item-content class="follow-content">
+                        {{following_information[i]['user']}}, {{following_information[i]['fullName']}}
+                        <i class="follow-bio">{{following_information[i]['bio']}}</i>
+                     </v-list-item-content>
+                 <v-btn large align="right" @click="unfollowAccount(following_information[i]['user'])" color="primary">Unfollow</v-btn>
+                </v-list-item>
+            </v-list>
+            <infinite-loading
+                v-if="following_information.length"
+                spinner="spiral"
+                @infinite="infinteScroll"
+                ><span slot="no-more"></span>
+            </infinite-loading>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script lang='ts'>
 import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
+import * as _ from 'lodash';
 import { v4 } from 'uuid';
 
 export default defineComponent({
@@ -180,6 +226,11 @@ export default defineComponent({
     const snackText = ref('');
     const snackSuccess = ref(false);
     const uploading = ref(false);
+    const follower_dialog = ref(false);
+    const following_dialog = ref(false);
+    const follower_information = ref([]);
+    const following_information = ref([]);
+    const offset = ref(1);
 
     function goToUserLikedBars(this: any) {
         this.$router.push(`/mylikeditems/bar`);
@@ -190,8 +241,6 @@ export default defineComponent({
     function goToUserLikedBrands(this: any) {
         this.$router.push(`/mylikeditems/brand`);
     }
-
-
 
     function dummy() {
         alert('Just look down dummy!!');
@@ -207,7 +256,6 @@ export default defineComponent({
             this.$router.push('/signin');
             location.reload();
           } catch (e) {
-            console.log(e);
             this.snackText = 'Error: could not delete user. Check your network connection.';
             this.snackFail = true;
           }
@@ -267,14 +315,120 @@ export default defineComponent({
         this.editedBio = null;
         location.reload();
     }
+     async function unfollowAccount(this: any, user: any) {
+        if (confirm(`Are you sure you want to unfollow ${user}?`)) {
+            let postBody = {
+                'follower': this.$store.state.user.displayName,
+                'following': user
+            };
+            try {
+                const token = await this.$fire.auth.currentUser.getIdToken();
+                this.$axios.setHeader('Authorization', `Bearer ${token}`);
+                await this.$axios.$delete('/followersapi/follower', { data: postBody });
+                //TODO: reload here?? or should i give them the option to follow them back?
+                location.reload();
+            } catch (e) {
+                this.snackText = 'Error: could not unfollow account';
+                this.snackFail = true;
+            }
+        }  
+     }
+    async function infinteScroll(this: any, $state: any) {
+      offset.value++;
+      try {
+        const token = await this.$fire.auth.currentUser.getIdToken();
+        this.$axios.setHeader('Authorization', `Bearer ${token}`);
+        const username = this.$store.state.user.displayName;
+        this.$axios.setHeader('user', username);
+        let data = null;
+        if (follower_dialog) {
+            data = await this.$axios.$get(`/followersapi/allfollowers?offset=${offset.value}`);
+        } else {
+            data = await this.$axios.$get(`/followersapi/allfollowing?offset=${offset.value}`);
+        }
+        if (data.length > 0) {
+          if (follower_dialog) {
+            this.follower_information.value = _.union(this.follower_information.value, data);
+          } else {
+            this.following_information.value = _.union(this.following_information.value, data);
+          }
+          $state.loaded();
+        } else {
+          $state.loaded();
+          $state.complete();
+        }
+      } catch (e) {
+         this.snackText = 'Error: could not retrieve follow information.';
+        this.snackFail = true;
+      }
+    }
 
   
-    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy, uploading, goToUserLikedBars, goToUserLikedDrinks, goToUserLikedBrands }
-  }
+    return { editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy, uploading, goToUserLikedBars, goToUserLikedDrinks, goToUserLikedBrands, follower_dialog, following_dialog, follower_information, following_information, offset, infinteScroll, unfollowAccount }
+  },
+   async fetch(this: any) {
+    try {
+      const username = this.$store.state.user.displayName;
+      this.$axios.setHeader('user', username);
+      this.$fire.auth.onAuthStateChanged(async (user: any) => {
+        if (user) {
+          const token = await this.$fire.auth.currentUser.getIdToken();
+          this.$axios.setHeader('Authorization', `Bearer ${token}`);
+          let data = await this.$axios.$get(`/followersapi/allfollowing`);
+          this.following_information = data;
+          data = await this.$axios.$get(`/followersapi/allfollowers`);
+          this.follower_information = data;
+        } else {
+          this.snackText = 'Error: User authentication failed. Please sign in again.';
+          this.snackFail = true;
+          await this.$store.dispatch('signOut');
+          this.$router.push('/signin');
+        }
+      });
+    } catch (e) {
+       this.snackText = 'Error: could not retrieve follow information.';
+      this.snackFail = true;
+    }
+  },
+  fetchOnServer: false,
+  watchQuery: ['offset']
 });
 </script>
 
 <style>
+    .follow-pic {
+        color: black;
+        font-weight: 500;
+    }
+    .follow-bio {
+        font-weight: normal;
+        font-size: .8em;
+        margin-top: .05em;
+        color: black;
+        margin-top: 2px;
+    }
+    .follow-person {
+       display: flex;
+       border-top: .1em solid black;
+       border-bottom: .1em solid black;
+       padding-top: .75em;
+       padding-bottom: .75em;
+       margin-bottom: 2em;
+    }
+    .follower-dialog .header, .following-dialog .header {
+        font-family: fantasy;
+        text-decoration: underline;
+        color: black;
+        padding-top: .75em;
+        text-align: center;
+    }
+    .follow-content {
+        color: black;
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-left: 22px;
+        margin-bottom: 8px;
+    }
     .bio-divider {
         padding: .13em;
     }

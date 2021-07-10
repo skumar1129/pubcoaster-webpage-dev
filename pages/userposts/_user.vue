@@ -90,7 +90,9 @@ export default defineComponent({
           this.responses = _.union(this.responses, data.post);
           this.user_post = data.totalCount;
           //get user data
-          let user_info = await this.$axios.$get(`/userapi/user/${this.$route.params.user}`);
+          const username = this.$store.state.user.displayName;
+          this.$axios.setHeader('user', username);
+          let user_info = await this.$axios.$get(`/userapi/searchuser/${this.$route.params.user}`);
           this.user_information = user_info;
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
