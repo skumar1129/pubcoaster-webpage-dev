@@ -1,8 +1,8 @@
 <template>
     <div data-app>
         <v-row>
-        <v-col v-if="user_information.picLink" class="pic">
-            <v-avatar size="210"><img :src="user_information.picLink" alt="Profile Picture"></v-avatar>
+        <v-col v-if="userInformation.picLink" class="pic">
+            <v-avatar size="210"><img :src="userInformation.picLink" alt="Profile Picture"></v-avatar>
         </v-col>
         <v-col v-else class="pic">
             <v-avatar size="210" color="grey lighten-2">Profile Picture</v-avatar>
@@ -14,12 +14,12 @@
             </v-row>
             <v-row>
                 <div class="send-help">
-                    <v-btn outlined class="outline-plz" @click="follower_dialog=true" color="white" elevation="6"><b class="numero">{{user_information['numFollowers']}}</b></v-btn>
-                    <caption class="text-subtitle-1 font-italic" v-if="user_information['numFollowers']==1">Follower</caption>
+                    <v-btn outlined class="outline-plz" @click="followerDialog=true" color="white" elevation="6"><b class="numero">{{userInformation['numFollowers']}}</b></v-btn>
+                    <caption class="text-subtitle-1 font-italic" v-if="userInformation['numFollowers']==1">Follower</caption>
                     <caption class="text-subtitle-1 font-italic" v-else>Followers</caption>
                 </div>
                 <div class="send-help">
-                    <v-btn outlined class="outline-plz" @click="following_dialog=true"  color="white" elevation="6"><b class="numero">{{user_information['numFollowing']}}</b></v-btn>
+                    <v-btn outlined class="outline-plz" @click="followingDialog=true"  color="white" elevation="6"><b class="numero">{{userInformation['numFollowing']}}</b></v-btn>
                     <caption class="text-subtitle-1 font-italic">Following</caption>
                 </div>
             </v-row>
@@ -27,33 +27,33 @@
         <v-col class="likes">
             <div class="indi-likes">
                 <v-btn color="white"><v-icon color="red" x-large @click="dummy">mdi-post</v-icon></v-btn>
-                <i v-if="user_post==1">{{user_post}} post created</i>
-                <i v-else>{{user_post}} posts created</i>
+                <i v-if="userPost==1">{{userPost}} post created</i>
+                <i v-else>{{userPost}} posts created</i>
             </div>
             <div class="indi-likes">
                 <v-btn color="white" @click="goToUserLikedBars"><v-icon color="red" x-large>mdi-table-chair</v-icon></v-btn>
-                <i v-if="user_information['numBars']==1">{{user_information['numBars']}} bar liked</i>
-                <i v-else>{{user_information['numBars']}} bars liked</i>
+                <i v-if="userInformation['numBars']==1">{{userInformation['numBars']}} bar liked</i>
+                <i v-else>{{userInformation['numBars']}} bars liked</i>
             </div>
             <div class="indi-likes">
                 <v-btn color="white" @click="goToUserLikedDrinks"><v-icon color="red" x-large>mdi-glass-mug-variant</v-icon></v-btn>
-                <i v-if="user_information['numDrinks']==1">{{user_information['numDrinks']}} drink liked</i>
-                <i v-else>{{user_information['numDrinks']}} drinks liked</i>
+                <i v-if="userInformation['numDrinks']==1">{{userInformation['numDrinks']}} drink liked</i>
+                <i v-else>{{userInformation['numDrinks']}} drinks liked</i>
             </div>
             <div class="indi-likes">
                 <v-btn color="white" @click="goToUserLikedBrands"><v-icon color="red" x-large>mdi-billboard</v-icon></v-btn>
-                <i v-if="user_information['numBrands']==1">{{user_information['numBrands']}} brand liked</i>
-                <i v-else>{{user_information['numBrands']}} brands liked</i>
+                <i v-if="userInformation['numBrands']==1">{{userInformation['numBrands']}} brand liked</i>
+                <i v-else>{{userInformation['numBrands']}} brands liked</i>
             </div>
         </v-col>
         </v-row>
         <v-divider class="bio-divider" color="black"></v-divider>
         <v-row class="user-headings">
-            <b>{{user_information['fullName']}}</b>
+            <b>{{userInformation['fullName']}}</b>
         </v-row>
         <v-divider class="bio-divider" color="black"></v-divider>
         <v-row class="user-headings">
-            <i v-if="user_information['bio']">{{user_information['bio']}}</i>
+            <i v-if="userInformation['bio']">{{userInformation['bio']}}</i>
             <i v-else>No Bio Yet</i>
         </v-row>
         <v-divider class="bio-divider" color="black"></v-divider>
@@ -62,51 +62,58 @@
             {{ snackText }}
             </div>
         </v-snackbar>
-        <v-dialog data-app v-model="follower_dialog" width="700">
+        <client-only>
+        <v-dialog data-app v-model="followerDialog" width="700">
             <v-card color="white" class="follower-dialog">
                 <h1 class="header">Followers</h1>
-                <!-- TODO: make it scrollable and have infinite scroll -->
-                <v-list dense color="white"> 
-                    <v-list-item v-for="(item, i) in follower_information" :key="i" class="follow-person">
-                        <v-avatar v-if="follower_information[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="follower_information[i]['picLink']" alt="Profile Picture"></v-avatar>
+                <v-list dense color="white"  v-if="followerInformation.length!=0"> 
+                    <v-list-item v-for="(item, i) in followerInformation" :key="i" class="follow-person">
+                        <v-avatar v-if="followerInformation[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="followerInformation[i]['picLink']" alt="Profile Picture"></v-avatar>
                         <v-avatar v-else size="80" color="grey lighten-2" class="follow-pic">Prof Pic</v-avatar>
                         <v-list-item-content class="follow-content">
-                            {{follower_information[i]['user']}}, {{follower_information[i]['fullName']}}
-                            <i class="follow-bio">{{follower_information[i]['bio']}}</i>
+                            {{followerInformation[i]['user']}}, {{followerInformation[i]['fullName']}}
+                            <i class="follow-bio">{{followerInformation[i]['bio']}}</i>
                         </v-list-item-content>
-                        <v-btn large v-if="follower_information[i]['following']" align="right" @click="unfollowAccountDialog(follower_information[i]['user'])" color="primary">Unfollow</v-btn>
+                        <v-btn large v-if="followerInformation[i]['following']" align="right" @click="unfollowAccountDialog(followerInformation[i]['user'], i)" color="primary">Unfollow</v-btn>
+                        <v-btn large v-else-if="!followerInformation[i]['following']" align="right" @click="followAccountDialog(followerInformation[i]['user'], i)" color="primary">Follow</v-btn>
                     </v-list-item>
                 </v-list>
+                <v-container color="white" v-if="followerInformation.length!=0"></v-container>
+                <h3 class="no-follow" v-if="followerInformation.length==0">No Followers :/</h3>
                 <infinite-loading
-                    v-if="follower_information.length"
+                    v-if="followerInformation.length"
                     spinner="spiral"
                     @infinite="infinteScroll"
                 ><span slot="no-more"></span>
                 </infinite-loading>
             </v-card>
         </v-dialog>
-        <v-dialog data-app v-model="following_dialog" width="700">
+        <v-dialog data-app v-model="followingDialog" width="700">
             <v-card color="white" class="following-dialog">
                 <h1 class="header">Following</h1>
-             <v-list dense color="white"> 
-                <v-list-item v-for="(item, i) in following_information" :key="i" class="follow-person">
-                  <v-avatar v-if="following_information[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="following_information[i]['picLink']" alt="Profile Picture"></v-avatar>
+             <v-list dense color="white"  v-if="followingInformation.length!=0"> 
+                <v-list-item v-for="(item, i) in followingInformation" :key="i" class="follow-person">
+                  <v-avatar v-if="followingInformation[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="followingInformation[i]['picLink']" alt="Profile Picture"></v-avatar>
                   <v-avatar v-else size="80" color="grey lighten-2" class="follow-pic">Prof Pic</v-avatar>
                   <v-list-item-content class="follow-content">
-                        {{following_information[i]['user']}}, {{following_information[i]['fullName']}}
-                        <i class="follow-bio">{{following_information[i]['bio']}}</i>
+                        {{followingInformation[i]['user']}}, {{followingInformation[i]['fullName']}}
+                        <i class="follow-bio">{{followingInformation[i]['bio']}}</i>
                      </v-list-item-content>
-                 <v-btn v-if="following_information[i]['following']" large align="right" @click="unfollowAccountDialog(following_information[i]['user'])" color="primary">Unfollow</v-btn>
+                 <v-btn v-if="followingInformation[i]['following']" large align="right" @click="unfollowAccountDialog(followingInformation[i]['user'], i)" color="primary">Unfollow</v-btn>
+                 <v-btn large v-else-if="!followingInformation[i]['following']" align="right" @click="followAccountDialog(followingInformation[i]['user'], i)" color="primary">Follow</v-btn>
                 </v-list-item>
             </v-list>
+            <v-container color="white" v-if="followingInformation.length!=0"></v-container>
+            <h3 class="no-follow" v-if="followingInformation.length==0">No Following :/</h3>
             <infinite-loading
-                v-if="following_information.length"
+                v-if="followingInformation.length"
                 spinner="spiral"
                 @infinite="infinteScroll"
                 ><span slot="no-more"></span>
             </infinite-loading>
             </v-card>
         </v-dialog>
+        </client-only>
     </div>
 </template>
 
@@ -118,11 +125,11 @@ import { v4 } from 'uuid';
 export default defineComponent({
   name: "userinfo",
   props: {
-    user_information: {
+    userInformation: {
         type: Object,
         required: true
     },
-    user_post: {
+    userPost: {
         type: Number,
         required: true
     },
@@ -130,9 +137,8 @@ export default defineComponent({
   setup(props) {
     
     const following = computed(() => {
-        if (props.user_information.following) {
-            console.log('calculating following');
-            return props.user_information.following;
+        if (props.userInformation.following) {
+            return props.userInformation.following;
         } else {
             return false;
         }
@@ -140,10 +146,10 @@ export default defineComponent({
 
     const snackFail = ref(false);
     const snackText = ref('');
-    const follower_dialog = ref(false);
-    const following_dialog = ref(false);
-    const follower_information = ref([]);
-    const following_information = ref([]);
+    const followerDialog = ref(false);
+    const followingDialog = ref(false);
+    const followerInformation = ref([]);
+    const followingInformation = ref([]);
     const offset = ref(1);
 
     function dummy() {
@@ -153,16 +159,15 @@ export default defineComponent({
     async function followAccount(this: any) {
         let postBody = {
             'follower': this.$store.state.user.displayName,
-            'following': props.user_information['username']
+            'following': props.userInformation['username']
         };
         try {
             const token = await this.$fire.auth.currentUser.getIdToken();
             this.$axios.setHeader('Authorization', `Bearer ${token}`);
             await this.$axios.$post('/followersapi/follower', postBody);
-            this.user_information.following = true;
-            this.user_information.numFollowers = this.user_information.numFollowers + 1;
+            location.reload();
         } catch (e) {
-            if (this.$store.state.user.displayName != props.user_information['username']) {
+            if (this.$store.state.user.displayName != props.userInformation['username']) {
                 this.snackText = 'Error: could not follow account';
             } else {
                 this.snackText = 'Error: A user cannot follow their own account!';
@@ -174,22 +179,21 @@ export default defineComponent({
     async function unfollowAccount(this: any) {
         let postBody = {
             'follower': this.$store.state.user.displayName,
-            'following': props.user_information['username']
+            'following': props.userInformation['username']
         };
         try {
             const token = await this.$fire.auth.currentUser.getIdToken();
             this.$axios.setHeader('Authorization', `Bearer ${token}`);
             await this.$axios.$delete('/followersapi/follower', { data: postBody });
-            this.user_information.following = false;
-            this.user_information.numFollowers = this.user_information.numFollowers - 1;
+            location.reload();
+            
         } catch (e) {
             this.snackText = 'Error: could not unfollow account';
             this.snackFail = true;
         }     
     }
 
-    async function unfollowAccountDialog(this: any, user: any) {
-        if (confirm(`Are you sure you want to unfollow ${user}?`)) {
+    async function unfollowAccountDialog(this: any, user: any, index: any) {
             let postBody = {
                 'follower': this.$store.state.user.displayName,
                 'following': user
@@ -198,23 +202,45 @@ export default defineComponent({
                 const token = await this.$fire.auth.currentUser.getIdToken();
                 this.$axios.setHeader('Authorization', `Bearer ${token}`);
                 await this.$axios.$delete('/followersapi/follower', { data: postBody });
-                //TODO: reload here?? or should i give them the option to follow them back?
-                location.reload();
+                if (followerDialog) {
+                    this.followerInformation[index]['following'] = false;
+                } else {
+                    this.followingInformation[index]['following'] = false;
+                }
             } catch (e) {
                 this.snackText = 'Error: could not unfollow account';
                 this.snackFail = true;
             }
-        }  
+     }
+
+    async function followAccountDialog(this: any, user: any, index: any) {
+            let postBody = {
+                'follower': this.$store.state.user.displayName,
+                'following': user
+            };
+            try {
+                const token = await this.$fire.auth.currentUser.getIdToken();
+                this.$axios.setHeader('Authorization', `Bearer ${token}`);
+                await this.$axios.$post('/followersapi/follower', postBody);
+                if (followerDialog) {
+                    this.followerInformation[index]['following'] = true;
+                } else {
+                    this.followingInformation[index]['following'] = true;
+                }
+            } catch (e) {
+                this.snackText = 'Error: could not follow account';
+                this.snackFail = true;
+            }
      }
 
     function goToUserLikedBars(this: any) {
-        this.$router.push(`/userlikeditems/${props.user_information['username']}-bar`);
+        this.$router.push(`/userlikeditems/${props.userInformation['username']}-bar`);
     }
     function goToUserLikedDrinks(this: any) {
-        this.$router.push(`/userlikeditems/${props.user_information['username']}-drink`);
+        this.$router.push(`/userlikeditems/${props.userInformation['username']}-drink`);
     }
     function goToUserLikedBrands(this: any) {
-        this.$router.push(`/userlikeditems/${props.user_information['username']}-brand`);
+        this.$router.push(`/userlikeditems/${props.userInformation['username']}-brand`);
     }
 
      async function infinteScroll(this: any, $state: any) {
@@ -222,18 +248,19 @@ export default defineComponent({
       try {
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
-        const username = this.user_information['username'];
+        const username = this.userInformation['username'];
+        this.$axios.setHeader('user', this.$store.state.user.displayName);
         let data = null;
-        if (follower_dialog) {
+        if (followerDialog) {
             data = await this.$axios.$get(`/followersapi/userfollowers/${username}?offset=${offset.value}`);
         } else {
             data = await this.$axios.$get(`/followersapi/userfollowing/${username}?offset=${offset.value}`);
         }
         if (data.length > 0) {
-          if (follower_dialog) {
-            this.follower_information.value = _.union(this.follower_information.value, data);
+          if (followerDialog) {
+            this.followerInformation.value = _.union(this.followerInformation.value, data);
           } else {
-            this.following_information.value = _.union(this.following_information.value, data);
+            this.followingInformation.value = _.union(this.followingInformation.value, data);
           }
           $state.loaded();
         } else {
@@ -247,19 +274,20 @@ export default defineComponent({
     }
 
   
-    return { unfollowAccountDialog, infinteScroll, follower_dialog, following_dialog, follower_information, following_information, offset, snackFail, snackText, followAccount, unfollowAccount, following, dummy, goToUserLikedBars, goToUserLikedDrinks, goToUserLikedBrands }
+    return { followAccountDialog, unfollowAccountDialog, infinteScroll, followerDialog, followingDialog, followerInformation, followingInformation, offset, snackFail, snackText, followAccount, unfollowAccount, following, dummy, goToUserLikedBars, goToUserLikedDrinks, goToUserLikedBrands }
   },
   async fetch(this: any) {
     try {
       let username = this.$route.params.user;
+      this.$axios.setHeader('user', this.$store.state.user.displayName);
       this.$fire.auth.onAuthStateChanged(async (user: any) => {
         if (user) {
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/followersapi/userfollowing/${username}`);
-          this.following_information = data;
+          this.followingInformation = data;
           data = await this.$axios.$get(`/followersapi/userfollowers/${username}`);
-          this.follower_information = data;
+          this.followerInformation = data;
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
@@ -268,7 +296,6 @@ export default defineComponent({
         }
       });
     } catch (e) {
-        console.log(e);
        this.snackText = 'Error: could not retrieve follow information.';
       this.snackFail = true;
     }
@@ -279,6 +306,15 @@ export default defineComponent({
 </script>
 
 <style>
+    .no-follow {
+        text-align: center;
+        font-size: 1.25em;
+        margin-top: auto;
+        margin-bottom: auto;
+        padding-top: 1.5em;
+        padding-bottom: 1.5em;
+        color: black;
+    }
     .follow-pic {
         color: black;
         font-weight: 400;
@@ -296,7 +332,7 @@ export default defineComponent({
        border-bottom: .1em solid black;
        padding-top: .75em;
        padding-bottom: .75em;
-       margin-bottom: 2em;
+       /* margin-bottom: 2em; */
     }
     .follower-dialog .header, .following-dialog .header {
         font-family: fantasy;
