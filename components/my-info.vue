@@ -153,9 +153,9 @@
         </v-snackbar>
         <client-only>
         <v-dialog data-app v-model="followerDialog" width="700">
-            <v-card color="white" class="followerDialog">
+            <v-card color="white" class="follower-dialog" v-if="followerInformation.length!=0">
                 <h1 class="header">Followers</h1>
-                <v-list dense color="white" v-if="followerInformation.length!=0"> 
+                <v-list dense color="white"> 
                     <v-list-item v-for="(item, i) in followerInformation" :key="i" class="follow-person">
                         <v-avatar v-if="followerInformation[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="followerInformation[i]['picLink']" alt="Profile Picture"></v-avatar>
                         <v-avatar v-else size="80" color="grey lighten-2" class="follow-pic">Prof Pic</v-avatar>
@@ -167,8 +167,7 @@
                         <v-btn large v-else align="right" @click="followAccount(followerInformation[i]['user'], i)" color="primary">Follow</v-btn>
                     </v-list-item>
                 </v-list>
-                <v-container color="white" v-if="followerInformation.length!=0"></v-container>
-                <h3 class="no-follow" v-if="followerInformation.length==0">No Followers :/</h3>
+                <v-container color="white"></v-container>
                 <infinite-loading
                     v-if="followerInformation.length"
                     spinner="spiral"
@@ -176,11 +175,15 @@
                 ><span slot="no-more"></span>
                 </infinite-loading>
             </v-card>
+            <v-card v-else>
+                <h1 class="no-follow-header">Followers</h1>
+                <h3 class="no-follow">No Followers :/</h3>
+            </v-card>
         </v-dialog>
         <v-dialog data-app v-model="followingDialog" width="700">
-            <v-card color="white" class="followingDialog">
+            <v-card color="white" class="following-dialog" v-if="followingInformation.length!=0">
                 <h1 class="header">Following</h1>
-             <v-list dense color="white" v-if="followingInformation.length!=0"> 
+             <v-list dense color="white"> 
                 <v-list-item v-for="(item, i) in followingInformation" :key="i" class="follow-person">
                   <v-avatar v-if="followingInformation[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="followingInformation[i]['picLink']" alt="Profile Picture"></v-avatar>
                   <v-avatar v-else size="80" color="grey lighten-2" class="follow-pic">Prof Pic</v-avatar>
@@ -191,14 +194,17 @@
                     <v-btn large align="right" @click="unfollowAccount(followingInformation[i]['user'], i)" color="primary">Unfollow</v-btn>
                 </v-list-item>
             </v-list>
-            <v-container color="white" v-if="followingInformation.length!=0"></v-container>
-            <h3 v-if="followingInformation.length==0" class="no-follow">No Following :/</h3>
+            <v-container color="white"></v-container>
             <infinite-loading
                 v-if="followingInformation.length"
                 spinner="spiral"
                 @infinite="infinteScroll"
                 ><span slot="no-more"></span>
             </infinite-loading>
+            </v-card>
+            <v-card v-else>
+                <h1 class="no-follow-header">Following</h1>
+                <h3 class="no-follow">No Following :/</h3>
             </v-card>
         </v-dialog>
         </client-only>
@@ -452,7 +458,10 @@ export default defineComponent({
        padding-bottom: .75em;
        /* margin-bottom: 2em; */
     }
-    .followerDialog .header, .followingDialog .header {
+    .follower-dialog, .following-dialog {
+        height: 26.5em;
+    }
+    .follower-dialog .header, .following-dialog .header, .no-follow-header {
         font-family: fantasy;
         text-decoration: underline;
         color: black;
