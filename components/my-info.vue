@@ -167,7 +167,6 @@
                         <v-btn large v-else align="right" @click="followAccount(followerInformation[i]['user'], i)" color="primary">Follow</v-btn>
                     </v-list-item>
                 </v-list>
-                <v-container color="white"></v-container>
                 <infinite-loading
                     v-if="followerInformation.length"
                     spinner="spiral"
@@ -194,7 +193,6 @@
                     <v-btn large align="right" @click="unfollowAccount(followingInformation[i]['user'], i)" color="primary">Unfollow</v-btn>
                 </v-list-item>
             </v-list>
-            <v-container color="white"></v-container>
             <infinite-loading
                 v-if="followingInformation.length"
                 spinner="spiral"

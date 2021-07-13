@@ -78,7 +78,6 @@
                         <v-btn large v-else-if="followerInformation[i]['following']==false && notCurrentUser(followerInformation[i]['user'])" align="right" @click="followAccountDialog(followerInformation[i]['user'], i)" color="primary">Follow</v-btn>
                     </v-list-item>
                 </v-list>
-                <v-container color="white"></v-container>
                 <infinite-loading
                     v-if="followerInformation.length"
                     spinner="spiral"
@@ -106,7 +105,6 @@
                  <v-btn large v-else-if="followingInformation[i]['following']==false && notCurrentUser(followingInformation[i]['user'])" align="right" @click="followAccountDialog(followingInformation[i]['user'], i)" color="primary">Follow</v-btn>
                 </v-list-item>
             </v-list>
-            <v-container color="white"></v-container>
             <infinite-loading
                 v-if="followingInformation.length"
                 spinner="spiral"
