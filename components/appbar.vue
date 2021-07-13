@@ -2,7 +2,7 @@
   <div data-app>
     <v-app-bar color="red">
 
-      <v-app-bar-nav-icon v-if="nav || user_nav"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon v-if="nav || userNav"></v-app-bar-nav-icon>
 
       <v-btn text @click="goToFeed">
         <v-toolbar-title><b><i>Pubcoasters</i></b></v-toolbar-title>
@@ -90,7 +90,7 @@
     </v-app-bar>
 
     <navdrawer :location="location" data-app v-if="nav"></navdrawer>
-    <userdrawer :username="username" data-app v-if="user_nav"></userdrawer>
+    <userdrawer :username="username" data-app v-if="userNav"></userdrawer>
   </div>
 </template>
 
@@ -111,7 +111,7 @@ export default defineComponent({
       type: String,
       required: false
     },
-    user_nav: {
+    userNav: {
       type: Boolean,
       required: false
     },
