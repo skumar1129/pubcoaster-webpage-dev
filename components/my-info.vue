@@ -449,6 +449,8 @@ export default defineComponent({
         margin-top: 2px;
     }
     .follow-person {
+       padding-top: 10px;
+       padding-bottom: 10px;
        display: flex;
        border-top: .1em solid black;
        border-bottom: .1em solid black;
