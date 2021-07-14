@@ -2,9 +2,9 @@
   <div data-app>
     <v-app-bar color="red">
 
-      <v-app-bar-nav-icon v-if="nav || user_nav"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon v-if="nav || userNav"></v-app-bar-nav-icon>
 
-      <v-btn text @click="goHome">
+      <v-btn text @click="goToFeed">
         <v-toolbar-title><b><i>Pubcoasters</i></b></v-toolbar-title>
       </v-btn>
 
@@ -90,7 +90,7 @@
     </v-app-bar>
 
     <navdrawer :location="location" data-app v-if="nav"></navdrawer>
-    <userdrawer :username="username" data-app v-if="user_nav"></userdrawer>
+    <userdrawer :username="username" data-app v-if="userNav"></userdrawer>
   </div>
 </template>
 
@@ -111,7 +111,7 @@ export default defineComponent({
       type: String,
       required: false
     },
-    user_nav: {
+    userNav: {
       type: Boolean,
       required: false
     },
@@ -122,8 +122,8 @@ export default defineComponent({
   },
   setup() {
     const user = ref('');
-    function goHome(this: any) {
-      this.$router.push('/home')
+    function goToFeed(this: any) {
+      this.$router.push('/feed')
     }
     function goToCreatePost(this: any) {
       this.$router.push('/createpost');
@@ -144,7 +144,7 @@ export default defineComponent({
       this.$router.push('/signin');
     }
 
-    return { user, searchUser, goToUserPage, goHome, goToLocationPage, locations, goToCreatePost, logOut }
+    return { user, searchUser, goToUserPage, goToFeed, goToLocationPage, locations, goToCreatePost, logOut }
   }
 });
 </script>

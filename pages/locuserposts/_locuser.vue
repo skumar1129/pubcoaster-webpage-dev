@@ -51,9 +51,7 @@ export default defineComponent({
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -61,7 +59,7 @@ export default defineComponent({
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         let data = await this.$axios.$get(`/postapi/post/locuser/${location.value}/${user.value}?offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data);
+          responses.value = _.union(responses.value, data.posts);
           $state.loaded();
         } else {
           $state.loaded();
@@ -72,7 +70,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, user, location, goToCreatePost, infinteScroll, snackText, snackFail };
+    return { responses, user, location, infinteScroll, snackText, snackFail };
   },
   async fetch(this: any) {
     let params = this.$route.params.locuser.split('-');
@@ -84,7 +82,7 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/postapi/post/locuser/${this.location}/${this.user}`);
-          this.responses = _.union(this.responses, data);
+          this.responses = _.union(this.responses, data.posts);
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;

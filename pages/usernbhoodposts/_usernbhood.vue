@@ -65,7 +65,7 @@ export default defineComponent({
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         let data = await this.$axios.$get(`/postapi/post/usernbhood/${user.value}/${nbhood.value}?offset=${offset.value}`);
-        if (data.length > 0) {
+        if (data.post.length > 0) {
           responses.value = _.union(responses.value, data.post);
           $state.loaded();
         } else {

@@ -1,37 +1,37 @@
 <template>
-  <v-app>
-    <appbar data-app :nav="true" :location="location" :user_nav="false"></appbar>
-      <div class="page">
-      <v-container grid-list data-app>
-        <v-row class="title-button">
-          <h1 class="header">{{bar}} in {{location}}</h1>
-        </v-row>
-        <v-row v-if="responses.length==0" class="titlearea">
-          <h2 class="mb-2"><i>No posts yet for {{bar}} :(</i></h2>
-          <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
-        </v-row>
-        <v-col v-else>
-        <client-only placeholder="Loading....">
-            <v-row v-for="(response, i) in responses" :key="i">
-              <feedpost :response="response"></feedpost>
-            </v-row>
-        </client-only>
-        </v-col>
-      </v-container>
-      <infinite-loading
-        v-if="responses.length"
-        spinner="spiral"
-        @infinite="infinteScroll"
-        data-app
-      ><span slot="no-more"></span>
-      </infinite-loading>
+    <v-app>
+    <div class="page">
+      <appbar data-app :nav="false" :user_nav="false"></appbar>
+        <v-container grid-list data-app>
+          <v-row class="title-button">
+            <h1 class="header">Your Feed</h1>
+          </v-row>
+          <v-row v-if="responses.length==0" class="titlearea">
+            <h2 class="mb-2"><i>No posts yet for your followers :(</i></h2>
+            <img src="../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
+          </v-row>
+          <v-col v-else>
+            <client-only placeholder="Loading....">
+              <v-row v-for="(response, i) in responses" :key="i">
+                <feedpost :response="response"></feedpost>
+              </v-row>
+            </client-only>
+          </v-col>
+        </v-container>
+        <infinite-loading
+          v-if="responses.length"
+          spinner="spiral"
+          @infinite="infinteScroll"
+          data-app
+        ><span slot="no-more"></span>
+        </infinite-loading>
+        <v-snackbar multi-line v-model="snackFail" color="red" data-app>
+        <div class="snack">
+        {{ snackText }}
+        </div>
+      </v-snackbar>
       </div>
-      <v-snackbar multi-line v-model="snackFail" color="red" data-app>
-      <div class="snack">
-      {{ snackText }}
-      </div>
-    </v-snackbar>
-  </v-app>
+    </v-app>
 </template>
 
 <script lang='ts'>
@@ -42,12 +42,10 @@ import { ref, defineComponent} from '@nuxtjs/composition-api';
 
 export default defineComponent({
   components: { feedpost, appbar },
-  name: "LocBarPosts",
+  name: "Feed",
   middleware: 'authenticate',
   setup() {
     const responses = ref([]);
-    const bar = ref('');
-    const location = ref('');
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
@@ -57,9 +55,10 @@ export default defineComponent({
       try {
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
-        let data = await this.$axios.$get(`/postapi/post/locbar/${location.value}/${bar.value}?offset=${offset.value}`);
+        this.$axios.setHeader('user', this.$store.state.user.displayName);
+        let data = await this.$axios.$get(`/followersapi/followingposts?offset=${offset.value}`);
         if (data.length > 0) {
-          responses.value = _.union(responses.value, data);
+          responses.value = _.union(responses.value, data.posts);
           $state.loaded();
         } else {
           $state.loaded();
@@ -70,19 +69,17 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, bar, location, infinteScroll, snackText, snackFail };
+    return { responses, infinteScroll, snackFail, snackText };
   },
   async fetch(this: any) {
-    let params = this.$route.params.locbar.split('-');
-    this.location = params[0];
-    this.bar = params[1];
     try {
       this.$fire.auth.onAuthStateChanged(async (user: any) => {
         if (user) {
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
-          let data = await this.$axios.$get(`/postapi/post/locbar/${this.location}/${this.bar}`)
-          this.responses = _.union(this.responses, data);
+          this.$axios.setHeader('user', this.$store.state.user.displayName);
+          let data = await this.$axios.$get(`/followersapi/followingposts`);
+          this.responses = _.union(this.responses, data.posts);
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;

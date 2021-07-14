@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <appbar :nav="false" :user_nav="false" data-app></appbar>
+    <appbar :nav="false" :userNav="false" data-app></appbar>
       <div class="page" data-app>
         <client-only>
-          <myinfo :user_information="user_information" :user_post="user_post"></myinfo>
+          <myinfo :userInformation="userInformation" :userPost="userPost"></myinfo>
         </client-only>
       <v-container grid-list data-app class="spacing">
         <v-row v-if="responses.length==0" class="titlearea">
@@ -47,14 +47,12 @@ export default defineComponent({
   middleware: 'authenticate',
   setup() {
     const responses = ref([]);
-    const user_information = ref({});
-    const user_post = ref(0);
+    const userInformation = ref({});
+    const userPost = ref(0);
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -73,7 +71,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, goToCreatePost, infinteScroll, snackText, snackFail, user_information, user_post };
+    return { responses, infinteScroll, snackText, snackFail, userInformation, userPost };
   },
   async fetch(this: any) {
     try {
@@ -85,10 +83,10 @@ export default defineComponent({
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get('/postapi/mypost/user');
           this.responses = _.union(this.responses, data.post);
-          this.user_post = data.totalCount;
+          this.userPost = data.totalCount;
           //get user data
-          let user_info = await this.$axios.$get(`/userapi/user/${username}`);
-          this.user_information = user_info;
+          let userInfo = await this.$axios.$get(`/userapi/user/${username}`);
+          this.userInformation = userInfo;
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
@@ -127,6 +125,6 @@ export default defineComponent({
     font-style: italic;
   }
   .spacing {
-    margin-top: 1em;
+    margin-top: 1.5em;
   }
 </style>
