@@ -174,7 +174,7 @@
                 ><span slot="no-more"></span>
                 </infinite-loading>
             </v-card>
-            <v-card v-else>
+            <v-card color="white" v-else>
                 <h1 class="no-follow-header">Followers</h1>
                 <h3 class="no-follow">No Followers :/</h3>
             </v-card>
@@ -200,7 +200,7 @@
                 ><span slot="no-more"></span>
             </infinite-loading>
             </v-card>
-            <v-card v-else>
+            <v-card color="white" v-else>
                 <h1 class="no-follow-header">Following</h1>
                 <h3 class="no-follow">No Following :/</h3>
             </v-card>
@@ -340,7 +340,8 @@ export default defineComponent({
                 } else {
                     this.followerInformation[index]['following'] = false;
                     this.userInformation.numFollowing = this.userInformation.numFollowing - 1;
-                    this.followingInformation.splice(index, 1);
+                    let temp_index = Object.keys(this.followingInformation).find(user);
+                    this.followingInformation.splice(temp_index, 1);
                 }
             } catch (e) {
                 this.snackText = 'Error: could not unfollow account';
@@ -449,6 +450,8 @@ export default defineComponent({
         margin-top: 2px;
     }
     .follow-person {
+       padding-top: 10px;
+       padding-bottom: 10px;
        display: flex;
        border-top: .1em solid black;
        border-bottom: .1em solid black;
