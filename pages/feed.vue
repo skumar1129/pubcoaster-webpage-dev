@@ -57,7 +57,7 @@ export default defineComponent({
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         this.$axios.setHeader('user', this.$store.state.user.displayName);
         let data = await this.$axios.$get(`/followersapi/followingposts?offset=${offset.value}`);
-        if (data.length > 0) {
+        if (data.posts.length > 0) {
           responses.value = _.union(responses.value, data.posts);
           $state.loaded();
         } else {
