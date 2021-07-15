@@ -171,12 +171,7 @@ module.exports = {
     meta: false,
     icon: false,
 
-    workbox: {
-      importScripts: [
-        '/firebase-auth-sw.js'
-      ],
-      dev: process.env.NODE_ENV === 'development',
-    }
+    workbox: {},
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
