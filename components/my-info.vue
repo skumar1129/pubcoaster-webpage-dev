@@ -340,8 +340,7 @@ export default defineComponent({
                 } else {
                     this.followerInformation[index]['following'] = false;
                     this.userInformation.numFollowing = this.userInformation.numFollowing - 1;
-                    let temp_index = this.followingInformation.find((el: any) => el.user === user);
-                    this.followingInformation.splice(temp_index, 1);
+                    this.followingInformation = this.followingInformation.filter((el: any) => el.user !== user);
                 }
             } catch (e) {
                 this.snackText = 'Error: could not unfollow account';
