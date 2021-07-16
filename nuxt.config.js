@@ -83,7 +83,7 @@ module.exports = {
 
   proxy: {
     '/postapi/': {
-      target: postapi,
+      target: localpost,
       pathRewrite: {'^/postapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
@@ -102,7 +102,7 @@ module.exports = {
       }
      },
     '/userapi/': {
-      target: userapi,
+      target: localuser,
       pathRewrite: {'^/userapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
@@ -121,7 +121,7 @@ module.exports = {
       }
     },
     '/itemsapi/': {
-      target: itemsapi,
+      target: localitem,
       pathRewrite: {'^/itemsapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
@@ -140,7 +140,7 @@ module.exports = {
       }
     },
     '/followersapi/': {
-      target: followersapi,
+      target: localfollower,
       pathRewrite: {'^/followersapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
