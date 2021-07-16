@@ -1,5 +1,5 @@
 const firebaseConfig = require('./config/firebaseconfig');
-const { followersapi, itemsapi, postapi, userapi, localfollower, localitem, localpost, localuser } = require('./config/apiconfig');
+const { followersapi, itemsapi, postapi, userapi } = require('./config/apiconfig');
 
 module.exports = {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -83,7 +83,7 @@ module.exports = {
 
   proxy: {
     '/postapi/': {
-      target: localpost,
+      target: postapi,
       pathRewrite: {'^/postapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
@@ -102,7 +102,7 @@ module.exports = {
       }
      },
     '/userapi/': {
-      target: localuser,
+      target: userapi,
       pathRewrite: {'^/userapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
@@ -121,7 +121,7 @@ module.exports = {
       }
     },
     '/itemsapi/': {
-      target: localitem,
+      target: itemsapi,
       pathRewrite: {'^/itemsapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
@@ -140,7 +140,7 @@ module.exports = {
       }
     },
     '/followersapi/': {
-      target: localfollower,
+      target: followersapi,
       pathRewrite: {'^/followersapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
