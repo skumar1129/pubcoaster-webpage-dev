@@ -155,7 +155,7 @@
         <v-dialog data-app v-model="followerDialog" width="700">
             <v-card color="white" class="follower-dialog" v-if="followerInformation.length!=0">
                 <h1 class="header">Followers</h1>
-                <v-list dense color="white"> 
+                <v-list dense color="white">
                     <v-list-item v-for="(item, i) in followerInformation" :key="i" class="follow-person">
                         <v-avatar v-if="followerInformation[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="followerInformation[i]['picLink']" alt="Profile Picture"></v-avatar>
                         <v-avatar v-else size="80" color="grey lighten-2" class="follow-pic">Prof Pic</v-avatar>
@@ -182,7 +182,7 @@
         <v-dialog data-app v-model="followingDialog" width="700">
             <v-card color="white" class="following-dialog" v-if="followingInformation.length!=0">
                 <h1 class="header">Following</h1>
-             <v-list dense color="white"> 
+             <v-list dense color="white">
                 <v-list-item v-for="(item, i) in followingInformation" :key="i" class="follow-person">
                   <v-avatar v-if="followingInformation[i]['picLink']" size="80" color="grey lighten-2" class="follow-pic"><img :src="followingInformation[i]['picLink']" alt="Profile Picture"></v-avatar>
                   <v-avatar v-else size="80" color="grey lighten-2" class="follow-pic">Prof Pic</v-avatar>
@@ -306,7 +306,7 @@ export default defineComponent({
         let lastNameData = this.userInformation['lastName'];
         if (this.editedFirstName != null) {
             firstNameData = this.editedFirstName;
-        } 
+        }
         if (this.editedLastName != null) {
             lastNameData = this.editedLastName;
         }
@@ -340,14 +340,13 @@ export default defineComponent({
                 } else {
                     this.followerInformation[index]['following'] = false;
                     this.userInformation.numFollowing = this.userInformation.numFollowing - 1;
-                    let temp_index = Object.keys(this.followingInformation).find(user);
-                    this.followingInformation.splice(temp_index, 1);
+                    this.followingInformation = this.followingInformation.filter((el: any) => el.user !== user);
                 }
             } catch (e) {
                 this.snackText = 'Error: could not unfollow account';
                 this.snackFail = true;
             }
-        }  
+        }
      }
     async function followAccount(this: any, user: any, index: any) {
             let postBody = {
@@ -364,7 +363,7 @@ export default defineComponent({
             } catch (e) {
                 this.snackText = 'Error: could not follow account';
                 this.snackFail = true;
-            } 
+            }
      }
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
@@ -396,7 +395,7 @@ export default defineComponent({
       }
     }
 
-  
+
     return { followAccount, editInfo, editedFirstName, editedBio, cancelEdit, saveEdit, editedLastName, picFile, filePicked, snackText, snackFail, snackSuccess, deleteAccount, dummy, uploading, goToUserLikedBars, goToUserLikedDrinks, goToUserLikedBrands, followerDialog, followingDialog, followerInformation, followingInformation, offset, infinteScroll, unfollowAccount }
   },
    async fetch(this: any) {
@@ -499,7 +498,7 @@ export default defineComponent({
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-row: auto auto;
-        grid-row-gap: 1em; 
+        grid-row-gap: 1em;
     }
     .indi-likes {
         display: inline-block;
@@ -513,7 +512,7 @@ export default defineComponent({
         width: 100%;
         bottom: 0;
         left: 0;
-    } 
+    }
     .push-left {
         margin-left: 1.2em;
     }
