@@ -7,11 +7,11 @@
         <v-row class="title-button">
              <h1 class="header">{{user}}'s Posts in {{nbhood}}</h1>
         </v-row>
-        <v-row v-if="responses.length==0" class="titlearea">
+        <v-row v-if="!loading && responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No posts yet for {{user}} in {{nbhood}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
-        <v-col v-else>
+        <v-col v-elif="!loading && responses.length!=0">
           <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <feedpost :response="response"></feedpost>
@@ -32,6 +32,15 @@
       {{ snackText }}
       </div>
     </v-snackbar>
+     <v-overlay :value="loading">
+      <div class="center-it">
+          <v-progress-circular
+            indeterminate
+            color="black"
+            size="110"
+          ></v-progress-circular>
+      </div>
+      </v-overlay>
   </v-app>
 </template>
 
@@ -55,6 +64,7 @@ export default defineComponent({
     const user_post = ref(0);
     const snackFail = ref(false);
     const snackText = ref('');
+    const loading = ref(true);
 
     const token = computed(async function(this:  any) {
       await this.$fire.auth.currentUser.getIdToken();
@@ -77,7 +87,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, nbhood, user, infinteScroll, snackFail, snackText, token, user_information, user_post };
+    return { responses, nbhood, user, infinteScroll, snackFail, snackText, token, user_information, user_post, loading };
   },
   async fetch(this: any) {
     let params = this.$route.params.usernbhood.split('-');
@@ -89,12 +99,14 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/postapi/post/usernbhood/${this.user}/${this.nbhood}`);
+          this.loading = false;
           this.responses = _.union(this.responses, data.post);
           this.user_post = data.totalCount;
           //get user data
           let user_info = await this.$axios.$get(`/userapi/user/${this.user}`);
           this.user_information = user_info;
         } else {
+          this.loading = false;
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
           await this.$store.dispatch('signOut');
@@ -102,6 +114,7 @@ export default defineComponent({
         }
       });
     } catch (e) {
+      this.loading = false;
       this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
     }
