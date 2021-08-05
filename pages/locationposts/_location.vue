@@ -6,11 +6,11 @@
           <v-row class="title-button">
             <h1 class="header">{{this.$route.params.location}}</h1>
           </v-row>
-          <v-row v-if="responses.length==0" class="titlearea">
+          <v-row v-if="!loading && responses.length==0" class="titlearea">
             <h2 class="mb-2"><i>No posts yet for {{this.$route.params.location}} :(</i></h2>
             <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
           </v-row>
-          <v-col v-else>
+          <v-col v-elif="!loading && responses.length!=0">
             <client-only placeholder="Loading....">
               <v-row v-for="(response, i) in responses" :key="i">
                 <feedpost :response="response"></feedpost>
@@ -30,6 +30,15 @@
         {{ snackText }}
         </div>
       </v-snackbar>
+      <v-overlay :value="loading">
+      <div class="center-it">
+          <v-progress-circular
+            indeterminate
+            color="black"
+            size="110"
+          ></v-progress-circular>
+      </div>
+      </v-overlay>
       </div>
     </v-app>
 </template>
@@ -49,6 +58,7 @@ export default defineComponent({
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
+    const loading = ref(true);
 
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
@@ -68,7 +78,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, infinteScroll, snackFail, snackText };
+    return { responses, infinteScroll, snackFail, snackText, loading };
   },
   async fetch(this: any) {
     try {
@@ -77,8 +87,10 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/postapi/post/location/${this.$route.params.location}`);
+          this.loading = false; 
           this.responses = _.union(this.responses, data);
         } else {
+          this.loading = false;
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
           await this.$store.dispatch('signOut');
@@ -86,6 +98,7 @@ export default defineComponent({
         }
       });
     } catch (e) {
+      this.loading = false;
       this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
     }
