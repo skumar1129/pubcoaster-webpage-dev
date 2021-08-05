@@ -6,11 +6,11 @@
         <v-row class="title-button">
           <h1 class="header">{{user}}'s Liked {{shownItem}}s</h1>
         </v-row>
-        <v-row v-if="responses.length==0" class="titlearea">
+        <v-row v-if="!loading && responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No {{shownItem}}s Liked yet for {{user}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
-        <v-col v-else>
+        <v-col v-elif="!loading && responses.length!=0">
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false" :newlike="false"></likeditem>
@@ -31,6 +31,15 @@
       {{ snackText }}
       </div>
     </v-snackbar>
+     <v-overlay :value="loading">
+      <div class="center-it">
+          <v-progress-circular
+            indeterminate
+            color="black"
+            size="110"
+          ></v-progress-circular>
+      </div>
+      </v-overlay>
   </v-app>
 </template>
 
@@ -51,6 +60,7 @@ export default defineComponent({
     const offset = ref(1);
     const snackFail = ref(false);
     const snackText = ref('');
+    const loading = ref(true);
 
     const shownItem = computed(function(this: any) {
         if (this.item) {
@@ -85,7 +95,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, user, infinteScroll, snackText, snackFail, item, shownItem };
+    return { responses, user, infinteScroll, snackText, snackFail, item, shownItem, loading };
   },
   async fetch(this: any) {
     let params = this.$route.params.userlikes.split('-');
@@ -96,7 +106,8 @@ export default defineComponent({
         if (user) {
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
-          let data = await this.$axios.$get(`/userapi/${this.item.toLowerCase()}/${this.user}`)
+          let data = await this.$axios.$get(`/userapi/${this.item.toLowerCase()}/${this.user}`);
+          this.loading = false;
           if (this.item.toLowerCase() == 'brand') {
             this.responses = _.union(this.responses, data.brands);
           } else if (this.item.toLowerCase() == 'drink') {

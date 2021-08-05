@@ -17,12 +17,12 @@
           </v-btn>
         </v-row>
           <h1 class="header" align="middle">Results for {{shownLookingAtItem}}</h1>
-        <v-row v-if="responses.length==0" class="titlearea">
+        <v-row v-if="!loading && responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No Results for {{shownLookingAtItem}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
           <v-btn color="secondary" class="add-new" x-large align="right" @click="newItem"><v-icon x-large>mdi-plus</v-icon>Add a new {{shownItem}}</v-btn>
         </v-row>
-        <v-col v-else>
+        <v-col v-elif="!loading && responses.length!=0">
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false" :newlike="true"></likeditem>
@@ -48,6 +48,15 @@
       {{ snackText }}
       </div>
     </v-snackbar>
+     <v-overlay :value="loading">
+      <div class="center-it">
+          <v-progress-circular
+            indeterminate
+            color="black"
+            size="110"
+          ></v-progress-circular>
+      </div>
+      </v-overlay>
   </v-app>
 </template>
 
@@ -70,6 +79,7 @@ export default defineComponent({
     const searchedItem = ref('');
     const lookingAtItem = ref('');
     const snackText = ref('');
+    const loading = ref(true);
 
     function searchItem(this: any) {
         this.$router.push(`/singlelikeditem/${this.item.toLowerCase() + '-' + this.searchedItem}`);
@@ -119,7 +129,7 @@ export default defineComponent({
     }
 
   
-    return { newItem, offset, infinteScroll, responses, user, snackText, snackFail, item, shownItem, searchItem, searchedItem, lookingAtItem, shownLookingAtItem };
+    return { newItem, offset, infinteScroll, responses, user, snackText, snackFail, item, shownItem, searchItem, searchedItem, lookingAtItem, shownLookingAtItem, loading };
   },
   async fetch(this: any) {
     let params = this.$route.params.singleitem.split('-');
@@ -132,6 +142,7 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/itemsapi/${this.item.toLowerCase()}/${this.lookingAtItem}?user=${this.user}`)
+          this.loading = false;
           this.responses = _.union(this.responses, data);
         } else {
           this.snackText = 'Error: User authentication failed. Please sign in again.';
