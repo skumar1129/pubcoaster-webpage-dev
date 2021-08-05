@@ -127,6 +127,7 @@ export default defineComponent({
           this.loading = false;
           this.responses = _.union(this.responses, data);
         } else {
+          this.loading = false;
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
           await this.$store.dispatch('signOut');
@@ -134,6 +135,7 @@ export default defineComponent({
         }
       });
     } catch (e) {
+      this.loading = false;
       this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
     }

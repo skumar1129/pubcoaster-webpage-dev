@@ -106,6 +106,7 @@ export default defineComponent({
           let userInfo = await this.$axios.$get(`/userapi/searchuser/${this.$route.params.user}`);
           this.userInformation = userInfo;
         } else {
+          this.loading = false;
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
           await this.$store.dispatch('signOut');
@@ -113,6 +114,7 @@ export default defineComponent({
         }
       });
     } catch (e) {
+      this.loading = false;
       this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
     }
