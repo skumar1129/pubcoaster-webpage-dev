@@ -9,8 +9,41 @@
       class="form"
     >
       <v-select
+        v-model="locationType"
+        :items="locationTypes"
+        :rules="[v => !!v || 'Location Type is required']"
+        label="Location Type*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+      <v-select
+        v-if="locationType=='College'"
+        v-model="location"
+        :items="locationsCollege"
+        :rules="[v => !!v || 'Location is required']"
+        label="Location*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+       <v-select
+        v-else-if="locationType=='City'"
         v-model="location"
         :items="locations"
+        :rules="[v => !!v || 'Location is required']"
+        label="Location*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+      <v-select
+        v-else
+        v-model="location"
+        items=""
         :rules="[v => !!v || 'Location is required']"
         label="Location*"
         required
@@ -115,9 +148,13 @@ export default defineComponent({
     const locations = ['Chicago', 'Columbus', 'Denver',
     'New York', 'San Francisco', 'Orlando', 'Phoenix',
     'Boston', 'Los Angeles', 'Washington DC'];
+    const locationsCollege = ['Ohio State', 'University of Michigan',
+    'Michigan State', 'Penn State', 'University of Illinois', 'University of Wisconsin'];
+    const locationTypes = ['College', 'City'];
     const ratings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const anonymous = ref(false);
     const location = ref('');
+    const locationType = ref('');
     const picture = ref();
     const bar = ref('');
     const neighborhood = ref('');
@@ -138,7 +175,7 @@ export default defineComponent({
       this.$refs.form.reset();
     }
     async function submit(this: any) {
-      if (bar.value == null || bar.value == '' || location.value == null || location.value == '' || description.value == null || description.value == '' || rating.value == null) {
+      if (locationType.value == null || locationType.value == '' || bar.value == null || bar.value == '' || location.value == null || location.value == '' || description.value == null || description.value == '' || rating.value == null) {
         this.snackText = 'Please fill out all required fields before submitting the form.';
         this.snackFail = true;
       } else {
@@ -202,7 +239,8 @@ export default defineComponent({
 
     return { location, bar, neighborhood, picture,
     rating, description, locations, ratings, anonymous,
-    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess, spinner };
+    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess, spinner, 
+    locationsCollege, locationType, locationTypes };
   }
 });
 </script>
