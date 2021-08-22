@@ -8,9 +8,42 @@
       lazy-validation
       class="form"
     >
+       <v-select
+        v-model="locationType"
+        :items="locationTypes"
+        :rules="[v => !!v || 'Location Type is required']"
+        label="Location Type*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
       <v-select
+        v-if="locationType=='College'"
+        v-model="location"
+        :items="locationsCollege"
+        :rules="[v => !!v || 'Location is required']"
+        label="Location*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+       <v-select
+        v-else-if="locationType=='City'"
         v-model="location"
         :items="locations"
+        :rules="[v => !!v || 'Location is required']"
+        label="Location*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+      <v-select
+        v-else
+        v-model="location"
+        items=""
         :rules="[v => !!v || 'Location is required']"
         label="Location*"
         required
@@ -37,10 +70,20 @@
         class="field"
       ></v-text-field>
       <v-select
+        v-model="busyness_live"
+        :items="busyness"
+        :rules="[v => !!v || 'Busyness is required']"
+        label="How busy is it right now?*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+      <v-select
         v-model="rating"
         :items="ratings"
-        :rules="[v => !!v || 'Rating is required']"
-        label="Rating*"
+        :rules="[v => !!v || 'Experience Rating is required']"
+        label="Experience Rating*"
         required
         dense
         color="white"
@@ -115,6 +158,9 @@ export default defineComponent({
     const locations = ['Chicago', 'Columbus', 'Denver',
     'New York', 'San Francisco', 'Orlando', 'Phoenix',
     'Boston', 'Los Angeles', 'Washington DC'];
+    const locationsCollege = ['Ohio State', 'University of Michigan',
+    'Michigan State', 'Penn State', 'University of Illinois', 'University of Wisconsin'];
+    const busyness = ['Dead AF', 'Some Crowd', 'Lively Enough', 'There Are Lines', "Can't Move"];
     const ratings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const anonymous = ref(false);
     const location = ref('');
@@ -122,8 +168,11 @@ export default defineComponent({
     const bar = ref('');
     const neighborhood = ref('');
     const rating = ref();
+    const busyness_live = ref('');
     const description = ref('');
+    const locationTypes = ['College', 'City'];
     const picFile = ref();
+    const locationType = ref('');
     const spinner = ref(false);
     const snackFail = ref(false);
     const snackText = ref('');
@@ -138,7 +187,7 @@ export default defineComponent({
       this.$refs.form.reset();
     }
     async function submit(this: any) {
-      if (bar.value == null || bar.value == '' || location.value == null || location.value == '' || description.value == null || description.value == '' || rating.value == null) {
+      if (locationType.value == null || locationType.value == '' || busyness_live.value == null || busyness_live.value == '' || bar.value == null || bar.value == '' || location.value == null || location.value == '' || description.value == null || description.value == '' || rating.value == null) {
         this.snackText = 'Please fill out all required fields before submitting the form.';
         this.snackFail = true;
       } else {
@@ -159,7 +208,8 @@ export default defineComponent({
                   description: description.value,
                   rating: rating.value,
                   location: location.value,
-                  neighborhood: neighborhood.value
+                  neighborhood: neighborhood.value,
+                  busyness: busyness_live.value
                 };
                 const token = await this.$fire.auth.currentUser.getIdToken();
                 this.$axios.setHeader('Authorization', `Bearer ${token}`);
@@ -184,7 +234,8 @@ export default defineComponent({
               description: description.value,
               rating: rating.value,
               location: location.value,
-              neighborhood: neighborhood.value
+              neighborhood: neighborhood.value,
+              busyness: busyness_live.value
             };
             const token = await this.$fire.auth.currentUser.getIdToken();
             this.$axios.setHeader('Authorization', `Bearer ${token}`);
@@ -202,7 +253,8 @@ export default defineComponent({
 
     return { location, bar, neighborhood, picture,
     rating, description, locations, ratings, anonymous,
-    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess, spinner };
+    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess, spinner, 
+    locationType, locationTypes, locationsCollege, busyness, busyness_live };
   }
 });
 </script>
