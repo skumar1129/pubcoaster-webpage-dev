@@ -3,7 +3,7 @@
     <appbar data-app :nav="false" :user_nav="false"></appbar>
     <div class="page">
     <client-only>
-        <h1 class="text-center mt-1 mb-1">Let us know what Google says about Bars in {{location}}</h1>
+        <h1 class="text-center mt-1 mb-1">Let us know what Google says about bars in {{location}}</h1>
     <v-form
       ref="form"
       lazy-validation
@@ -74,6 +74,7 @@ export default defineComponent({
     const google_busyness_live = ref('');
     const google_busyness_avg = ref('');
     const live_busyness = ref('');
+    const location = ref('');
     const busyness = ['Dead AF', 'Some Crowd', 'Lively Enough', 'There Are Lines', "Can't Move"];
     const google_busyness = ['1', '2', '3', '4', '5'];
 

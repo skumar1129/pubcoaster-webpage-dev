@@ -3,7 +3,7 @@
     <appbar data-app :nav="false" :user_nav="false"></appbar>
     <div class="page">
     <client-only>
-        <h1 class="text-center mt-1 mb-1">Check out which Bars are Poppin'</h1>
+        <h1 class="text-center mt-1 mb-1">Check out which bars are poppin'</h1>
     <v-form
       ref="form"
       lazy-validation
@@ -125,9 +125,9 @@ export default defineComponent({
         this.snackFail = true;
       } else {
         if (neighborhood.value == '' || neighborhood.value == null) {
-          window.open(`http://google.com/search?q=${location.value} ${bar.value}`);
+          window.open(`http://google.com/search?q=${location.value}+${bar.value}`);
         } else {
-          window.open(`http://google.com/search?q=${location.value} ${bar.value} ${neighborhood.value}`);
+          window.open(`http://google.com/search?q=${location.value}+${bar.value}+${neighborhood.value}`);
         }
         this.$router.push(`/busyfeedback/${location.value}`);
       }
