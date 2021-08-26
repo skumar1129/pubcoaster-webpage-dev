@@ -45,7 +45,7 @@
         </v-row>
         <v-row v-if="response['busyness']"> 
             <v-col align="middle" class="busyness">
-                <b>Busyness: </b>{{response['busyness']}}
+                <b>Busyness Level: </b>{{response['busyness']}}
             </v-col>
         </v-row>
         <v-row>
