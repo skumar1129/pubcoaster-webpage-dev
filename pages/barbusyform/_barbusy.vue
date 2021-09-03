@@ -63,8 +63,8 @@
                   <h1 class="header">Busyness in {{bar}}</h1>
                   <h3 class="no-follow" v-if="pubcoasters_busyness_live!='No Information For This Time' &&  pubcoasters_busyness_live!='Could Not Find Bar'">Live Busyness: <i class="no-bold">{{pubcoasters_busyness_live}}</i></h3>
                   <h3 class="no-follow" v-else>Live Busyness: <i class="no-bold">No Available Data on Average Busyness</i></h3>
-                  <h3 class="no-follow" v-if="pubcoasters_busyness_avg!='No Information For This Time' &&  pubcoasters_busyness_avg!='Could Not Find Bar'">Average Busyness: <i class="no-bold">{{pubcoasters_busyness_avg}}</i></h3>
-                  <h3 class="no-follow" v-else>Average Busyness: <i class="no-bold">No Available Data on Average Busyness</i></h3>
+                  <h3 class="no-follow-1" v-if="pubcoasters_busyness_avg!='No Information For This Time' &&  pubcoasters_busyness_avg!='Could Not Find Bar'">Average Busyness: <i class="no-bold">{{pubcoasters_busyness_avg}}</i></h3>
+                  <h3 class="no-follow-1" v-else>Average Busyness: <i class="no-bold">No Available Data on Average Busyness</i></h3>
               </v-card>
         </v-dialog>
       </client-only>
@@ -127,8 +127,6 @@ export default defineComponent({
           this.pubcoasters_busyness_live = live_data['busyness'];
           this.pubcoasters_busyness_avg = avg_data['busyness']
           this.spinner = false;
-          console.log('live busyness: ' + this.pubcoasters_busyness_live);
-          console.log('avg busyness: ' + this.pubcoasters_busyness_avg);
           this.dialog = true;
         } catch (e) {
             this.snackText = 'Error: could not get busyness. Check network connection.';
@@ -185,10 +183,18 @@ export default defineComponent({
   .no-follow {
       text-align: center;
       font-size: 1.25em;
+      margin-bottom: auto;
+      padding-top: 1.2em;
+      padding-bottom: .75em;
+      color: black;
+  }
+  .no-follow-1 {
+      text-align: center;
+      font-size: 1.25em;
       margin-top: auto;
       margin-bottom: auto;
       padding-top: 1.5em;
-      padding-bottom: 1.5em;
+      padding-bottom: 2em;
       color: black;
   }
   .header {
