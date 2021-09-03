@@ -44,7 +44,7 @@
       <v-select
         v-else
         v-model="location"
-        items=""
+        :items="empty"
         :rules="[v => !!v || 'Location is required']"
         label="Location*"
         required
@@ -91,6 +91,26 @@
       </div>
     </v-snackbar>
     </div>
+    <client-only>
+      <v-overlay :value="spinner">
+        <div class="center-it">
+          <v-progress-circular
+            indeterminate
+            color="white"
+            size="110"
+          ></v-progress-circular>
+        </div>
+      </v-overlay>
+      <v-dialog data-app v-model="dialog" width="700">
+              <v-card color="white">
+                  <h1 class="header">Busyness in {{bar}}</h1>
+                  <h3 class="no-follow" v-if="pubcoasters_busyness_live!='No Information For This Time' &&  pubcoasters_busyness_live!='Could Not Find Bar'">Live Busyness: <i class="no-bold">{{pubcoasters_busyness_live}}</i></h3>
+                  <h3 class="no-follow" v-else>Live Busyness: <i class="no-bold">No Available Data on Average Busyness</i></h3>
+                  <h3 class="no-follow" v-if="pubcoasters_busyness_avg!='No Information For This Time' &&  pubcoasters_busyness_avg!='Could Not Find Bar'">Average Busyness: <i class="no-bold">{{pubcoasters_busyness_avg}}</i></h3>
+                  <h3 class="no-follow" v-else>Average Busyness: <i class="no-bold">No Available Data on Average Busyness</i></h3>
+              </v-card>
+        </v-dialog>
+      </client-only>
   </v-app>
 </template>
 
@@ -105,6 +125,7 @@ export default defineComponent({
     'Boston', 'Los Angeles', 'Washington DC'];
     const locationsCollege = ['Ohio State', 'University of Michigan',
     'Michigan State', 'Penn State', 'University of Illinois', 'University of Wisconsin'];
+    const empty:String[] = [];
     const locationTypes = ['College', 'City'];
     const location = ref('');
     const locationType = ref('');
@@ -113,6 +134,10 @@ export default defineComponent({
     const snackFail = ref(false);
     const snackText = ref('');
     const snackSuccess = ref(false);
+    const pubcoasters_busyness_live = ref('');
+    const pubcoasters_busyness_avg = ref('');
+    const dialog = ref(false);
+    const spinner = ref(false);
     
 
     const user = computed(function(this: any) {
@@ -138,13 +163,34 @@ export default defineComponent({
         this.snackText = 'Please fill out all required fields before submitting the form.';
         this.snackFail = true;
       } else {
-        //TODO: write when api is done
+        try {
+          this.spinner = true;
+          const token = await this.$fire.auth.currentUser.getIdToken();
+          this.$axios.setHeader('Authorization', `Bearer ${token}`);
+          let postData = {
+            'location': location.value,
+            'neighborhood': neighborhood.value,
+            'bar': bar.value
+          };
+          let live_data = await this.$axios.$post(`/busyapi/live/barbusyness`, postData);
+          let avg_data = await this.$axios.$post(`/busyapi/average/barbusyness`, postData);
+          this.pubcoasters_busyness_live = live_data['busyness'];
+          this.pubcoasters_busyness_avg = avg_data['busyness']
+          this.spinner = false;
+          console.log('live busyness: ' + this.pubcoasters_busyness_live);
+          console.log('avg busyness: ' + this.pubcoasters_busyness_avg);
+          this.dialog = true;
+        } catch (e) {
+            this.snackText = 'Error: could not get busyness. Check network connection.';
+            this.snackFail = true;
+        }
       }
     }
 
-    return { user, location, neighborhood, locations,
-    snackFail, snackText, snackSuccess, bar,
-    locationTypes, locationType, locationsCollege, pubcoasters, google };
+
+    return { user, location, neighborhood, locations, spinner,
+    snackFail, snackText, snackSuccess, bar, dialog, empty, pubcoasters_busyness_avg,
+    locationTypes, locationType, locationsCollege, pubcoasters, google, pubcoasters_busyness_live };
   },
   fetchOnServer: false
 });
@@ -183,5 +229,31 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
+  }
+  .no-follow {
+      text-align: center;
+      font-size: 1.25em;
+      margin-top: auto;
+      margin-bottom: auto;
+      padding-top: 1.5em;
+      padding-bottom: 1.5em;
+      color: black;
+  }
+  .busyness-row {
+      text-align: center;
+      font-size: 1.25em;
+      margin-top: auto;
+      margin-bottom: auto;
+      color: black;
+  }
+  .header {
+    font-family: fantasy;
+    text-decoration: underline;
+    color: black;
+    padding-top: .75em;
+    text-align: center;
+  }
+  .no-bold {
+    font-weight: normal;
   }
 </style>

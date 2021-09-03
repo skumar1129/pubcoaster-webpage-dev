@@ -43,7 +43,7 @@
       <v-select
         v-else
         v-model="location"
-        items=""
+        :items="empty"
         :rules="[v => !!v || 'Location is required']"
         label="Location*"
         required
@@ -177,6 +177,8 @@ export default defineComponent({
     const snackFail = ref(false);
     const snackText = ref('');
     const snackSuccess = ref(false);
+    const empty:String[] = [];
+
     const user = computed(function(this: any) {
       return this.$store.state.user.displayName;
     });
@@ -251,7 +253,7 @@ export default defineComponent({
       }
     }
 
-    return { location, bar, neighborhood, picture,
+    return { location, bar, neighborhood, picture, empty,
     rating, description, locations, ratings, anonymous,
     cancel, clear, submit, picFile, snackFail, snackText, snackSuccess, spinner, 
     locationType, locationTypes, locationsCollege, busyness, busyness_live };

@@ -45,7 +45,7 @@
       <v-select
         v-else-if="shownItem.toLowerCase() == 'bar' && (locationType==null || locationType=='')"
         v-model="location"
-        items=""
+        :items="empty"
         :rules="[v => !!v || 'Location is required']"
         label="Location*"
         required
@@ -131,6 +131,7 @@ export default defineComponent({
     const locationType = ref('');
     const item = ref('');
     const shownItem = ref('');
+    const empty:String[] = [];
 
     const user = computed(function(this: any) {
       return this.$store.state.user.displayName;
@@ -224,7 +225,7 @@ export default defineComponent({
     }
 
     return { user, submit, item, type, submitBar, submitBrand, submitDrink, location, name, neighborhood, locations,
-    cancel, clear, snackFail, snackText, snackSuccess, shownItem, locationsCollege, locationTypes, locationType };
+    empty, cancel, clear, snackFail, snackText, snackSuccess, shownItem, locationsCollege, locationTypes, locationType };
   },
   fetchOnServer: false,
   fetch(this: any) {

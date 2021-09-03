@@ -1,5 +1,5 @@
 const firebaseConfig = require('./config/firebaseconfig');
-const { localfollowers, localitems, localpost, localuser } = require('./config/apiconfig');
+const { localfollowers, localitems, localpost, localuser, localbusy } = require('./config/apiconfig');
 
 module.exports = {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -123,6 +123,25 @@ module.exports = {
     '/itemsapi/': {
       target: localitems,
       pathRewrite: {'^/itemsapi/': ''},
+      changeOrigin: true,
+      onProxyReq: function log (proxyReq, req, res) {
+        if (!req.body || !Object.keys(req.body).length) {
+          return;
+        }
+
+        const contentType = proxyReq.getHeader('Content-Type')
+        const writeBody = (bodyData) => {
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+        if (contentType.includes('application/json') || contentType.includes('application/x-www-form-urlencoded')) {
+          writeBody(JSON.stringify(req.body));
+        }
+      }
+    },
+    '/busyapi/': {
+      target: localbusy,
+      pathRewrite: {'^/busyapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
         if (!req.body || !Object.keys(req.body).length) {
