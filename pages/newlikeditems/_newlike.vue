@@ -22,7 +22,7 @@
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
           <v-btn color="secondary" class="add-new" x-large align="right" @click="newItem"><v-icon x-large>mdi-plus</v-icon>Add a new {{shownItem}}</v-btn>
         </v-row>
-        <v-col v-elif="!loading && responses.length!=0">
+        <v-col v-else-if="!loading && responses.length!=0">
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <likeditem :response="response" :item="item.toLowerCase()" :mylikes="false" :newlike="true"></likeditem>

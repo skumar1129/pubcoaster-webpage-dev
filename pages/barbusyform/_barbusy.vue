@@ -69,7 +69,6 @@
         </v-dialog>
       </client-only>
   </v-app>
-  <!-- TODO: add a display for busyness with spinner while loading -->
 </template>
 
 <script lang='ts'>
@@ -104,7 +103,7 @@ export default defineComponent({
         } else {
           window.open(`http://google.com/search?q=${location.value}+${bar.value}+${neighborhood.value}`);
         }
-        this.$router.push(`/busyfeedback/${location.value}`);
+        this.$router.push(`/busyfeedback/${location.value + '-' + bar.value + '-' + neighborhood.value}`);
       }
     }
 

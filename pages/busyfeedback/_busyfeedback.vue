@@ -75,6 +75,8 @@ export default defineComponent({
     const google_busyness_avg = ref('');
     const live_busyness = ref('');
     const location = ref('');
+    const bar = ref('');
+    const neighborhood = ref('');
     const busyness = ['Dead AF', 'Some Crowd', 'Lively Enough', 'There Are Lines', "Can't Move"];
     const google_busyness = ['1', '2', '3', '4', '5'];
 
@@ -88,23 +90,41 @@ export default defineComponent({
       this.$refs.form.reset();
     }
 
-
-    function submit(this: any) {
+    async function submit(this: any) {
         if(google_busyness_live.value == null || google_busyness_live.value == '') {
             this.snackText = 'Please fill out all required fields before submitting the form.';
             this.snackFail = true;
         } else {
-            //TODO: write submit code
+          try {
+            let postData = {
+              'location': location.value,
+              'neighborhood': neighborhood.value,
+              'bar': bar.value,
+              'google_average_busyness': google_busyness_avg.value,
+              'google_live_busyness': google_busyness_live.value,
+              'busyness': live_busyness.value
+            };
+            await this.$axios.$post(`/busyapi/barbusyness`, postData);
+            this.snackText = 'Successfully submitted busyness feedback!';
+            this.snackSuccess = true;
+            this.$router.push('/home')
+          }  catch (e) {
+             this.snackText = 'Error: could not get submit busyness feedback. Check network connection.';
+             this.snackFail = true;
+          }
         }
     }
 
-    return { user, submit, location,  
+    return { user, submit, location, bar, neighborhood,  
     cancel, clear, snackFail, snackText, snackSuccess, busyness,
     google_busyness_live, google_busyness_avg, live_busyness, google_busyness };
   },
   fetchOnServer: false,
   fetch(this: any) {
-      this.location = this.$route.params.busyfeedback;
+    let params = this.$route.params.busyfeedback.split('-');
+    this.location = params[0];
+    this.bar = params[1];
+    this.neighborhood = params[2];
   }
 });
 </script>

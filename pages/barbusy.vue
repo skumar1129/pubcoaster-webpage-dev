@@ -154,7 +154,7 @@ export default defineComponent({
         } else {
           window.open(`http://google.com/search?q=${location.value}+${bar.value}+${neighborhood.value}`);
         }
-        this.$router.push(`/busyfeedback/${location.value}`);
+        this.$router.push(`/busyfeedback/${location.value + '-' + bar.value + '-' + neighborhood.value}`);
       }
     }
 
