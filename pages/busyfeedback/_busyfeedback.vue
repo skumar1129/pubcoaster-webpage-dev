@@ -3,7 +3,7 @@
     <appbar data-app :nav="false" :user_nav="false"></appbar>
     <div class="page">
     <client-only>
-        <h1 class="text-center mt-1 mb-1">Let us know what Google says about bars in {{location}}</h1>
+        <h1 class="text-center mt-1 mb-1">Let us know what Google says about {{bar}} in {{location}}</h1>
     <v-form
       ref="form"
       lazy-validation

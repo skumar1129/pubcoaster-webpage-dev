@@ -103,7 +103,7 @@
       </v-overlay>
       <v-dialog data-app v-model="dialog" width="700">
               <v-card color="white">
-                  <h1 class="header">Busyness in {{bar}}</h1>
+                  <h1 class="header">Busyness in {{bar}} in {{location}}</h1>
                   <h3 class="no-follow" v-if="pubcoasters_busyness_live!='No Information For This Time' &&  pubcoasters_busyness_live!='Could Not Find Bar'">Live Busyness: <i class="no-bold">{{pubcoasters_busyness_live}}</i></h3>
                   <h3 class="no-follow" v-else>Live Busyness: <i class="no-bold">No Available Data on Average Busyness</i></h3>
                   <h3 class="no-follow-1" v-if="pubcoasters_busyness_avg!='No Information For This Time' &&  pubcoasters_busyness_avg!='Could Not Find Bar'">Average Busyness: <i class="no-bold">{{pubcoasters_busyness_avg}}</i></h3>
@@ -165,6 +165,10 @@ export default defineComponent({
       } else {
         try {
           this.spinner = true;
+          this.bar = this.bar.toLowerCase()
+            .split(' ')
+            .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let postData = {
