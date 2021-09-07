@@ -160,7 +160,7 @@ export default defineComponent({
     'Boston', 'Los Angeles', 'Washington DC'];
     const locationsCollege = ['Ohio State', 'University of Michigan',
     'Michigan State', 'Penn State', 'University of Illinois', 'University of Wisconsin'];
-    const busyness = ['Dead AF', 'Some Crowd', 'Lively Enough', 'There Are Lines', "Can't Move"];
+    const busyness = ['Dead AF', 'Some Crowd', 'Lively Enough', 'There Are Lines', "Can’t Move"];
     const ratings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const anonymous = ref(false);
     const location = ref('');
@@ -255,7 +255,7 @@ export default defineComponent({
 
     return { location, bar, neighborhood, picture, empty,
     rating, description, locations, ratings, anonymous,
-    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess, spinner, 
+    cancel, clear, submit, picFile, snackFail, snackText, snackSuccess, spinner,
     locationType, locationTypes, locationsCollege, busyness, busyness_live };
   }
 });
