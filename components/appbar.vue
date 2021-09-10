@@ -4,8 +4,13 @@
 
       <v-app-bar-nav-icon v-if="nav || userNav"></v-app-bar-nav-icon>
 
-      <v-btn text @click="goToFeed">
-        <v-toolbar-title><b><i>Pubcoasters</i></b></v-toolbar-title>
+      <v-btn text @click="goToFeed" class="ml-2">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on: onToolTip }">
+                <v-toolbar-title v-on="{ ...onToolTip }"><b><i>Pubcoasters</i></b></v-toolbar-title>
+            </template>
+            <span>Check out your feed to see your followers' posts</span>
+          </v-tooltip>
       </v-btn>
 
       <v-spacer></v-spacer>
@@ -32,7 +37,7 @@
                 <v-icon color="white">mdi-city</v-icon>
               </v-btn>
             </template>
-            <span>Locations</span>
+            <span>Cities</span>
           </v-tooltip>
         </template>
         <v-list>
@@ -42,6 +47,29 @@
             >
               <v-btn text @click="goToLocationPage(locations[index])">
                 <v-list-item-title>{{ locations[index] }}</v-list-item-title>
+              </v-btn>
+            </v-list-item>
+          </v-list>
+      </v-menu>
+
+      <v-menu>
+        <template v-slot:activator="{ on: onMenu }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on: onToolTip }">
+              <v-btn icon v-on="{ ...onMenu, ...onToolTip }">
+                <v-icon color="white">mdi-school</v-icon>
+              </v-btn>
+            </template>
+            <span>Colleges</span>
+          </v-tooltip>
+        </template>
+        <v-list>
+            <v-list-item
+              v-for="(item, index) in colleges"
+              :key="index"
+            >
+              <v-btn text @click="goToLocationPage(colleges[index])">
+                <v-list-item-title>{{ colleges[index] }}</v-list-item-title>
               </v-btn>
             </v-list-item>
           </v-list>
@@ -98,7 +126,6 @@
 import { ref, defineComponent} from '@nuxtjs/composition-api';
 import navdrawer from '~/components/navdrawer.vue';
 import userdrawer from '~/components/userdrawer.vue';
-
 export default defineComponent({
   components: { navdrawer, userdrawer },
   name: "AppBar",
@@ -136,6 +163,8 @@ export default defineComponent({
     }
     const locations = ['Chicago', 'Columbus', 'Denver', 'New York',
     'San Francisco', 'Orlando', 'Phoenix', 'Boston', 'Los Angeles', 'Washington DC'];
+    const colleges = ['Ohio State', 'University of Michigan', 'Michigan State', 'Penn State', 'University of Illinois',
+    'University of Wisconsin'];
     function searchUser(this: any) {
       this.$router.push(`/userposts/${user.value}`);
     }
@@ -143,12 +172,10 @@ export default defineComponent({
       await this.$store.dispatch('signOut');
       this.$router.push('/signin');
     }
-
-    return { user, searchUser, goToUserPage, goToFeed, goToLocationPage, locations, goToCreatePost, logOut }
+    return { user, searchUser, goToUserPage, goToFeed, goToLocationPage, locations, goToCreatePost, logOut, colleges }
   }
 });
 </script>
 
 <style>
-
 </style>

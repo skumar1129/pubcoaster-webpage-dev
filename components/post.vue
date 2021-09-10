@@ -41,6 +41,11 @@
               <v-btn v-else icon @click="unLikePost"><v-icon>mdi-heart</v-icon></v-btn>
             </v-col>
         </v-row>
+        <v-row v-if="response['busyness']"> 
+            <v-col align="middle" class="busyness">
+                <b>Busyness Level: </b>{{response['busyness']}}
+            </v-col>
+        </v-row>
         <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
             <v-col class="footer" align="right" v-if="response['neighborhood']">
@@ -267,6 +272,9 @@ export default defineComponent({
 </script>
 
 <style>
+    .busyness {
+        font-size: 1.5rem;
+    }
     .divider {
         margin-top: .75rem;
         margin-bottom: .75rem;

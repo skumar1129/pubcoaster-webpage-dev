@@ -5,12 +5,13 @@
         <v-container grid-list data-app>
           <v-row class="title-button">
             <h1 class="header">{{this.$route.params.location}}</h1>
+            <v-btn class="busy-button" medium color="grey darken-1" @click="goToBarBusy">See what's poppin'</v-btn>
           </v-row>
           <v-row v-if="!loading && responses.length==0" class="titlearea">
             <h2 class="mb-2"><i>No posts yet for {{this.$route.params.location}} :(</i></h2>
             <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
           </v-row>
-          <v-col v-elif="!loading && responses.length!=0">
+          <v-col v-else-if="!loading && responses.length!=0">
             <client-only placeholder="Loading....">
               <v-row v-for="(response, i) in responses" :key="i">
                 <feedpost :response="response"></feedpost>
@@ -60,6 +61,10 @@ export default defineComponent({
     const snackText = ref('');
     const loading = ref(true);
 
+    function goToBarBusy(this: any) {
+      this.$router.push(`/barbusyform/${this.$route.params.location}`);
+    }
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -78,7 +83,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, infinteScroll, snackFail, snackText, loading };
+    return { responses, infinteScroll, snackFail, snackText, loading, goToBarBusy };
   },
   async fetch(this: any) {
     try {
@@ -111,8 +116,8 @@ export default defineComponent({
 <style scoped>
   .title-button {
     display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
+    position: relative;   
+    margin-bottom: 2.75rem;
     margin-top: 2rem;
   }
   .page {
@@ -125,6 +130,10 @@ export default defineComponent({
   .header {
     font-family: fantasy;
     text-decoration: underline;
+    flex: 0 1 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .titlearea {
     justify-content: center;
@@ -137,5 +146,11 @@ export default defineComponent({
     color: white;
     text-align: center;
     font-style: italic;
+  }
+  .busy-button {
+    flex: 0 1 auto;
+    margin-left: auto;  
+    font-weight: bold;
+    color: white;
   }
 </style>

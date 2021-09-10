@@ -18,7 +18,6 @@
         </v-row>
         <v-row v-if="response['picLink']">
             <v-col align="center">
-                <!--eventually replace src with response['picLink']-->
                 <v-img :src="response['picLink']" max-height="480" max-width="820"></v-img>
             </v-col>
         </v-row>
@@ -34,6 +33,11 @@
                 No likes yet
             </v-col>
             <v-col v-else align="right" class="middle">{{response['numLikes']}} likes </v-col>
+        </v-row>
+        <v-row v-if="response['busyness']"> 
+            <v-col align="middle" class="busyness">
+                <b>Busyness Level: </b>{{response['busyness']}}
+            </v-col>
         </v-row>
         <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
@@ -112,6 +116,9 @@ export default defineComponent({
     }
     .title {
         margin: .5rem;
+    }
+    .busyness {
+        font-size: 1.5rem;
     }
     .middle {
         margin: .5rem;
