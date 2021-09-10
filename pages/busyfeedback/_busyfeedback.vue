@@ -34,7 +34,7 @@
         dense
         color="white"
         class="field"
-      ></v-select>   
+      ></v-select>
       <v-row class="btn-row">
         <v-btn @click="cancel" color="red" class="ml-8 mt-5 mb-4">
           Not at Bar
@@ -77,7 +77,7 @@ export default defineComponent({
     const location = ref('');
     const bar = ref('');
     const neighborhood = ref('');
-    const busyness = ['Dead AF', 'Some Crowd', 'Lively Enough', 'There Are Lines', "Can't Move"];
+    const busyness = ['Dead AF', 'Some Crowd', 'Lively Enough', 'There Are Lines', "Can’t Move"];
     const google_busyness = ['1', '2', '3', '4', '5'];
 
     const user = computed(function(this: any) {
@@ -115,7 +115,7 @@ export default defineComponent({
         }
     }
 
-    return { user, submit, location, bar, neighborhood,  
+    return { user, submit, location, bar, neighborhood,
     cancel, clear, snackFail, snackText, snackSuccess, busyness,
     google_busyness_live, google_busyness_avg, live_busyness, google_busyness };
   },
