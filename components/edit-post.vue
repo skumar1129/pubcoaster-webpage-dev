@@ -43,6 +43,11 @@
             </v-col>
             <v-col v-else align="right" class="middle">{{response['numLikes']}} likes</v-col>
         </v-row>
+        <v-row v-if="response['busyness']"> 
+            <v-col align="middle" class="busyness">
+                <b>Busyness Level: </b>{{response['busyness']}}
+            </v-col>
+        </v-row>
         <v-row>
             <v-col class="footer">{{getMoment([response['createdAt']])}}</v-col>
             <v-col class="footer" align="right" v-if="response['neighborhood']">
@@ -125,7 +130,6 @@
         <v-divider color="black" class="divider"> </v-divider>
         <v-row>
             <v-col align="left">
-                <!--TODO: should this be a button that says delete or just the icon-->
                 <v-btn @click="deletePost" icon class="title" large>
                 <v-icon>mdi-delete</v-icon>
                 </v-btn>
@@ -271,6 +275,9 @@ export default defineComponent({
         margin: .5rem;
         font-size: 1.5rem;
     }
+    .busyness {
+        font-size: 1.5rem;
+    }
     .footer {
         margin: .5rem;
         font-size: 1rem;
@@ -289,7 +296,6 @@ export default defineComponent({
         margin: .2rem;
         font-size: 1rem;
         box-shadow: 0 0 3pt 2pt darkgrey;
-        /* outline: solid darkgray 1px; */
     }
     .selectRating {
         margin: .5rem;

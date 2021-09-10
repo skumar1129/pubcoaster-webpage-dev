@@ -1,14 +1,23 @@
 <template>
   <v-app>
-    <appbar data-app :nav="false" :user_nav="true" :username="this.$route.params.user"></appbar>
-      <div class="page">
-        <userinfo :user_information="user_information" :user_post="user_post"></userinfo>
+    <appbar data-app v-if="'message' in userInformation && userInformation['message']=='No user exists by that username'" :nav="false" :userNav="false"></appbar>
+    <appbar data-app v-else :nav="false" :userNav="true" :username="this.$route.params.user"></appbar>
+      <div class="page" v-if="'message' in userInformation && userInformation['message']=='No user exists by that username'">
+         <v-row class="main-area">
+          <h2 class="mb-2"><i>No such user exists under {{this.$route.params.user}}  :(</i></h2>
+          <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
+        </v-row>
+      </div>
+      <div class="page" v-else>
+        <client-only>
+          <userinfo :userInformation="userInformation" :userPost="userPost"></userinfo>
+        </client-only>
       <v-container grid-list data-app class="spacing">
-        <v-row v-if="responses.length==0" class="titlearea">
+        <v-row v-if="!loading && responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No posts yet for {{this.$route.params.user}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
-        <v-col v-else>
+        <v-col v-else-if="!loading && responses.length!=0">
           <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <feedpost :response="response"></feedpost>
@@ -29,6 +38,15 @@
       {{ snackText }}
       </div>
     </v-snackbar>
+     <v-overlay :value="loading">
+      <div class="center-it">
+          <v-progress-circular
+            indeterminate
+            color="black"
+            size="110"
+          ></v-progress-circular>
+      </div>
+      </v-overlay>
   </v-app>
 </template>
 
@@ -46,13 +64,12 @@ export default defineComponent({
   setup() {
     const responses = ref([]);
     const offset = ref(1);
-    const user_information = ref({});
-    const user_post = ref(0);
+    const userInformation = ref({});
+    const userPost = ref(0);
     const snackFail = ref(false);
     const snackText = ref('');
-    function goToCreatePost(this: any) {
-      this.$router.push('/createpost');
-    }
+    const loading = ref(true);
+
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
       try {
@@ -71,7 +88,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, goToCreatePost, infinteScroll, snackText, snackFail, user_post, user_information };
+    return { responses, infinteScroll, snackText, snackFail, userPost, userInformation, loading };
   },
   async fetch(this: any) {
     try {
@@ -80,12 +97,16 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/postapi/post/user/${this.$route.params.user}`);
+          this.loading = false;
           this.responses = _.union(this.responses, data.post);
-          this.user_post = data.totalCount;
+          this.userPost = data.totalCount;
           //get user data
-          let user_info = await this.$axios.$get(`/userapi/user/${this.$route.params.user}`);
-          this.user_information = user_info;
+          const username = this.$store.state.user.displayName;
+          this.$axios.setHeader('user', username);
+          let userInfo = await this.$axios.$get(`/userapi/searchuser/${this.$route.params.user}`);
+          this.userInformation = userInfo;
         } else {
+          this.loading = false;
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
           await this.$store.dispatch('signOut');
@@ -93,6 +114,7 @@ export default defineComponent({
         }
       });
     } catch (e) {
+      this.loading = false;
       this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
     }
@@ -120,9 +142,16 @@ export default defineComponent({
     font-family: fantasy;
     text-decoration: underline;
   }
+  .main-area {
+    margin-top: 3em;
+    margin-right: 4em;
+    margin-left: 4em;
+    justify-content: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+  }
   .titlearea {
     justify-content: center;
-    font-family: "Lucida Console", "Courier New", monospace;;
+    font-family: "Lucida Console", "Courier New", monospace;
   }
   .snack {
     width: 100%;
@@ -133,6 +162,6 @@ export default defineComponent({
     font-style: italic;
   }
   .spacing {
-    margin-top: 1em;
+    margin-top: 1.5em;
   }
 </style>

@@ -1,5 +1,5 @@
 const firebaseConfig = require('./config/firebaseconfig');
-const { postapi, userapi, itemsapi } = require('./config/apiconfig');
+const { localfollowers, localitems, localpost, localuser, localbusy, busyapi, itemsapi, postapi, followersapi, userapi } = require('./config/apiconfig');
 
 module.exports = {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -83,7 +83,7 @@ module.exports = {
 
   proxy: {
     '/postapi/': {
-      target: postapi,
+      target: localpost,
       pathRewrite: {'^/postapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
@@ -102,7 +102,7 @@ module.exports = {
       }
      },
     '/userapi/': {
-      target: userapi,
+      target: localuser,
       pathRewrite: {'^/userapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
@@ -121,8 +121,46 @@ module.exports = {
       }
     },
     '/itemsapi/': {
-      target: itemsapi,
+      target: localitems,
       pathRewrite: {'^/itemsapi/': ''},
+      changeOrigin: true,
+      onProxyReq: function log (proxyReq, req, res) {
+        if (!req.body || !Object.keys(req.body).length) {
+          return;
+        }
+
+        const contentType = proxyReq.getHeader('Content-Type')
+        const writeBody = (bodyData) => {
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+        if (contentType.includes('application/json') || contentType.includes('application/x-www-form-urlencoded')) {
+          writeBody(JSON.stringify(req.body));
+        }
+      }
+    },
+    '/busyapi/': {
+      target: localbusy,
+      pathRewrite: {'^/busyapi/': ''},
+      changeOrigin: true,
+      onProxyReq: function log (proxyReq, req, res) {
+        if (!req.body || !Object.keys(req.body).length) {
+          return;
+        }
+
+        const contentType = proxyReq.getHeader('Content-Type')
+        const writeBody = (bodyData) => {
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+        if (contentType.includes('application/json') || contentType.includes('application/x-www-form-urlencoded')) {
+          writeBody(JSON.stringify(req.body));
+        }
+      }
+    },
+    '/followersapi/': {
+      target: localfollowers,
+      pathRewrite: {'^/followersapi/': ''},
       changeOrigin: true,
       onProxyReq: function log (proxyReq, req, res) {
         if (!req.body || !Object.keys(req.body).length) {

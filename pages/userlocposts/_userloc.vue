@@ -7,11 +7,11 @@
         <v-row class="title-button">
           <h1 class="header">{{user}}'s Posts in {{location}}</h1>
         </v-row>
-        <v-row v-if="responses.length==0" class="titlearea">
+        <v-row v-if="!loading && responses.length==0" class="titlearea">
           <h2 class="mb-2"><i>No posts yet for {{user}} in {{location}} :(</i></h2>
           <img src="../../assets/city_page.jpg" alt="City Page IMG" height="100%" width="100%">
         </v-row>
-        <v-col v-else>
+        <v-col v-else-if="!loading && responses.length!=0">
         <client-only placeholder="Loading....">
             <v-row v-for="(response, i) in responses" :key="i">
               <feedpost :response="response"></feedpost>
@@ -32,6 +32,15 @@
       {{ snackText }}
       </div>
     </v-snackbar>
+     <v-overlay :value="loading">
+      <div class="center-it">
+          <v-progress-circular
+            indeterminate
+            color="black"
+            size="110"
+          ></v-progress-circular>
+      </div>
+      </v-overlay>
   </v-app>
 </template>
 
@@ -55,6 +64,7 @@ export default defineComponent({
     const user_information = ref({});
     const user_post = ref(0);
     const snackText = ref('');
+    const loading = ref(true);
 
     async function infinteScroll(this: any, $state: any) {
       offset.value++;
@@ -62,7 +72,7 @@ export default defineComponent({
         const token = await this.$fire.auth.currentUser.getIdToken();
         this.$axios.setHeader('Authorization', `Bearer ${token}`);
         let data = await this.$axios.$get(`/postapi/post/userloc/${this.user}/${this.location}?offset=${offset.value}`);
-        if (data.length > 0) {
+        if (data.post.length > 0) {
           responses.value = _.union(responses.value, data.post);
           $state.loaded();
         } else {
@@ -74,7 +84,7 @@ export default defineComponent({
         this.snackFail = true;
       }
     }
-    return { responses, user, location, infinteScroll, snackText, snackFail, user_post, user_information };
+    return { responses, user, location, infinteScroll, snackText, snackFail, user_post, user_information, loading };
   },
   async fetch(this: any) {
     let params = this.$route.params.userloc.split('-');
@@ -86,12 +96,14 @@ export default defineComponent({
           const token = await this.$fire.auth.currentUser.getIdToken();
           this.$axios.setHeader('Authorization', `Bearer ${token}`);
           let data = await this.$axios.$get(`/postapi/post/userloc/${this.user}/${this.location}`);
+          this.loading = false;
           this.responses = _.union(this.responses, data.post);
           this.user_post = data.totalCount;
           //get user data
           let user_info = await this.$axios.$get(`/userapi/user/${this.user}`);
           this.user_information = user_info;
         } else {
+          this.loading = false;
           this.snackText = 'Error: User authentication failed. Please sign in again.';
           this.snackFail = true;
           await this.$store.dispatch('signOut');
@@ -99,6 +111,7 @@ export default defineComponent({
         }
       });
     } catch (e) {
+      this.loading = false;
       this.snackText = 'Error: could not retrieve posts';
       this.snackFail = true;
     }
@@ -128,7 +141,7 @@ export default defineComponent({
   }
   .titlearea {
     justify-content: center;
-    font-family: "Lucida Console", "Courier New", monospace;;
+    font-family: "Lucida Console", "Courier New", monospace;
   }
   .snack {
     width: 100%;

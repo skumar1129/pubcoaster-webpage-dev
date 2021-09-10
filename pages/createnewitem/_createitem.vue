@@ -9,10 +9,43 @@
       lazy-validation
       class="form"
     >
-      <v-select
+     <v-select
         v-if="shownItem.toLowerCase() == 'bar'"
+        v-model="locationType"
+        :items="locationTypes"
+        :rules="[v => !!v || 'Location Type is required']"
+        label="Location Type*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+      <v-select
+        v-if="shownItem.toLowerCase() == 'bar' && locationType=='College'"
+        v-model="location"
+        :items="locationsCollege"
+        :rules="[v => !!v || 'Location is required']"
+        label="Location*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+       <v-select
+        v-else-if="shownItem.toLowerCase() == 'bar' && locationType=='City'"
         v-model="location"
         :items="locations"
+        :rules="[v => !!v || 'Location is required']"
+        label="Location*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+      <v-select
+        v-else-if="shownItem.toLowerCase() == 'bar' && (locationType==null || locationType=='')"
+        v-model="location"
+        :items="empty"
         :rules="[v => !!v || 'Location is required']"
         label="Location*"
         required
@@ -92,8 +125,13 @@ export default defineComponent({
     const snackFail = ref(false);
     const snackText = ref('');
     const snackSuccess = ref(false);
+    const locationsCollege = ['Ohio State', 'University of Michigan',
+    'Michigan State', 'Penn State', 'University of Illinois', 'University of Wisconsin'];
+    const locationTypes = ['College', 'City'];
+    const locationType = ref('');
     const item = ref('');
     const shownItem = ref('');
+    const empty:String[] = [];
 
     const user = computed(function(this: any) {
       return this.$store.state.user.displayName;
@@ -163,7 +201,7 @@ export default defineComponent({
 
 
     async function submitBar(this: any) {
-      if (name.value == null || name.value == '' || location.value == null || location.value == '') {
+      if (locationType.value == null || locationType.value == '' || name.value == null || name.value == '' || location.value == null || location.value == '') {
         this.snackText = 'Please fill out all required fields before submitting the form.';
         this.snackFail = true;
       } else {
@@ -187,7 +225,7 @@ export default defineComponent({
     }
 
     return { user, submit, item, type, submitBar, submitBrand, submitDrink, location, name, neighborhood, locations,
-    cancel, clear, snackFail, snackText, snackSuccess, shownItem };
+    empty, cancel, clear, snackFail, snackText, snackSuccess, shownItem, locationsCollege, locationTypes, locationType };
   },
   fetchOnServer: false,
   fetch(this: any) {
