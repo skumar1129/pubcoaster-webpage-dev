@@ -37,7 +37,7 @@
       ></v-select>   
       <v-row class="btn-row">
         <v-btn @click="cancel" color="red" class="ml-8 mt-5 mb-4">
-          Cancel
+          Not at Bar
         </v-btn>
         <v-btn @click="clear" color="red" class="mt-5 mb-4">
           Clear
@@ -84,7 +84,7 @@ export default defineComponent({
       return this.$store.state.user.displayName;
     });
     function cancel(this: any) {
-      this.$router.push('/home');
+      this.$router.push(`/locationPosts/${location.value}`);
     }
     function clear(this: any) {
       this.$refs.form.reset();

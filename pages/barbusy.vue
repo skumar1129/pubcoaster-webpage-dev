@@ -71,6 +71,9 @@
         class="field"
       ></v-text-field>
       <v-row class="btn-row">
+        <v-btn @click="cancel" color="red" class="ml-8 mt-5 mb-4">
+          Back to Feed
+        </v-btn>
         <v-btn @click="google" color="red" class="ml-8 mt-5 mb-4">
           Check Google
         </v-btn>
@@ -144,11 +147,19 @@ export default defineComponent({
       return this.$store.state.user.displayName;
     });
 
+    function cancel(this: any) {
+      this.$router.push('/feed');
+    }
+
     async function google(this: any) {
       if (bar.value == null || bar.value == '') {
         this.snackText = 'Please fill out all required fields before submitting the form.';
         this.snackFail = true;
       } else {
+        this.bar = this.bar.toLowerCase()
+          .split(' ')
+          .map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
+          .join(' ');
         if (neighborhood.value == '' || neighborhood.value == null) {
           window.open(`http://google.com/search?q=${location.value}+${bar.value}`);
         } else {
@@ -190,7 +201,7 @@ export default defineComponent({
     }
 
 
-    return { user, location, neighborhood, locations, spinner,
+    return { user, location, neighborhood, locations, spinner, cancel,
     snackFail, snackText, snackSuccess, bar, dialog, empty, pubcoasters_busyness_avg,
     locationTypes, locationType, locationsCollege, pubcoasters, google, pubcoasters_busyness_live };
   },
