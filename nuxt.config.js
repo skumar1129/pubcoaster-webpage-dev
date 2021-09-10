@@ -1,5 +1,5 @@
 const firebaseConfig = require('./config/firebaseconfig');
-const { localfollowers, localitems, localpost, localuser, localbusy } = require('./config/apiconfig');
+const { localfollowers, localitems, localpost, localuser, localbusy, busyapi, itemsapi, postapi, followersapi, userapi } = require('./config/apiconfig');
 
 module.exports = {
   // Global page headers (https://go.nuxtjs.dev/config-head)
