@@ -213,7 +213,7 @@ export default defineComponent({
                 const token = await this.$fire.auth.currentUser.getIdToken();
                 this.$axios.setHeader('Authorization', `Bearer ${token}`);
                 await this.$axios.$delete('/followersapi/follower', { data: postBody });
-                if (followerDialog) {
+                if (this.followerDialog) {
                     this.followerInformation[index]['following'] = false;
                 } else {
                     this.followingInformation[index]['following'] = false;
@@ -233,7 +233,7 @@ export default defineComponent({
                 const token = await this.$fire.auth.currentUser.getIdToken();
                 this.$axios.setHeader('Authorization', `Bearer ${token}`);
                 await this.$axios.$post('/followersapi/follower', postBody);
-                if (followerDialog) {
+                if (this.followerDialog) {
                     this.followerInformation[index]['following'] = true;
                 } else {
                     this.followingInformation[index]['following'] = true;
@@ -262,13 +262,13 @@ export default defineComponent({
         const username = this.userInformation['username'];
         this.$axios.setHeader('user', this.$store.state.user.displayName);
         let data = null;
-        if (followerDialog) {
+        if (this.followerDialog) {
             data = await this.$axios.$get(`/followersapi/userfollowers/${username}?offset=${offset.value}`);
         } else {
             data = await this.$axios.$get(`/followersapi/userfollowing/${username}?offset=${offset.value}`);
         }
         if (data.length > 0) {
-          if (followerDialog) {
+          if (this.followerDialog) {
             this.followerInformation.value = _.union(this.followerInformation.value, data);
           } else {
             this.followingInformation.value = _.union(this.followingInformation.value, data);
@@ -338,6 +338,8 @@ export default defineComponent({
         margin-top: 2px;
     }
     .follow-person {
+       padding-top: 10px;
+       padding-bottom: 10px;
        display: flex;
        border-top: .1em solid black;
        border-bottom: .1em solid black;

@@ -19,6 +19,16 @@
         class="field"
       ></v-select>
       <v-select
+        v-model="locationType"
+        :items="locationTypes"
+        :rules="[v => !!v || 'Location Type is required']"
+        label="Location Type*"
+        required
+        dense
+        color="white"
+        class="field"
+      ></v-select>
+      <v-select
         v-if="locationType=='College'"
         v-model="location"
         :items="locationsCollege"
@@ -164,6 +174,7 @@ export default defineComponent({
     const ratings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const anonymous = ref(false);
     const location = ref('');
+    const locationType = ref('');
     const picture = ref();
     const bar = ref('');
     const neighborhood = ref('');

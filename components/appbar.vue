@@ -172,6 +172,7 @@ export default defineComponent({
       await this.$store.dispatch('signOut');
       this.$router.push('/signin');
     }
+
     return { user, searchUser, goToUserPage, goToFeed, goToLocationPage, locations, goToCreatePost, logOut, colleges }
   }
 });

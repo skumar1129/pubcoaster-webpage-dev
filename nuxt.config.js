@@ -1,5 +1,5 @@
 const firebaseConfig = require('./config/firebaseconfig');
-const { localfollowers, localitems, localpost, localuser, localbusy, busyapi, itemsapi, postapi, followersapi, userapi } = require('./config/apiconfig');
+const { followersapi, itemsapi, postapi, userapi } = require('./config/apiconfig');
 
 module.exports = {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -194,8 +194,7 @@ module.exports = {
       importScripts: [
         '/firebase-auth-sw.js'
       ],
-      dev: process.env.NODE_ENV === 'development',
-    }
+    },
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
